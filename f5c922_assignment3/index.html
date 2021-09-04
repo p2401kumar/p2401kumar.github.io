@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Prateek Kumar</title>
+    <style>
+    * {
+        margin: 0px;
+        padding: 0px;
+        font-family: sans-serif;
+    }
+
+    .links {
+        text-decoration: none;
+    }
+
+    .center_column {
+        display: flex;
+        width: 1080px;
+        flex-direction: column;
+        background-image: linear-gradient(rgba(0, 0, 0,1), rgba(0, 0, 0,1)), url("http://csci571.com/hw/hw3/images/glasses.png");
+        background-blend-mode: saturation;
+        background-repeat: no-repeat;
+<!--        background-position: fill;-->
+        background-size: cover;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-attachment: fixed;
+        margin: auto;
+    }
+
+    .header_box {
+        display: flex;
+        width: 1080px;
+        height: 80px;
+        flex-direction: row;
+        justify-content: space-between;
+        background-color: white;
+    }
+
+    #home {
+        align-self: center;
+        margin-left: 60px;
+    }
+    #rest {
+        align-self: center;
+        display: flex;
+        flex-direction: row;
+        margin-right: 60px;
+    }
+    #rest * {
+        padding: 7px;
+        color: grey;
+    }
+
+    .presentation_box {
+        position: relative;
+        width: 100%;
+        height: max-content;
+    }
+
+    #lawyer {
+        background-image: url('');
+        width: 100%;
+    }
+
+    .signIn {
+        background-color: #0b3c5d;
+        width: 259px;
+        height: 310px;
+        position: absolute;
+        top: 110px;
+        left: 79px;
+        text-align: left;
+        padding: 30px;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    #signIn_whiteText1 {
+        font-size: 16px;
+        color: white;
+        margin-top: 20px;
+        margin-bottom: 6px;
+    }
+
+    #signIn_whiteText2 {
+        font-size: 28px;
+        color: white;
+        margin-bottom: 12px;
+    }
+    #signIn_yellowText {
+        font-size: 10px;
+        color: yellow;
+        font-weight: bold;
+        font-style: italic;
+        margin-bottom: 20px;
+    }
+
+    #signIn_userId {
+        width: 80%;
+        height: 21px;
+    }
+
+    #signIn_button{
+        text-align: center;
+        background-color: #fadd16;
+        width: 150px;
+        height: 30px;
+        font-size: 12px;
+        display: inline-block;
+    }
+
+    #signIn_button_text {
+        margin: 6px;
+        justify-content: center;
+    }
+
+    .features{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        padding-top: 50px;
+        padding-bottom: 50px;
+        padding-left: 20px;
+        padding-right: 20px;
+        background-color: white;
+    }
+
+    .features * {
+        text-align: center;
+        flex: 1;
+        padding: 10px;
+    }
+
+    .feature_body {
+        color: #929292;
+        text-align: left;
+    }
+
+    .ceo_talks {
+        background-color: #f4f4f4;
+        height: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 30px;
+    }
+
+    #ceo_about {
+        display: flex;
+        justify-content: center;
+        flex-direction: row;
+    }
+    #ceo_said {
+        font-size: 15px;
+        margin-bottom: 10px;
+    }
+    #ceo_about_name {
+        color: #2a2a2a;
+        font-weight: bold;
+    }
+    #ceo_about_pos, #price_everyone_text {
+        color: #8e8e8e;
+    }
+
+    .prices_div {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #prices_top_box {
+        margin: auto;
+        height: 100px;
+        text-align: center;
+    }
+
+    #prices_bottom_box {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+<!--        padding: 100px;-->
+    }
+
+    .price_types {
+        width: 20%;
+        height: 350px;
+        background: white;
+<!--        background: rgba(250, 250, 250, 0.9);-->
+        background-repeat:repeat;
+        background-size: 400px 400px;
+        background-image: linear-gradient(rgba(250, 250, 250,.8), rgba(250, 250, 250,.8)), url("http://csci571.com/hw/hw3/images/grid.png");
+        margin-bottom: 50px;
+        text-align: center;
+        padding-top: 50px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .price_types_space {
+        width: 50px;
+    }
+
+    .try_free_box {
+        height: 350px;
+        background-position: center;
+        background-image: linear-gradient(rgba(60,100,170, 0.8), rgba(60,100,170, 0.8)), url("http://csci571.com/hw/hw3/images/notebook.jpg");
+        background-repeat: no-repeat;
+        background-size: 100%;
+    }
+
+    .contact {
+        background-color: black;
+        height: 250px;
+    }
+
+    .try_free_box {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #try_free_box_center {
+        text-align: center;
+    }
+
+    #try_1 {
+        font-size: 25px;
+        color: white;
+    }
+    #try_2 {
+        font-size: 10px;
+        color: white;
+    }
+    #try_button {
+        background-color: #fadd16;
+        margin-left: 30%;
+        margin-right: 30%;
+        margin-top: 30px;
+        font-size: 10px;
+        padding: 7px;
+    }
+
+    .plan_name {
+        font-size: 17px;
+        margin-bottom: 20px;
+    }
+    .plan_detail {
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+
+    .price_value {
+        margin-top: 40px;
+    }
+    .price_value, .price_value_text {
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .price_money_button {
+        margin-top: 25px;
+        background-color: #0b3c5d;
+        color: white;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        margin-left: 50px;
+        margin-right: 50px;
+    }
+
+    .contact {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+    }
+
+    .contact_box {
+        text-align: center;
+    }
+
+    .contact_box_biz {
+        font-size: 18px;
+        color: #dddee0
+    }
+
+    .contact_box_address {
+        color: #dddee0
+        margin-top: 10px;
+        font-size: 10px;
+    }
+
+    .contact_socialmedia {
+        margin-top: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: row;
+        color: white;
+    }
+
+    .social {
+        width: 25px;
+        height: 25px;
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+    </style>
+</head>
+<body>
+
+<div class="center_column">
+    <div class="header_box">
+        <div id="home">
+            <p>MENU</p>
+        </div>
+
+        <div id="rest">
+            <div id="about">
+                <a class="links" href="next_page.html/#about">
+                    About
+                </a>
+            </div>
+            <div id="projects">
+                <a class="links" href="next_page.html/#products">
+                    Projects
+                </a>
+            </div>
+            <div id="services">
+                <a class="links" href="next_page.html/#services">
+                    Services
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="presentation_box">
+        <img id="lawyer" src="http://csci571.com/hw/hw3/images/lawyer.jpg">
+        <div class="signIn">
+            <p id="signIn_whiteText1">DON'T WAIT</p>
+            <p id="signIn_whiteText2">IMPROVE<br/> YOUR BUSINESS TODAY</p>
+            <p id="signIn_yellowText">-Get your hands on MyBiz-</p>
+            <input id="signIn_userId"><br><br>
+            <div id="signIn_button">
+                <p id="signIn_button_text">SIGN IN FOR FREE</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="features">
+        <div class="feature1">
+            <p>AMAZING FEATURE＃1</p>
+            <p class="feature_body">Lorem ipsum dolor sit amet，consectetur adiplscing ell. Sed malesuada fauclbus ex nec ultricles.Donec mattis 0gostas nisi non pretium.Suspendisse nec eros uf erat facilisis maximus.In congue et leo In vartu. Vestibulum sit amet folls ornare，comnodo orci ul feugiat lore</p>
+        </div>
+        <div class="feature2">
+            <p>AMAZING FEATURE＃2</p>
+            <p class="feature_body">Lorem ipsum dolor sit amet，consectetur adiplscing ell. Sed malesuada fauclbus ex nec ultricles.Donec mattis 0gostas nisi non pretium.Suspendisse nec eros uf erat facilisis maximus.In congue et leo In vartu. Vestibulum sit amet folls ornare，comnodo orci ul feugiat lore</p>
+        </div>
+        <div class="feature3">
+            <p>AMAZING FEATURE＃3</p>
+            <p class="feature_body">Lorem ipsum dolor sit amet，consectetur adiplscing ell. Sed malesuada fauclbus ex nec ultricles.Donec mattis 0gostas nisi non pretium.Suspendisse nec eros uf erat facilisis maximus.In congue et leo In vartu. Vestibulum sit amet folls ornare，comnodo orci ul feugiat lore</p>
+        </div>
+    </div>
+
+    <div class="ceo_talks">
+        <div id="ceo_box">
+            <div id="ceo_said">
+                "I COULDN'T HAVE ASKED FOR MORE THAN THIS. MYBIZ IS THE KILLER APP."
+            </div>
+            <div id="ceo_about">
+                <p id="ceo_about_name">John Deo</p>
+                <p id="ceo_about_pos">, CEO & Founder, MyBiz</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="prices_div">
+        <div id="prices_top_box">
+            <p id="price_text">
+                PRICES
+            </p><br/>
+            <p id="price_everyone_text">
+                AFFORDABLE FOR EVERYONE
+            </p>
+        </div>
+        <div id="prices_bottom_box">
+            <div class="price_types">
+                <p class="plan_name">BASIC PLAN</p>
+                <p class="plan_detail">Plan Amazing Feature #1</p>
+                <p class="plan_detail">Plan Amazing Feature #2</p>
+                <p class="plan_detail">Plan Amazing Feature #3</p>
+                <p class="plan_detail">Plan Amazing Feature #4</p>
+                <p class="price_value">$29.99</p>
+                <p class="price_value_text">Monthly</p>
+
+                <div class="price_money_button">
+                    BUY NOW
+                </div>
+            </div>
+            <div class="price_types_space"></div>
+            <div class="price_types">
+                <p class="plan_name">STANDARD PLAN</p>
+                <p class="plan_detail">Plan Amazing Feature #1</p>
+                <p class="plan_detail">Plan Amazing Feature #2</p>
+                <p class="plan_detail">Plan Amazing Feature #3</p>
+                <p class="plan_detail">Plan Amazing Feature #4</p>
+                <p class="price_value">$39.99</p>
+                <p class="price_value_text">Monthly</p>
+
+                <div class="price_money_button">
+                    BUY NOW
+                </div>
+            </div>
+            <div class="price_types_space"></div>
+            <div class="price_types">
+                <p class="plan_name">CORPORATE PLAN</p>
+                <p class="plan_detail">Plan Amazing Feature #1</p>
+                <p class="plan_detail">Plan Amazing Feature #2</p>
+                <p class="plan_detail">Plan Amazing Feature #3</p>
+                <p class="plan_detail">Plan Amazing Feature #4</p>
+                <p class="price_value">$49.99</p>
+                <p class="price_value_text">Monthly</p>
+
+                <div class="price_money_button">
+                    BUY NOW
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="try_free_box">
+        <div id="try_free_box_center">
+            <p id="try_1">TRY THE BEST APP IN MARKET</p>
+            <p id="try_2">tell more why your software is amazing and why users need to sign up</p>
+            <div id="try_button">
+                TRY IT FOR FREE
+            </div>
+        </div>
+    </div>
+
+    <div class="contact">
+        <div class="contact_box">
+            <p class="contact_box_biz">MY BIZ</p>
+            <p class="contact_box_address">224 Grant Ave, Redondo Beach, CA, 90278 310.555.1212 Ext 3 for Business Needs</p>
+            <div class="contact_socialmedia">
+                <a href="https://www.facebook.com/">
+                    <img class="social" id="fb" src="http://csci571.com/hw/hw3/images/facebook.png"/>
+                </a>
+
+                <a href="https://www.twitter.com/">
+                    <img class="social" id="tw" src="http://csci571.com/hw/hw3/images/twitter.png"/>
+                </a>
+
+                <a href="https://www.instagram.com/">
+                    <img class="social" id="insta" src="http://csci571.com/hw/hw3/images/instagram.png"/>
+                </a>
+
+                <a href="https://www.youtube.com/">
+                    <img class="social" id="yt" src="http://csci571.com/hw/hw3/images/youtube.png"/>
+                </a>
+
+                <a href="https://www.google.com/">
+                    <img class="social" id="gp" src="http://csci571.com/hw/hw3/images/googleplus.png"/>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
