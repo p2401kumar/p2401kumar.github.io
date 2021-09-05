@@ -1,0 +1,302 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    font-family: sans-serif;
+}
+
+.links {
+    text-decoration: none;
+}
+
+.center_column {
+    display: flex;
+    width: 1080px;
+    flex-direction: column;
+    background-color: rgba(200, 200, 200, 0.9);
+    background-image: linear-gradient(rgba(0, 0, 0,1), rgba(0, 0, 0,1)), url("http://csci571.com/hw/hw3/images/glasses.png");
+    background-blend-mode: saturation;
+    background-repeat: no-repeat;
+<!--        background-position: fill;-->
+    background-size: cover;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-attachment: fixed;
+    margin: auto;
+}
+
+.header_box {
+    display: flex;
+    width: 1080px;
+    height: 80px;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: white;
+}
+
+#home {
+    align-self: center;
+    margin-left: 60px;
+}
+#rest {
+    align-self: center;
+    display: flex;
+    flex-direction: row;
+    margin-right: 60px;
+}
+#rest * {
+    padding: 7px;
+    color: grey;
+}
+
+.presentation_box {
+    position: relative;
+    width: 100%;
+    height: max-content;
+}
+
+#lawyer {
+    /*background-image: url('');*/
+    width: 100%;
+}
+
+.signIn {
+    background-color: #0b3c5d;
+    width: 259px;
+    height: 310px;
+    position: absolute;
+    top: 110px;
+    left: 79px;
+    text-align: left;
+    padding: 30px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#signIn_whiteText1 {
+    font-size: 16px;
+    color: white;
+    margin-top: 20px;
+    margin-bottom: 6px;
+}
+
+#signIn_whiteText2 {
+    font-size: 28px;
+    color: white;
+    margin-bottom: 12px;
+}
+#signIn_yellowText {
+    font-size: 10px;
+    color: yellow;
+    font-weight: bold;
+    font-style: italic;
+    margin-bottom: 20px;
+}
+
+#signIn_userId {
+    width: 90%;
+    height: 35px;
+}
+
+#signIn_button{
+    text-align: center;
+    background-color: #fadd16;
+    width: 150px;
+    height: 30px;
+    font-size: 12px;
+    display: inline-block;
+}
+
+#signIn_button_text {
+    margin: 6px;
+    justify-content: center;
+}
+
+.features{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    padding-left: 20px;
+    padding-right: 20px;
+    background-color: white;
+}
+
+.features * {
+    text-align: center;
+    flex: 1;
+    padding: 10px;
+}
+
+.feature_body {
+    color: #929292;
+    text-align: left;
+}
+
+.ceo_talks {
+    background-color: #f4f4f4;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+#ceo_about {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+}
+#ceo_said {
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+#ceo_about_name {
+    color: #2a2a2a;
+    font-weight: bold;
+}
+#ceo_about_pos, #price_everyone_text {
+    color: #5e5e5e;
+}
+
+.prices_div {
+    display: flex;
+    flex-direction: column;
+}
+
+#prices_top_box {
+    margin: auto;
+    height: 100px;
+    text-align: center;
+}
+
+#prices_bottom_box {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+<!--        padding: 100px;-->
+}
+
+.price_types {
+    width: 20%;
+    height: 350px;
+    background: white;
+<!--        background: rgba(250, 250, 250, 0.9);-->
+    background-repeat:repeat;
+    background-size: 400px 400px;
+    background-image: linear-gradient(rgba(250, 250, 250,.8), rgba(250, 250, 250,.8)), url("http://csci571.com/hw/hw3/images/grid.png");
+    margin-bottom: 50px;
+    text-align: center;
+    padding-top: 50px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.price_types_space {
+    width: 50px;
+}
+
+.try_free_box {
+    height: 350px;
+    background-position: center;
+    background-image: linear-gradient(rgba(30,50,85, 0.8), rgba(30,50,85, 0.8)), url("http://csci571.com/hw/hw3/images/notebook.jpg");
+    background-repeat: no-repeat;
+    background-size: 100%;
+}
+
+.contact {
+    background-color: black;
+    height: 250px;
+}
+
+.try_free_box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#try_free_box_center {
+    text-align: center;
+}
+
+#try_1 {
+    font-size: 25px;
+    color: white;
+}
+#try_2 {
+    font-size: 10px;
+    color: white;
+}
+#try_button {
+    background-color: #fadd16;
+    margin-left: 30%;
+    margin-right: 30%;
+    margin-top: 30px;
+    font-size: 10px;
+    padding: 7px;
+}
+
+.plan_name {
+    font-size: 17px;
+    margin-bottom: 20px;
+}
+.plan_detail {
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.price_value {
+    margin-top: 40px;
+}
+.price_value, .price_value_text {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.price_money_button {
+    margin-top: 25px;
+    background-color: #0b3c5d;
+    color: white;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-left: 50px;
+    margin-right: 50px;
+}
+
+.contact {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.contact_box {
+    text-align: center;
+}
+
+.contact_box_biz {
+    font-size: 18px;
+    color: #dddee0
+}
+
+.contact_box_address {
+    color: #dddee0;
+    margin-top: 10px;
+    font-size: 10px;
+}
+
+.contact_socialmedia {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    color: white;
+}
+
+.social {
+    width: 25px;
+    height: 25px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
