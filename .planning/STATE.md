@@ -62,7 +62,7 @@ None yet.
 
 ### Blockers/Concerns
 
-- GitHub Pages hosting target (user root `p2401kumar.github.io` vs. project path) is still an open decision per PROJECT.md — must be resolved as the first concrete decision of Phase 1 planning, since it gates `astro.config.mjs` `site`/`base` and every subsequent internal link (research-flagged pitfall).
+- ~~GitHub Pages hosting target~~ **RESOLVED 2026-07-15**: user chose **user root** — deploy to a repo named `p2401kumar.github.io`, site served at `https://p2401kumar.github.io` with no `base` path (`site: 'https://p2401kumar.github.io'` in astro.config.mjs). The old `p2401kumar.github.io/home` repo is retired after the new site launches (add a redirect or archive it — post-launch task).
 
 ## Deferred Items
 

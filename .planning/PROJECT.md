@@ -51,7 +51,7 @@ Within seconds of landing, a senior engineering leader should think "this person
 
 **Research corpus (4 parallel agents, July 2026):** AI-infra design language (Anthropic/Modal/OpenAI et al.), devtools motion grammar (Vercel/Stripe/Linear/PlanetScale), elite engineer portfolios (rauno.me/paco.me/antfu.me), canvas technique catalog (dot-grid fields, routed beams, flow fields). Key findings embedded in decisions above.
 
-**Deployment note:** target is GitHub Pages. Existing `p2401kumar.github.io/home` repo serves the old site; decide at deploy phase whether new site takes over the user root (`p2401kumar.github.io`) or a project path with the old site retired.
+**Deployment (decided 2026-07-15):** user-root GitHub Pages — repo `p2401kumar.github.io`, served at `https://p2401kumar.github.io`, no `base` path. The old `/home` repo is retired after launch (redirect or archive — post-launch task).
 
 ## Constraints
 
@@ -71,6 +71,7 @@ Within seconds of landing, a senior engineering leader should think "this person
 | Fig. 01 demonstrates auto-weight-away/cellularization | Animation proves the résumé claim instead of decorating it — the site's memorable differentiator | — Pending |
 | No blog, no chatbot in v1 | Stale-blog risk; top-tier portfolios avoid chatbots; both revisitable in v2 | — Pending |
 | Dark-only tinted-graphite + copper system | Committed visual world reads more deliberate than a toggle; accent <5% per AI-infra research | — Pending |
+| Deploy to user root `p2401kumar.github.io` (new repo), retire old `/home` after launch | Cleanest résumé URL, zero base-path risk (top research-flagged pitfall); user decision 2026-07-15 | — Pending |
 
 ## Evolution
 
