@@ -1,0 +1,97 @@
+# Requirements: Prateek Kumar — Portfolio
+
+**Defined:** 2026-07-15
+**Core Value:** Within seconds of landing, a senior engineering leader should think "this person operates at our level" — credibility delivered through demonstrated craft, not adjectives.
+
+## v1 Requirements
+
+Requirements for initial release. Each maps to roadmap phases.
+
+### Editorial Shell
+
+- [ ] **SHELL-01**: Visitor sees a mono header (name · seattle · nav: work / résumé / contact) on every page
+- [ ] **SHELL-02**: Visitor reads the serif declarative thesis and a one-line bio naming Microsoft/AWS/Samsung within the first viewport
+- [ ] **SHELL-03**: Visitor can reach résumé, LinkedIn, and GitHub via quiet text links in the hero
+- [ ] **SHELL-04**: Visitor sees a footer with a live Seattle clock and "all systems operational" status line
+- [ ] **SHELL-05**: All pages render from a single design-token source (tokens.css: graphite/copper palette, serif + sans + mono roles)
+
+### Fig. 01 — Signature Figure
+
+- [ ] **FIG-01**: Visitor sees the cellularized-region figure build in with staggered, dependency-ordered animation and ambient request beams
+- [ ] **FIG-02**: Visitor can dispatch a request (button or node click) and watch it travel client → load balancer → healthy cell → pipelines → ML node
+- [ ] **FIG-03**: Visitor can inject a fault: a cell degrades (amber, dashed), traffic weighs away from it, the event log narrates, and the cell self-heals after ~8s
+- [ ] **FIG-04**: Visitor can hover any node to see a real production fact (tooltip with résumé-sourced metrics)
+- [ ] **FIG-05**: Visitor with `prefers-reduced-motion` gets an informative static figure where fault injection still works via instant state changes
+- [ ] **FIG-06**: Keyboard-only visitor can operate the figure (focusable controls, visible focus states, no keyboard trap)
+- [ ] **FIG-07**: Figure sustains ~60fps on average laptops (single rAF loop, DPR cap 2, batched draws) and the page holds Lighthouse ≥ 90 with the figure active
+
+### Content Sections
+
+- [ ] **CONT-01**: Visitor can scan a selected-systems list (4 entries: date, mono artifact name, one-liner, real metric)
+- [ ] **CONT-02**: Visitor can read experience entries for Microsoft, AWS, MathWorks, and Samsung with real scope and metrics
+- [ ] **CONT-03**: Visitor can view patents & publications (2 patents incl. Grade A1, Android Lint paper)
+- [ ] **CONT-04**: Visitor can read skills as grouped prose/mono tags (no skill bars, no logo walls)
+- [ ] **CONT-05**: Visitor can download the PDF résumé
+- [ ] **CONT-06**: Visitor can reach contact (mailto + LinkedIn) from header or footer
+- [ ] **CONT-07**: Every displayed metric traces to the résumé via a `source` annotation in the content data (honesty gate)
+
+### Case Studies
+
+- [ ] **CASE-01**: Visitor can read the DynamoDB cellularization case study (problem → approach with trade-offs considered → impact)
+- [ ] **CASE-02**: Visitor can read the ELB auto-weight-away case study (same structure)
+- [ ] **CASE-03**: Case studies are a typed Astro content collection whose schema enforces the problem/approach/impact structure
+
+### Platform & Deploy
+
+- [ ] **PLAT-01**: Site builds as fully static Astro 7 output with zero framework runtime (Fig. 01 is a vanilla TS module)
+- [ ] **PLAT-02**: Site deploys to GitHub Pages automatically on push to main via GitHub Actions (withastro/action)
+- [ ] **PLAT-03**: All internal links and assets respect the hosting target (`site`/`base` locked in foundation; root vs project path decided before scaffolding)
+- [ ] **PLAT-04**: Fonts are self-hosted subsetted woff2 with preload and metrics-matched fallback (no visible CLS on the hero thesis)
+- [ ] **PLAT-05**: Site is responsive from 360px mobile through desktop
+- [ ] **PLAT-06**: Every page ships title/description/OG meta, a static OG image, favicon, and sitemap
+- [ ] **PLAT-07**: Home page scores Lighthouse ≥ 90 in Performance, Accessibility, Best Practices, and SEO
+
+## v2 Requirements
+
+Deferred to future release. Tracked but not in current roadmap.
+
+### Writing & Experiments
+
+- **NOTE-01**: Visitor can read notes/essays (blog) — deferred until a content pipeline exists (LinkedIn is the current channel)
+- **NOTE-02**: `/craft` experiments page hosting dated interactive prototypes (a curated AI-twin chat could live here, framed as an experiment)
+
+### Content Depth
+
+- **CASE-04**: Third case study (azure/health-snapshots — information-theory rebuild)
+- **PLAT-08**: JSON-LD Person structured data for richer search appearance
+
+## Out of Scope
+
+Explicitly excluded. Documented to prevent scope creep.
+
+| Feature | Reason |
+|---------|--------|
+| AI chatbot / "AI twin" on the main page | Top-tier engineer portfolios conspicuously avoid chatbots; a wrong answer about your own experience damages trust faster than a typo |
+| Skill bars, tech-logo walls, testimonials | Independently corroborated anti-features that read junior/template |
+| CMS or any backend | GitHub Pages is static-only; content velocity doesn't justify a CMS |
+| Light theme / theme toggle | Design commits to one visual world; toggle adds surface without hiring value |
+| Astro view transitions | Canvas re-init gotchas + only ~6 pages; plain MPA navigation is simpler and safer |
+| Analytics platform | No decision this data would change in v1 |
+| Fabricated/simulated telemetry in Fig. 01 | Honesty constraint — every number on screen traces to the résumé |
+
+## Traceability
+
+Which phases cover which requirements. Updated during roadmap creation.
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| (populated by roadmap) | | |
+
+**Coverage:**
+- v1 requirements: 29 total
+- Mapped to phases: 0
+- Unmapped: 29 ⚠️ (pending roadmap)
+
+---
+*Requirements defined: 2026-07-15*
+*Last updated: 2026-07-15 after initial definition*
