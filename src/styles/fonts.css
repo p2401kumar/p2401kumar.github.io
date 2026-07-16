@@ -1,0 +1,38 @@
+/*
+ * fonts.css — self-hosted @font-face declarations.
+ *
+ * Hand-authored (does NOT @import any @fontsource/* package CSS — that
+ * bundles one @font-face block per language subset, which is more than
+ * this project needs; see ARCHITECTURE.md "Anti-Patterns to Avoid").
+ *
+ * Source Serif 4 (weight 500): copied unchanged from
+ *   node_modules/@fontsource/source-serif-4/files/source-serif-4-latin-500-normal.woff2
+ *
+ * Cascadia Code (weight 400): re-subset from a locally installed
+ *   C:\Windows\Fonts\CascadiaCode.ttf (not the @fontsource package) to
+ *   explicitly include U+2192 (→), which the @fontsource/cascadia-code
+ *   package's shipped "latin" subset does not cover — see 01-RESEARCH.md
+ *   Pitfall 1. Subset unicode range: U+0020-007E, U+00A0, U+00B7, U+00E9,
+ *   U+2013, U+2014, U+2192 (basic Latin + digits + nbsp + middot + é +
+ *   en/em dash + right arrow — the site's actual glyph set).
+ *
+ * Metrics-matched fallback (`size-adjust`/`ascent-override`/etc.) for both
+ * faces is generated at build time by the fontaine Vite plugin registered
+ * in astro.config.mjs — no manual fallback @font-face rules needed here.
+ */
+
+@font-face {
+  font-family: "Source Serif 4";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/source-serif-4-latin-500-normal.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Cascadia Code";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/cascadia-code-latin-400-normal.woff2") format("woff2");
+}
