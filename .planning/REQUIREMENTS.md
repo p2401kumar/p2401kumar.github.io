@@ -9,10 +9,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Editorial Shell
 
-- [ ] **SHELL-01**: Visitor sees a mono header (name · seattle · nav: work / résumé / contact) on every page
-- [ ] **SHELL-02**: Visitor reads the serif declarative thesis and a one-line bio naming Microsoft/AWS/Samsung within the first viewport
-- [ ] **SHELL-03**: Visitor can reach résumé, LinkedIn, and GitHub via quiet text links in the hero
-- [ ] **SHELL-04**: Visitor sees a footer with a live Seattle clock and "all systems operational" status line
+- [x] **SHELL-01**: Visitor sees a mono header (name · seattle · nav: work / résumé / contact) on every page
+- [x] **SHELL-02**: Visitor reads the serif declarative thesis and a one-line bio naming Microsoft/AWS/Samsung within the first viewport
+- [x] **SHELL-03**: Visitor can reach résumé, LinkedIn, and GitHub via quiet text links in the hero
+- [x] **SHELL-04**: Visitor sees a footer with a live Seattle clock and "all systems operational" status line
 - [ ] **SHELL-05**: All pages render from a single design-token source (tokens.css: graphite/copper palette, serif + sans + mono roles)
 
 ### Fig. 01 — Signature Figure
@@ -32,7 +32,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **CONT-03**: Visitor can view patents & publications (2 patents incl. Grade A1, Android Lint paper)
 - [x] **CONT-04**: Visitor can read skills as grouped prose/mono tags (no skill bars, no logo walls)
 - [x] **CONT-05**: Visitor can download the PDF résumé
-- [ ] **CONT-06**: Visitor can reach contact (mailto + LinkedIn) from header or footer
+- [x] **CONT-06**: Visitor can reach contact (mailto + LinkedIn) from header or footer
 - [x] **CONT-07**: Every displayed metric traces to the résumé via a `source` annotation in the content data (honesty gate)
 
 ### Case Studies
@@ -85,17 +85,17 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SHELL-01 | Phase 1 | Pending |
-| SHELL-02 | Phase 1 | Pending |
-| SHELL-03 | Phase 1 | Pending |
-| SHELL-04 | Phase 1 | Pending |
+| SHELL-01 | Phase 1 | Complete |
+| SHELL-02 | Phase 1 | Complete |
+| SHELL-03 | Phase 1 | Complete |
+| SHELL-04 | Phase 1 | Complete |
 | SHELL-05 | Phase 1 | Pending |
 | CONT-01 | Phase 1 | Complete |
 | CONT-02 | Phase 1 | Complete |
 | CONT-03 | Phase 1 | Complete |
 | CONT-04 | Phase 1 | Complete |
 | CONT-05 | Phase 1 | Complete |
-| CONT-06 | Phase 1 | Pending |
+| CONT-06 | Phase 1 | Complete |
 | CONT-07 | Phase 1 | Complete |
 | PLAT-01 | Phase 1 | Complete |
 | PLAT-02 | Phase 1 | Complete |
