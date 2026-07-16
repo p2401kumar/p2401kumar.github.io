@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 01
 current_phase_name: Foundation & Editorial Shell
 status: executing
-stopped_at: Completed 01-04-PLAN.md
-last_updated: "2026-07-16T23:32:24.509Z"
+stopped_at: Completed 01-05-PLAN.md
+last_updated: "2026-07-16T23:48:41.451Z"
 last_activity: 2026-07-16
 last_activity_desc: Phase 01 execution started
 progress:
   total_phases: 3
   completed_phases: 0
   total_plans: 7
-  completed_plans: 4
+  completed_plans: 5
   percent: 0
 ---
 
@@ -29,11 +29,11 @@ See: .planning/PROJECT.md (updated 2026-07-15)
 ## Current Position
 
 Phase: 01 (Foundation & Editorial Shell) — EXECUTING
-Plan: 5 of 7
+Plan: 6 of 7
 Status: Ready to execute
 Last activity: 2026-07-16 — Phase 01 execution started
 
-Progress: [██████░░░░] 57%
+Progress: [███████░░░] 71%
 
 ## Performance Metrics
 
@@ -59,6 +59,7 @@ Progress: [██████░░░░] 57%
 | Phase 01 P02 | 20min | 3 tasks | 9 files |
 | Phase 01 P03 | 15min | 3 tasks | 6 files |
 | Phase 01 P04 | 12min | 3 tasks | 3 files |
+| Phase 01 P05 | 9min | 3 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -75,6 +76,9 @@ Recent decisions affecting current work:
 - [Phase 01]: Added ProfileLink wrapper type ({href, source}) so every profile link carries honesty-gate provenance, extending CONT-07 coverage beyond metrics to links
 - [Phase 01]: SiteHeader's résumé nav link omits download attribute (only Hero's résumé link has it, per plan task-1 action text)
 - [Phase 01]: SiteFooter clock uses a plain unattributed inline script (no hydration directive), matching 01-RESEARCH.md Pattern 2 for live DOM updates without a framework runtime
+- [Phase 01]: ExperienceSection and PatentsSection reuse SystemsList's quiet editorial row idiom (mono meta line + sans description, hairline top-border) even though only SystemsList's grid was locked verbatim by the prototype — Plan 01-05 action text instructed reusing the section spacing/heading pattern for visual consistency across list-shaped sections
+- [Phase 01]: ContactSection mailto link renders as visible copy "email -> " rather than the raw address, matching the mono quiet-link idiom used elsewhere — Consistency with resume/linkedin/github link styling; address itself lives in profile.links.email.href
+- [Phase 01]: SkillsSection tags styled as bordered mono pills using existing --panel2/--hair2 tokens — 01-UI-SPEC.md specifies grouped mono tags without prescribing exact chrome; reused existing tokens rather than inventing new ones
 
 ### Pending Todos
 
@@ -94,6 +98,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-16T23:31:42.065Z
-Stopped at: Completed 01-04-PLAN.md
+Last session: 2026-07-16T23:48:41.385Z
+Stopped at: Completed 01-05-PLAN.md
 Resume file: None

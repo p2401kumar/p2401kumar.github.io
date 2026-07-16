@@ -47,7 +47,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **PLAT-02**: Site deploys to GitHub Pages automatically on push to main via GitHub Actions (withastro/action)
 - [x] **PLAT-03**: All internal links and assets respect the hosting target (`site`/`base` locked in foundation; root vs project path decided before scaffolding)
 - [ ] **PLAT-04**: Fonts are self-hosted subsetted woff2 with preload and metrics-matched fallback (no visible CLS on the hero thesis)
-- [ ] **PLAT-05**: Site is responsive from 360px mobile through desktop
+- [x] **PLAT-05**: Site is responsive from 360px mobile through desktop
 - [ ] **PLAT-06**: Every page ships title/description/OG meta, a static OG image, favicon, and sitemap
 - [ ] **PLAT-07**: Home page scores Lighthouse ≥ 90 in Performance, Accessibility, Best Practices, and SEO
 
@@ -101,7 +101,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PLAT-02 | Phase 1 | Complete |
 | PLAT-03 | Phase 1 | Complete |
 | PLAT-04 | Phase 1 | Pending |
-| PLAT-05 | Phase 1 | Pending |
+| PLAT-05 | Phase 1 | Complete |
 | FIG-01 | Phase 2 | Pending |
 | FIG-02 | Phase 2 | Pending |
 | FIG-03 | Phase 2 | Pending |
