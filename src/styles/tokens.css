@@ -1,0 +1,39 @@
+/*
+ * tokens.css — THE single source of truth for design-token literals.
+ *
+ * Every color, font stack, and (later) spacing value used anywhere on this
+ * site (CSS files, .astro component <style> blocks, and eventually the
+ * Fig. 01 canvas module via getComputedStyle) must read from a var(--token)
+ * declared here. No other file may declare a hex literal or a font stack
+ * literal — see ARCHITECTURE.md Anti-Pattern 2.
+ *
+ * Values are locked from the user-approved prototype
+ * (.planning/reference/prototype-shell-and-fig01.html) — do not invent or
+ * round any value.
+ */
+:root {
+  /* Surface colors (60/30/10 doctrine — see UI-SPEC.md Color table) */
+  --bg:#0f1216;
+  --panel:#12161c;
+  --panel2:#141a22;
+
+  /* Text colors */
+  --ink:#e8ebef;
+  --body:#aab2bd;
+  --dim:#78818d;
+  --faint:#565f6b;
+
+  /* Hairline borders */
+  --hair:#1e242d;
+  --hair2:#28303b;
+
+  /* Accent + status colors */
+  --accent:#d99163;
+  --good:#57b98a;
+  --amber:#d9a441;
+
+  /* Font stacks */
+  --mono:ui-monospace,"Cascadia Code","SF Mono",Consolas,monospace;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:"Helvetica Neue","Segoe UI",Arial,system-ui,sans-serif;
+}
