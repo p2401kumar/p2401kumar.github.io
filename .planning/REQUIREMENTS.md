@@ -31,7 +31,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **CONT-02**: Visitor can read experience entries for Microsoft, AWS, MathWorks, and Samsung with real scope and metrics
 - [ ] **CONT-03**: Visitor can view patents & publications (2 patents incl. Grade A1, Android Lint paper)
 - [ ] **CONT-04**: Visitor can read skills as grouped prose/mono tags (no skill bars, no logo walls)
-- [ ] **CONT-05**: Visitor can download the PDF résumé
+- [x] **CONT-05**: Visitor can download the PDF résumé
 - [ ] **CONT-06**: Visitor can reach contact (mailto + LinkedIn) from header or footer
 - [ ] **CONT-07**: Every displayed metric traces to the résumé via a `source` annotation in the content data (honesty gate)
 
@@ -43,9 +43,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Platform & Deploy
 
-- [ ] **PLAT-01**: Site builds as fully static Astro 7 output with zero framework runtime (Fig. 01 is a vanilla TS module)
-- [ ] **PLAT-02**: Site deploys to GitHub Pages automatically on push to main via GitHub Actions (withastro/action)
-- [ ] **PLAT-03**: All internal links and assets respect the hosting target (`site`/`base` locked in foundation; root vs project path decided before scaffolding)
+- [x] **PLAT-01**: Site builds as fully static Astro 7 output with zero framework runtime (Fig. 01 is a vanilla TS module)
+- [x] **PLAT-02**: Site deploys to GitHub Pages automatically on push to main via GitHub Actions (withastro/action)
+- [x] **PLAT-03**: All internal links and assets respect the hosting target (`site`/`base` locked in foundation; root vs project path decided before scaffolding)
 - [ ] **PLAT-04**: Fonts are self-hosted subsetted woff2 with preload and metrics-matched fallback (no visible CLS on the hero thesis)
 - [ ] **PLAT-05**: Site is responsive from 360px mobile through desktop
 - [ ] **PLAT-06**: Every page ships title/description/OG meta, a static OG image, favicon, and sitemap
@@ -94,12 +94,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CONT-02 | Phase 1 | Pending |
 | CONT-03 | Phase 1 | Pending |
 | CONT-04 | Phase 1 | Pending |
-| CONT-05 | Phase 1 | Pending |
+| CONT-05 | Phase 1 | Complete |
 | CONT-06 | Phase 1 | Pending |
 | CONT-07 | Phase 1 | Pending |
-| PLAT-01 | Phase 1 | Pending |
-| PLAT-02 | Phase 1 | Pending |
-| PLAT-03 | Phase 1 | Pending |
+| PLAT-01 | Phase 1 | Complete |
+| PLAT-02 | Phase 1 | Complete |
+| PLAT-03 | Phase 1 | Complete |
 | PLAT-04 | Phase 1 | Pending |
 | PLAT-05 | Phase 1 | Pending |
 | FIG-01 | Phase 2 | Pending |
@@ -116,6 +116,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PLAT-07 | Phase 3 | Pending |
 
 **Coverage:**
+
 - v1 requirements: 29 total
 - Mapped to phases: 29
 - Unmapped: 0 ✓

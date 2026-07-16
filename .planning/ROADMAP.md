@@ -32,11 +32,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   4. Visitor sees a footer with a live Seattle clock and "all systems operational" status line on every page
   5. Site renders responsively from 360px through desktop using self-hosted subsetted fonts with no visible CLS/FOUT on the hero, all from a single design-token source, and auto-deploys to GitHub Pages on push to main
 
-**Plans**: 7 plans
+**Plans**: 1/7 plans executed
 Plans:
 **Wave 1**
 
-- [ ] 01-01-PLAN.md — Scaffold Astro 7, lock user-root config, deploy workflow, wire remote, place résumé/favicon (wave 1)
+- [x] 01-01-PLAN.md — Scaffold Astro 7, lock user-root config, deploy workflow, wire remote, place résumé/favicon (wave 1)
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
@@ -96,6 +96,6 @@ Phases execute in numeric order: 1 → 2 → 3
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Editorial Shell | 0/7 | Not started | - |
+| 1. Foundation & Editorial Shell | 1/7 | In Progress|  |
 | 2. Fig. 01 — Signature Interactive Figure | 0/TBD | Not started | - |
 | 3. Case Studies & Launch Polish | 0/TBD | Not started | - |
