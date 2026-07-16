@@ -1,0 +1,92 @@
+---
+/**
+ * ExperienceSection.astro — "experience" (4 entries).
+ *
+ * Same quiet editorial idiom as SystemsList: mono section label, mono
+ * company/role/dates, sans scope bullets. Entries are mapped from
+ * `experience` (src/data/experience.ts), not hardcoded.
+ */
+import { experience } from "../data/experience";
+---
+
+<section class="experience">
+  <h2>experience</h2>
+  {
+    experience.map((entry) => (
+      <div class="entry">
+        <div class="meta">
+          <span class="co">
+            {entry.company} <span class="role">· {entry.role}</span>
+          </span>
+          <span class="dates">{entry.dates}</span>
+        </div>
+        <ul class="bullets">
+          {entry.bullets.map((bullet) => (
+            <li>{bullet}</li>
+          ))}
+        </ul>
+      </div>
+    ))
+  }
+</section>
+
+<style>
+  .experience {
+    padding: 64px 0 20px;
+  }
+
+  .experience h2 {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--dim);
+    font-weight: 500;
+    margin: 0 0 10px;
+  }
+
+  .entry {
+    padding: 14px 10px;
+    margin: 0 -10px;
+    border-top: 1px solid var(--hair);
+  }
+
+  .meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 18px;
+    font-family: var(--mono);
+    font-size: 13.5px;
+  }
+
+  .co {
+    color: var(--ink);
+  }
+
+  .role {
+    color: var(--dim);
+  }
+
+  .dates {
+    color: var(--faint);
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .bullets {
+    margin: 8px 0 0;
+    padding: 0 0 0 18px;
+    font-family: var(--sans);
+    font-size: 13.5px;
+    color: var(--dim);
+  }
+
+  .bullets li {
+    margin: 0 0 4px;
+  }
+
+  .bullets li:last-child {
+    margin-bottom: 0;
+  }
+</style>

@@ -1,0 +1,87 @@
+---
+/**
+ * PatentsSection.astro — "patents & publications" (2 patents + 1 publication).
+ *
+ * Same quiet editorial idiom as SystemsList/ExperienceSection: mono section
+ * label, mono title/identifier/year, sans description. Entries are mapped
+ * from `patents`/`publications` (src/data/patents.ts), not hardcoded.
+ */
+import { patents, publications } from "../data/patents";
+---
+
+<section class="patents">
+  <h2>patents & publications</h2>
+  {
+    patents.map((patent) => (
+      <div class="entry">
+        <div class="meta">
+          <span class="ti">{patent.title}</span>
+          <span class="yr">{patent.year}</span>
+        </div>
+        <span class="ds">
+          {patent.note}
+          {patent.number ? ` · ${patent.number}` : ""}
+        </span>
+      </div>
+    ))
+  }
+  {
+    publications.map((publication) => (
+      <div class="entry">
+        <div class="meta">
+          <span class="ti">{publication.title}</span>
+        </div>
+        <span class="ds">{publication.metric}</span>
+      </div>
+    ))
+  }
+</section>
+
+<style>
+  .patents {
+    padding: 64px 0 20px;
+  }
+
+  .patents h2 {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--dim);
+    font-weight: 500;
+    margin: 0 0 10px;
+  }
+
+  .entry {
+    padding: 14px 10px;
+    margin: 0 -10px;
+    border-top: 1px solid var(--hair);
+  }
+
+  .meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 18px;
+    font-family: var(--mono);
+    font-size: 13.5px;
+  }
+
+  .ti {
+    color: var(--ink);
+  }
+
+  .yr {
+    color: var(--faint);
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .ds {
+    display: block;
+    font-family: var(--sans);
+    font-size: 13.5px;
+    color: var(--dim);
+    margin-top: 3px;
+  }
+</style>
