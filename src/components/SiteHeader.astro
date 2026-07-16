@@ -1,0 +1,57 @@
+---
+/**
+ * SiteHeader.astro — mono identity + nav.
+ *
+ * Ports the approved prototype's `<header>` block verbatim (markup, spacing,
+ * type). Identity/location sourced from `profile`; nav targets work/résumé/
+ * contact per 01-UI-SPEC.md's Copywriting Contract (not the prototype's
+ * original work/notes/résumé draft).
+ */
+import { profile } from "../data/profile";
+---
+
+<header>
+  <div class="id"><b>{profile.name}</b> · {profile.location}</div>
+  <nav>
+    <a href="#work">work</a>
+    <a href={profile.links.resume.href}>résumé</a>
+    <a href="#contact">contact</a>
+  </nav>
+</header>
+
+<style>
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 30px 0 0;
+  }
+
+  .id {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--dim);
+    letter-spacing: 0.04em;
+  }
+
+  .id b {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  nav {
+    display: flex;
+    gap: 22px;
+    font-family: var(--mono);
+    font-size: 12.5px;
+  }
+
+  nav a {
+    color: var(--dim);
+    border: none;
+  }
+
+  nav a:hover {
+    color: var(--ink);
+  }
+</style>
