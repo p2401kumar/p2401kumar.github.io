@@ -27,13 +27,13 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Content Sections
 
-- [ ] **CONT-01**: Visitor can scan a selected-systems list (4 entries: date, mono artifact name, one-liner, real metric)
-- [ ] **CONT-02**: Visitor can read experience entries for Microsoft, AWS, MathWorks, and Samsung with real scope and metrics
-- [ ] **CONT-03**: Visitor can view patents & publications (2 patents incl. Grade A1, Android Lint paper)
-- [ ] **CONT-04**: Visitor can read skills as grouped prose/mono tags (no skill bars, no logo walls)
+- [x] **CONT-01**: Visitor can scan a selected-systems list (4 entries: date, mono artifact name, one-liner, real metric)
+- [x] **CONT-02**: Visitor can read experience entries for Microsoft, AWS, MathWorks, and Samsung with real scope and metrics
+- [x] **CONT-03**: Visitor can view patents & publications (2 patents incl. Grade A1, Android Lint paper)
+- [x] **CONT-04**: Visitor can read skills as grouped prose/mono tags (no skill bars, no logo walls)
 - [x] **CONT-05**: Visitor can download the PDF résumé
 - [ ] **CONT-06**: Visitor can reach contact (mailto + LinkedIn) from header or footer
-- [ ] **CONT-07**: Every displayed metric traces to the résumé via a `source` annotation in the content data (honesty gate)
+- [x] **CONT-07**: Every displayed metric traces to the résumé via a `source` annotation in the content data (honesty gate)
 
 ### Case Studies
 
@@ -90,13 +90,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SHELL-03 | Phase 1 | Pending |
 | SHELL-04 | Phase 1 | Pending |
 | SHELL-05 | Phase 1 | Pending |
-| CONT-01 | Phase 1 | Pending |
-| CONT-02 | Phase 1 | Pending |
-| CONT-03 | Phase 1 | Pending |
-| CONT-04 | Phase 1 | Pending |
+| CONT-01 | Phase 1 | Complete |
+| CONT-02 | Phase 1 | Complete |
+| CONT-03 | Phase 1 | Complete |
+| CONT-04 | Phase 1 | Complete |
 | CONT-05 | Phase 1 | Complete |
 | CONT-06 | Phase 1 | Pending |
-| CONT-07 | Phase 1 | Pending |
+| CONT-07 | Phase 1 | Complete |
 | PLAT-01 | Phase 1 | Complete |
 | PLAT-02 | Phase 1 | Complete |
 | PLAT-03 | Phase 1 | Complete |
