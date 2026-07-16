@@ -1,17 +1,41 @@
 ---
-
+/**
+ * index.astro — the single-scroll home page.
+ *
+ * Composes BaseLayout with the full editorial shell + content sections in
+ * the locked order (01-CONTEXT.md "Page structure"). Fig. 01 is left as a
+ * comment placeholder between Hero and SystemsList — Phase 2 fills it in;
+ * Phase 1 renders nothing there.
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import Hero from "../components/Hero.astro";
+import SystemsList from "../components/SystemsList.astro";
+import ExperienceSection from "../components/ExperienceSection.astro";
+import PatentsSection from "../components/PatentsSection.astro";
+import SkillsSection from "../components/SkillsSection.astro";
+import ContactSection from "../components/ContactSection.astro";
+import SiteFooter from "../components/SiteFooter.astro";
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout>
+  <div class="page">
+    <SiteHeader />
+    <Hero />
+    <!-- Fig. 01 slot — Phase 2 -->
+    <SystemsList />
+    <ExperienceSection />
+    <PatentsSection />
+    <SkillsSection />
+    <ContactSection />
+    <SiteFooter />
+  </div>
+</BaseLayout>
+
+<style>
+  .page {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 0 clamp(18px, 4vw, 32px);
+  }
+</style>
