@@ -1,0 +1,54 @@
+---
+/**
+ * ContactSection.astro — "contact" (mailto + LinkedIn, no phone).
+ *
+ * Wrapper carries id="contact" so the header nav anchor resolves. Copy/URLs
+ * sourced from `profile.links` (src/data/profile.ts). Phone number is an
+ * explicit exclusion (PDF résumé only) — never rendered here.
+ *
+ * Threat model T-01-03 (mitigate): LinkedIn opens in a new tab and carries
+ * rel="noopener noreferrer" to prevent reverse-tabnabbing.
+ */
+import { profile } from "../data/profile";
+---
+
+<section class="contact" id="contact">
+  <h2>contact</h2>
+  <div class="links">
+    <a href={profile.links.email.href}>email →</a>
+    <a href={profile.links.linkedin.href} target="_blank" rel="noopener noreferrer"
+      >linkedin →</a
+    >
+  </div>
+</section>
+
+<style>
+  .contact {
+    padding: 64px 0 20px;
+  }
+
+  .contact h2 {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--dim);
+    font-weight: 500;
+    margin: 0 0 10px;
+  }
+
+  .links {
+    display: flex;
+    gap: 20px;
+    font-family: var(--mono);
+    font-size: 13px;
+  }
+
+  .links a {
+    border-bottom: 1px solid var(--hair2);
+  }
+
+  .links a:hover {
+    border-color: var(--accent);
+  }
+</style>
