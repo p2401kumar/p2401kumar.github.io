@@ -1,0 +1,81 @@
+---
+/**
+ * Hero.astro — eyebrow, serif thesis, bio, three quiet links.
+ *
+ * Ports the approved prototype's `.hero` section verbatim (markup, spacing,
+ * type). All copy/URLs sourced from `profile` (src/data/profile.ts).
+ *
+ * Threat model T-01-03 (mitigate): linkedin/github open in a new tab and
+ * carry rel="noopener noreferrer" to prevent reverse-tabnabbing.
+ */
+import { profile } from "../data/profile";
+---
+
+<section class="hero">
+  <div class="eyebrow">
+    {profile.eyebrowPrefix}<em>{profile.accentEyebrow}</em>
+  </div>
+  <h1>{profile.thesis}</h1>
+  <p class="sub">{profile.bio}</p>
+  <div class="links">
+    <a href={profile.links.resume.href} download>résumé →</a>
+    <a href={profile.links.linkedin.href} target="_blank" rel="noopener noreferrer"
+      >linkedin →</a
+    >
+    <a href={profile.links.github.href} target="_blank" rel="noopener noreferrer"
+      >github →</a
+    >
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding: 88px 0 30px;
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+
+  .eyebrow em {
+    color: var(--accent);
+    font-style: normal;
+  }
+
+  h1 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: clamp(30px, 4.6vw, 44px);
+    line-height: 1.18;
+    letter-spacing: -0.005em;
+    color: var(--ink);
+    margin: 20px 0 18px;
+    max-width: 21ch;
+    text-wrap: balance;
+  }
+
+  .sub {
+    max-width: 58ch;
+    color: var(--body);
+    margin: 0 0 22px;
+  }
+
+  .links {
+    display: flex;
+    gap: 20px;
+    font-family: var(--mono);
+    font-size: 13px;
+  }
+
+  .links a {
+    border-bottom: 1px solid var(--hair2);
+  }
+
+  .links a:hover {
+    border-color: var(--accent);
+  }
+</style>
