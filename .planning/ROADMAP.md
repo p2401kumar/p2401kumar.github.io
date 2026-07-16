@@ -28,7 +28,15 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Visitor can scan the selected-systems list (4 entries with date/name/one-liner/metric), read experience entries for Microsoft/AWS/MathWorks/Samsung, view patents & publications, and read skills as grouped prose/mono tags — every displayed metric carries a traceable `source` annotation in the content data
   4. Visitor sees a footer with a live Seattle clock and "all systems operational" status line on every page
   5. Site renders responsively from 360px through desktop using self-hosted subsetted fonts with no visible CLS/FOUT on the hero, all from a single design-token source, and auto-deploys to GitHub Pages on push to main
-**Plans**: TBD
+**Plans**: 7 plans
+Plans:
+- [ ] 01-01-PLAN.md — Scaffold Astro 7, lock user-root config, deploy workflow, wire remote, place résumé/favicon (wave 1)
+- [ ] 01-02-PLAN.md — Design tokens, self-hosted subsetted fonts (U+2192 resolved), global CSS, BaseLayout (wave 2)
+- [ ] 01-03-PLAN.md — Typed content data modules with honesty-gate source annotations (wave 2)
+- [ ] 01-04-PLAN.md — Shell components: header, hero, footer with live Seattle clock (wave 3)
+- [ ] 01-05-PLAN.md — Content sections: systems, experience, patents, skills, contact (wave 3)
+- [ ] 01-06-PLAN.md — Home page composition, 404, build + honesty + responsive verification (wave 4)
+- [ ] 01-07-PLAN.md — Gated live deploy to GitHub Pages + live-URL verification (wave 5)
 **UI hint**: yes
 
 ### Phase 2: Fig. 01 — Signature Interactive Figure
@@ -63,6 +71,6 @@ Phases execute in numeric order: 1 → 2 → 3
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Editorial Shell | 0/TBD | Not started | - |
+| 1. Foundation & Editorial Shell | 0/7 | Not started | - |
 | 2. Fig. 01 — Signature Interactive Figure | 0/TBD | Not started | - |
 | 3. Case Studies & Launch Polish | 0/TBD | Not started | - |
