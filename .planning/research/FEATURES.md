@@ -1,173 +1,190 @@
 # Feature Research
 
-**Domain:** Personal portfolio site for a senior distributed-systems/cloud/AI engineer (recruiter/hiring-manager audience)
-**Researched:** 2026-07-15
-**Confidence:** MEDIUM (cross-corroborated across 9 web queries, no single authoritative spec exists for this domain — portfolio "best practice" is a consensus of practitioner writing, not a standards body; WCAG/OG/performance sub-claims carry higher confidence than aesthetic/structural sub-claims)
+**Domain:** Immersive single-viewport / no-scroll panel-cycling portfolio experience (v2.0 "Night Sky" re-skin of a shipped content-complete portfolio)
+**Researched:** 2026-07-17
+**Confidence:** MEDIUM (cross-corroborated across 14 web queries covering NN/g usability research, WCAG technique docs, MDN/web.dev, and Awwwards-class example sites; no single authoritative spec exists for "immersive portfolio UX" as a genre — this is practitioner consensus + accessibility standards, not a formal spec. Accessibility sub-claims (WCAG 2.1.2, prefers-reduced-motion) carry higher confidence than aesthetic/genre-convention sub-claims.)
+
+**Scope note:** This file covers ONLY the new v2.0 experience layer (night scene, constellations, panel cycling, orientation/navigation). It does not re-litigate v1 content requirements (bio, systems list, case studies, contact) — those are shipped and validated; see git history for the superseded v1 `FEATURES.md`. All v1 content becomes panel content inside this new shell.
 
 ## Feature Landscape
 
 ### Table Stakes (Users Expect These)
 
-Features recruiters/hiring managers assume exist. Missing these reads as incomplete or unprofessional.
+Features any no-scroll/deck-style immersive site needs. Missing these reads as broken, disorienting, or amateurish — and for this project's task-oriented recruiter/hiring-manager audience, disorientation is punished harder than on an exploratory consumer site.
 
 | Feature | Why Expected | Complexity | Notes |
 |---------|--------------|------------|-------|
-| One-line positioning statement above the fold | Recruiters decide in the first 6-8 seconds; a distinct, specific thesis keeps them, a generic one closes the tab | LOW | Already scoped as serif declarative thesis hero in PROJECT.md — matches research |
-| 3-6 real projects/systems with role, stack, and outcome | Table-stakes proof of "what you built, why, what happened" — GitHub shows code, portfolio shows judgment | MEDIUM | PROJECT.md's "selected systems list" (4 entries) sits at the low end of this range — fine given depth-over-breadth positioning |
-| Specific metrics per project, not adjectives | "Cut p95 latency 800ms→120ms" reliably beats "worked on backend performance" in every source reviewed | LOW | Directly satisfied by PROJECT.md's real-metric requirement (+30% reliability, −20% p99, 90% automation, etc.) |
-| Experience/employment history with scope | Establishes career trajectory and seniority signal for hiring managers scanning for level-fit | LOW | Microsoft → AWS → MathWorks → Samsung section already scoped |
-| Contact method (impossible to miss) | Table stakes — email, or equivalent, must be one click away, not buried | LOW | "pick one and make it impossible to miss" is a repeated finding |
-| Downloadable résumé (PDF) alongside the live site | PDF serves ATS/applicant-tracking pipelines (static, parseable, 2-page); the site serves humans after resume clears the filter — they are complementary, not substitutes | LOW | PROJECT.md already has this; keep the PDF and site numbers in sync (single source of truth) |
-| Links to LinkedIn/GitHub near contact info | Standard placement pattern; recruiters look for corroborating profiles | LOW | Already scoped as quiet text links in header |
-| Fast load, no broken links | A 3-second load or a 404 is read as an anti-signal and recruiters simply move on — this is punished, not just under-rewarded | MEDIUM | Directly enforced by the project's Lighthouse ≥90 constraint; treat as a release gate, not an aspiration |
-| Basic SEO/OG so the link previews well when shared | Recruiters/hiring managers pass portfolio links through Slack/LinkedIn/email — an ugly or missing preview card undercuts a first impression before the click | LOW | Already scoped; see Architecture note below for implementation specifics |
-| Mobile-responsive, keyboard-accessible | A meaningful fraction of first-touch traffic is a recruiter on a phone forwarding a link, or a hiring manager tabbing through before a call; broken mobile/keyboard UX is punished like a broken link | MEDIUM | Already scoped; canvas figure needs an explicit non-mouse/non-hover fallback (see Fig. 01 dependency below) |
+| Visible progress/orientation indicator (dots or index, e.g. "03 / 06") | Full-viewport decks hide the page length that normal scrollbars communicate for free; without an explicit indicator users can't tell how much content exists or where they are — NN/g flags "discoverability" as one of scrolljacking's chief threatened heuristics | LOW | Mono numeric index ("03/06") fits the existing infrastructure-texture type system better than plain dots and doubles as a wayfinding label; dots alone are noted as a weak mobile cue (users often don't notice them) — pair with a numeric/label cue, not dots in isolation |
+| Multiple input parity: wheel, touch/swipe, arrow keys, and a clickable index | Users arrive on trackpad, mouse wheel, touchscreen, or keyboard-only — supporting only one channel breaks the experience for a meaningful slice of visitors, and CSS scroll-snap behaves inconsistently across mouse-wheel vs. trackpad, so device-diversity testing matters even after picking a mechanism | MEDIUM | This is the single highest-craft-signal implementation detail in the genre — every award-tier example reviewed treats input parity as non-negotiable, not a stretch goal |
+| Escape hatches: browser back/forward works, deep-linkable panels, no dead-end trap | WCAG 2.1.2 "No Keyboard Trap" is Level A — any full-viewport panel/overlay must let keyboard users move focus in and out with standard keys; NN/g's scrolljacking research found altering native navigation "hijacks" a user's sense of control, generating disorientation and eroding trust | MEDIUM | URL hash fragments (`#panel-name`) are the standard static-site-compatible mechanism: `hashchange` event drives the active panel, browser back/forward walks hash history for free, and links become shareable/bookmarkable — zero server routing needed, works on GitHub Pages |
+| First-visit "how to navigate" affordance | Users frequently don't realize a page continues or that non-scroll gestures are expected; NN/g homepage-usability guidance: don't rely on users noticing a subtle visual cue with no prompt | LOW | Small, persistent, low-key hint (e.g. a mono caption "scroll / swipe / → to continue") that fades after first interaction — progressive disclosure, not a blocking tutorial modal |
+| `prefers-reduced-motion` readable fallback for the entire experience, not just Fig. 01 | This is a carried-forward v1 floor (already a project constraint) but the surface area is much larger in v2 — starfield parallax, constellation-fire animation, panel transition motion, camper glow pulse all need gating, not just the one figure | MEDIUM | CSS media query alone is insufficient: JS-driven motion (rAF loops, Web Animations API, canvas redraws) must independently check `matchMedia('(prefers-reduced-motion: reduce)')` in script; decorative motion (parallax, fireflies, pulse) should simply be disabled, while meaningful motion (constellation brightening on active panel) should become an instant/static state change that still conveys the information |
+| Full keyboard operability of panel cycling itself | Same WCAG floor already committed to for Fig. 01 in v1, now extended to the whole shell — arrow/Page-Up-Down keys must cycle panels, Tab must reach in-panel interactive content (including Fig. 01's own keyboard proxies), Escape/clear route back to an index or "classic" view | MEDIUM | Sequencing risk: Fig. 01 already owns arrow-key semantics internally (fault injection proxies) for its own panel — the outer panel-cycling keymap must not collide with Fig. 01's inner keymap when that panel is active (see Feature Dependencies) |
+| No loading spinner / preloader gate before first interaction | Preloaders on immersive sites are a well-documented anti-pattern (adds perceived latency, actively fights the project's Lighthouse ≥90 / fast-load constraint, and the whole genre exists specifically to avoid "wait for the experience" friction) | LOW | Progressive/streamed initial paint: render the static night scene immediately, then layer in canvas starfield/constellation rendering — never block first paint on JS init |
+| Mobile parity, not a degraded mobile mode | A meaningful share of recruiter link-forwarding traffic is mobile; the genre's award-tier examples all treat mobile swipe as first-class, not an afterthought — 44-48px minimum tap targets with adequate spacing, visible tappable alternative to any swipe-only gesture | MEDIUM | Reuse v1's already-proven responsive floor (360px→desktop); the new risk is specifically canvas performance on mobile GPUs and touch-vs-scroll gesture conflicts (native page pull-to-refresh/bounce fighting a custom swipe handler) |
 
 ### Differentiators (Competitive Advantage)
 
-Features that set a senior/staff-level candidate apart. Not required, but this is where the site earns "operates at our level."
+Features that make the night-sky re-skin distinctive within the genre, not merely competent. Should align with Core Value ("this person operates at our level") — these are where craft becomes visible.
 
 | Feature | Value Proposition | Complexity | Notes |
 |---------|-------------------|------------|-------|
-| Fig. 01 — live interactive systems demo | Demonstrated craft beats asserted craft; nothing in the researched corpus of senior-engineer portfolios shows a live, faithful re-enactment of the candidate's actual production system (most "interactive" portfolios are generic canvas art, not domain-accurate). This is the single biggest differentiator available and is already the design centerpiece | HIGH | Core to Core Value in PROJECT.md; must hold 60fps and degrade gracefully under `prefers-reduced-motion` (WCAG: decorative/ambient motion can trigger vestibular/migraine issues, so a static-diagram fallback is not optional polish, it's a compliance floor) |
-| Case studies with explicit Problem → Approach → Impact structure | The "Approach" section (methodology, alternatives considered, trade-offs made) is what actually signals seniority — junior portfolios show outcomes, senior ones show judgment under trade-offs. Should be skimmable in ~30 seconds for the shape, then reward a deeper read | MEDIUM | Matches PROJECT.md's 1-2 case-study pages (DynamoDB cellularization, auto-weight-away); write each with a named "trade-offs considered" subsection — this is the differentiating ingredient, not just prose about impact |
-| Patents & publications section | Extremely rare on engineer portfolios generally (not surfaced in any researched example) — for this candidate specifically it's a legitimate, factual seniority signal (Grade A1 patent, Android Lint paper) that most peer portfolios cannot show | LOW | Already scoped; keep it terse (mono, dated, one line each) to match editorial restraint rather than turning it into a second CV |
-| Footer live clock + "all systems operational" status line | Small, cheap, reinforces the infrastructure-engineer identity and the site's own "systems" framing without adding a real feature surface; a wink that only a technical audience fully reads | LOW | Already scoped; treat as a signature detail, not a functional feature — must respect reduced-motion (freeze the clock text update cadence, no flashing) |
-| Named metric in the systems list line (not just a description) | Repeated finding: a metric in the label itself out-converts a metric buried in a paragraph | LOW | Enforce this per PROJECT.md's "one-line description + real metric" format — treat the metric as a required field per system entry, not optional flavor |
+| Constellation brightening tied to active panel | Ties the ambient scene directly to navigation state rather than leaving it as disconnected decoration — the scene *responds*, which is the difference between "pretty background" and "designed system." Award-tier immersive sites (Bruno Simon, Active Theory) share this pattern of the environment reacting to navigation, just in a 3D-game idiom rather than a 2D-canvas one | MEDIUM | Implement as a state-driven visual diff (brighten star/link opacity+glow for the constellation matching the active panel's career chapter) rather than a full redraw; gate the brighten transition (not just the idle firefly/parallax motion) behind `prefers-reduced-motion` with an instant-swap fallback |
+| Subtle neural links firing quietly between constellation nodes | Reinforces the "distributed systems engineer" thesis ambiently (nodes + links = literal systems diagram made celestial) without being a literal HUD/graph gimmick — matches the project's existing "one signature motion metaphor" doctrine from v1 (Fig. 01) extended to the whole scene | HIGH | Motion-doctrine risk: v1's locked doctrine is "one moving thing per viewport" — idle link-firing must stay extremely sparse/slow so it doesn't compete with Fig. 01's beam animation when that panel is active, or with the constellation-brighten transition during panel changes |
+| Panel-aware URL hashes for shareability | Lets a recruiter/hiring manager share a direct link to, e.g., the DynamoDB case-study panel, not just the homepage — differentiator because most immersive/deck-style sites in the genre skip this (WebGL/3D-world sites like Bruno Simon's have no equivalent concept of a "panel" to link to) | LOW-MEDIUM | Straightforward given the table-stakes hash-routing requirement above — this is really "table stakes done well" more than a separate feature; treat implementation as one unit with the escape-hatch requirement |
+| Parallax depth on the starfield (subtle, layered) | Cheap way to sell "this is a real 3D-feeling night sky, not a flat wallpaper" — layered star-density planes moving at different rates on pointer/scroll input is a well-worn but still-effective depth cue | LOW-MEDIUM | Must be disabled entirely (not reduced) under `prefers-reduced-motion` — parallax is specifically named in accessibility research as harmful to users with vestibular disorders, not merely a nice-to-disable |
+| "View classic" link to a static/linear fallback of the same content | Directly answers the task-oriented-user tolerance problem NN/g's scrolljacking research surfaces: recruiters scanning for a specific fact (e.g. "does he have AWS experience") are exactly the population shown to have the least patience for guided/gated navigation | LOW | This is a genuinely differentiating choice, not table stakes, because most immersive portfolios in the genre don't offer it — for this project specifically, v1's shipped editorial shell already exists and can be repurposed as exactly this fallback view, which is close to free given the codebase state |
 
 ### Anti-Features (Commonly Requested, Often Problematic)
 
-Features that seem good but create problems for this specific site and audience. This list validates and extends the project's existing Out of Scope section.
+Features that look appealing for an immersive night-sky deck but create real problems for this project's audience and constraints. Extends the project's existing Out of Scope guardrails into the v2 experience layer specifically.
 
 | Feature | Why Requested | Why Problematic | Alternative |
 |---------|---------------|------------------|-------------|
-| Skill bars / percentage ratings ("JavaScript 85%") | Feels like a quick way to visually communicate breadth | Reads as amateur theater to the exact senior-audience this site targets; a percentage on a skill is not a verifiable claim | Prose or grouped mono tags scoped by real project context (already the plan) |
-| Tech-logo wall | Feels comprehensive, shows tool breadth | "Twenty framework icons say less than one system explained well" — logo walls are consistently named as a negative signal, not neutral | Name the specific technology inline within each system/case-study entry, where it's load-bearing to the story |
-| AI chatbot / "AI twin" | On-trend, demonstrates "AI skills" directly | Explicitly flagged as high-risk: a chatbot giving one wrong answer about the candidate's own experience damages trust faster than a typo would — and for an infra/reliability engineer, an unreliable feature about reliability is a specific irony risk | Fig. 01's live systems demo already demonstrates AI-adjacent technical range without any correctness risk; keep chatbot as a possible later `/craft` experiment, clearly labeled as such, never load-bearing for credibility |
-| Testimonials / recommendation quotes | Feels like social proof | Nothing in the research corpus flags testimonials as expected for this audience; hiring managers weight demonstrated systems and metrics far above quoted praise, and quotes read as unverifiable | Let the metrics and case-study depth carry the credibility burden instead |
-| Blog / writing section | Feels like it rounds out a "thought leader" profile | Stale-blog risk is real and immediate — an abandoned blog dated 18 months ago actively undercuts the "operates at our level, today" thesis more than having no blog at all | Already correctly deferred to v2 in PROJECT.md; LinkedIn remains the active publishing channel |
-| Analytics dashboards / visible traffic stats | Feels like it demonstrates data-mindedness | Not requested or expected by this audience; adds a surface that's about the site's own performance rather than the candidate's work, diluting focus | None needed for v1; use invisible, privacy-respecting analytics if desired for the owner's own insight, never surfaced to visitors |
-| Light theme toggle | Seems like basic accessibility/preference courtesy | Already correctly rejected in PROJECT.md — a toggle doubles the design surface (contrast, copper-accent tuning, canvas palette) for a preference not evidenced as blocking for this audience; `prefers-reduced-motion` is the accessibility feature with actual compliance weight here, not `prefers-color-scheme` | Dark-only, but do keep text contrast ratios WCAG-compliant within the single theme |
-| Overly deep / multi-level navigation | Feels organized for a "complete" site | Elite comparable portfolios (rauno.me-class) consistently favor a small number of dense sections over deep nav trees; confusing navigation costs a recruiter's limited evaluation time and is held against the candidate | Single-scroll editorial shell with a handful of named sections, exactly the locked design direction |
-| Chasing every possible SEO/marketing tactic (schema.org person markup, blog-driven content SEO, backlink building) | Feels like "doing SEO properly" | This audience arrives via a shared link (LinkedIn, email, résumé), not organic search discovery — over-investing in search SEO is effort spent on the wrong acquisition channel | Basic on-page SEO + correct OG/Twitter Card tags only (see Table Stakes); optional minimal Person/Organization JSON-LD is low-cost enough to include but not worth further investment |
+| Aggressive scroll-hijacking (overriding native scroll speed/direction/easing) | Feels like the "premium" immersive feel seen on flashy agency sites | NN/g usability research found the majority of study participants experienced disorientation from altered scroll behavior, with some believing it was a bug; it actively threatens user control, discoverability, and task success — and this project's audience is disproportionately task-oriented (recruiters scanning for facts under time pressure), the exact population shown to tolerate it least | Panel cycling via discrete, intentional inputs (wheel-tick-to-advance, explicit swipe, arrow key, dot/index click) rather than continuous scroll-speed manipulation — advance one panel per gesture, don't remap the scroll axis itself |
+| Auto-advancing panels/text (timed carousel behavior) | Feels dynamic, "keeps itself moving," reduces perceived empty/idle state | Removes user control entirely (worse than scrolljacking, which at least responds to input); a recruiter mid-read on a case-study panel having it auto-advance away is a directly hostile UX failure, and it's explicitly called out as bad practice for content-heavy carousels generally | User-driven advancement only; if an idle/ambient state is wanted, animate the *background scene* (fireflies, subtle link-fire) while leaving panel content fully static and user-controlled |
+| Motion-sickness-triggering effects: aggressive parallax, screen-shake, fast camera-style pans, spinning transitions | Feels cinematic, "wows" on first view | Parallax and vestibular-triggering motion are specifically named in accessibility literature as harmful, not just an accessibility nice-to-have to reduce — and this sits directly on top of the project's already-committed `prefers-reduced-motion` floor, so shipping it un-gated would be a regression against an existing constraint | Slow, subtle, low-amplitude motion by default (twinkle, slow drift, sparse firefly movement); reserve any stronger transition for panel-change moments only, always gated, always with an instant-cut fallback |
+| Trapping keyboard focus inside the deck / no way to Tab to browser chrome | Feels like it "protects" the immersive experience from users leaving the flow | WCAG 2.1.2 No Keyboard Trap is a Level A violation if done wrong — keyboard failures already account for ~15-20% of typical WCAG violations sitewide, and this is one of the most common regression points specifically introduced by custom full-screen-panel navigation | Standard modal-dialog focus pattern only where a true overlay exists (e.g. a lightbox); for the primary panel-cycling shell itself, focus should move predictably with panel changes but never trap — Escape/Tab must always reach a way out |
+| Breaking the browser back button (panels not represented in history/URL) | Simpler to implement — just swap DOM content on gesture, ignore routing | Silently breaks one of the most fundamental web affordances users rely on; combined with scrolljacking-style disorientation this compounds into "the page feels broken," which is punished harder than a plain, unstyled page would be for this audience | Hash-based routing (`#panel-name`) as already scoped in Table Stakes — cheap, static-site-compatible, and turns "back button" into a free feature rather than a liability |
+| Loading spinner / intro preloader before the scene is interactive | Feels like it "sets the mood" for an immersive reveal, common on agency showcase sites | Directly fights the project's Lighthouse ≥90 / fast-load constraint and this genre's own best examples avoid it; a delayed-gratification intro reads as vanity for a résumé-adjacent site where the audience wants information fast, not a mood piece | Static night-scene base paints immediately (near-zero-cost SVG/CSS gradient sky + stars); canvas-driven starfield/constellation detail layers in progressively without blocking interaction |
+| Full 3D/WebGL world navigation (Bruno-Simon-style drivable/explorable scene) | The most impressive example in the genre, tempting to emulate directly | Radically higher implementation cost (physics engine, 3D asset pipeline, WebGL competency) for a static GitHub-Pages-hosted single-contributor résumé site; also actively works against the project's locked "vanilla TS/canvas, no framework runtime" stack constraint and its recruiter-scanning-for-facts audience, who need panel content to be fast and legible, not explorable | 2D canvas starfield/constellation scene as designed (dense stars, Milky Way band, camper silhouette) with panel content as flat overlays — keep the "systems" metaphor (nodes + links) but render it in the same 2D canvas engine already proven in Fig. 01, not a new 3D stack |
+| Skip/auto-continue "connecting the dots" narrative sequencing that forces panel order | Feels like it tells a better "story" (chapter 1 → chapter 2 → ...) | Contradicts the escape-hatch requirement above and the demonstrated tolerance gap for task-oriented users; a hiring manager who wants the DynamoDB case study specifically should not be forced through Microsoft/Samsung panels first | Free-order panel index/dots + direct deep links to any panel; use *visual* career-chronology cues (constellation layout, panel order in the default index) to imply a story without enforcing it as a gate |
 
 ## Feature Dependencies
 
 ```
-Fig. 01 (signature interactive figure)
-    └──requires──> prefers-reduced-motion static-diagram fallback (WCAG floor, not optional)
-    └──requires──> keyboard-operable controls (send request / inject fault) for zero-mouse access
-    └──requires──> Performance budget (60fps, DPR cap, Lighthouse ≥90) enforced in CI
+Panel-cycling shell (wheel/swipe/keys/dots)
+    └──requires──> URL hash routing (#panel-name) for back-button + deep-link escape hatch
+    └──requires──> prefers-reduced-motion gating extended beyond Fig. 01 to the whole shell
+    └──requires──> Keyboard-input namespace negotiation with Fig. 01's existing keyboard proxies
+                       └──conflicts-if-unhandled──> Fig. 01's fault-injection arrow-key controls (v1) when Fig. 01 is the active panel
 
-Case-study pages
-    └──requires──> Selected systems list (case studies are the deep-dive of specific list entries)
-    └──enhances──> Core Value ("operates at our level") — Approach/trade-offs section is where seniority reads
+Constellation brighten-on-active-panel
+    └──requires──> Panel-cycling shell's active-panel state (single source of truth for "current panel")
+    └──requires──> prefers-reduced-motion instant-swap fallback (brighten becomes a static state, not an animated transition)
+    └──enhances──> Core Value ("operates at our level") — environment responding to navigation reads as designed, not decorative
 
-Downloadable résumé PDF
-    └──requires──> Content parity with on-site metrics (single source of truth, résumé is authoritative)
+Neural links firing (idle ambient motion)
+    └──requires──> Motion budget discipline (v1's "one moving thing per viewport" doctrine)
+    └──conflicts-if-unbudgeted──> Fig. 01's beam animation and the constellation-brighten transition, if all three run simultaneously at full intensity
 
-SEO/OG meta
-    └──requires──> A generated or authored og:image (1200x627) per key route (home, each case study)
-    └──enhances──> Every other feature's "first click" — this is what recruiters see before they land
+Canvas starfield + parallax + fireflies
+    └──requires──> requestAnimationFrame-driven render loop with layer separation (static star cache vs. dynamic firefly/glow layer)
+    └──requires──> DPR cap + batched draws (already an existing v1/Fig.01 performance constraint, now applied scene-wide)
+    └──conflicts-if-unbudgeted──> Lighthouse ≥90 / 60fps floor if the scene-wide canvas competes with Fig. 01's own canvas budget when both are visible simultaneously
 
-Patents & publications section ──enhances──> Experience section (dated, factual seniority signal)
+"View classic" static fallback link
+    └──requires──> v1's existing editorial shell content (already built — this is largely a repurposing, not new content work)
+    └──enhances──> Escape-hatch requirement and task-oriented-user tolerance (NN/g finding)
 
-Anti-feature: chatbot ──conflicts──> Core Value (restraint-as-differentiator thesis)
-Anti-feature: skill bars ──conflicts──> Skills-as-prose requirement already locked in PROJECT.md
+Anti-feature: scroll-hijacking (continuous scroll remap) ──conflicts──> Panel-cycling shell (discrete, input-parity design)
+Anti-feature: 3D/WebGL world ──conflicts──> Stack constraint (vanilla TS/canvas, no framework runtime) and existing Fig. 01 investment
 ```
 
 ### Dependency Notes
 
-- **Fig. 01 requires the reduced-motion fallback and keyboard operability before it can ship:** this is not a phase-2 nicety — WCAG 2.2 treats it as a floor, and the project's own accessibility constraint list already names both. Build the static/keyboard path alongside the animated path in the same phase, not after.
-- **Case-study pages require the selected systems list to exist first:** the list is the index; the case studies are the two entries promoted to full depth. Sequence list-and-metrics before case-study prose in the roadmap.
-- **SEO/OG enhances every acquisition path:** because this audience arrives via shared links rather than search, OG correctness has outsized leverage relative to its (low) implementation cost — it should not be deprioritized to a late "polish" phase.
-- **Anti-feature conflicts are intentional guardrails:** chatbot and skill-bars are flagged as directly undermining the locked Core Value and design decisions, not merely low-value — a future contributor proposing either should be pointed at PROJECT.md's Key Decisions and this file.
+- **Panel-cycling shell requires hash routing before it can ship responsibly:** without it, browser back/forward and shareable deep links silently break — this is a correctness requirement, not a polish item, and should be built in the same phase as the panel mechanism itself, not bolted on after.
+- **Keyboard-namespace negotiation with Fig. 01 is the sharpest new integration risk in this milestone:** v1 shipped Fig. 01 with its own keyboard proxies (send request / inject fault) as a documented accessibility floor. The outer shell's panel-cycling keymap (likely arrow keys / Page Up-Down) must either (a) only intercept panel-navigation keys when focus is *not* inside Fig. 01's canvas/controls, or (b) use a distinct keymap for panel-cycling (e.g. bracket keys or explicit next/prev buttons) so the two never collide. Flag this for deeper phase-specific research — it's exactly the kind of interaction-design edge case generic web research won't fully resolve; it needs to be worked out against the actual Fig. 01 code.
+- **Motion budget is a scene-wide constraint, not a per-feature one:** v1 already committed to "one moving thing per viewport" for Fig. 01 alone. v2 introduces at least three more potential motion sources (starfield parallax/twinkle, firefly drift, neural-link firing, constellation-brighten transitions) that now share the same viewport as Fig. 01 when its panel is active. Treat this as a single design budget to allocate across all motion sources, not five independent decisions — likely resolution is: ambient scene motion is always slow/sparse/low-amplitude, and it visually recedes (dims/pauses) rather than competing whenever a panel's own content motion (like Fig. 01's beams) is active.
+- **"View classic" is nearly free given existing v1 investment:** because the entire v1 editorial shell already exists and is content-complete, this differentiator is much cheaper for this project specifically than it would be for a greenfield immersive site — strongly recommend keeping it in scope rather than treating it as a stretch goal.
+- **Canvas performance budget is scene-wide, echoing the motion-budget note:** v1's Fig. 01 already holds a 60fps/DPR-cap/batched-draw floor for its own canvas. v2 adds a second, larger, always-visible canvas (the night scene) that now renders concurrently with Fig. 01's canvas whenever that panel is shown. Layer separation (static starfield cached/offscreen, only the dynamic layer redrawn per frame) is the standard mitigation and should be treated as required, not an optimization to defer.
 
 ## MVP Definition
 
-### Launch With (v1)
+### Launch With (v1 of this milestone — the "Night Sky" release)
 
-Minimum viable product — matches PROJECT.md's Active requirements almost exactly; research did not surface any table-stakes feature missing from that list.
+Minimum viable version of the experience layer — matches PROJECT.md's Active requirements; research did not surface a table-stakes item missing from that list, but did surface implementation-order dependencies worth calling out explicitly.
 
-- [ ] Editorial shell (header, hero thesis, one-line bio, quiet links) — first-impression table stakes
-- [ ] Fig. 01 signature interactive figure with reduced-motion + keyboard fallback — the differentiator, ships with its accessibility floor
-- [ ] Selected systems list with real metrics per entry
-- [ ] Experience section (Microsoft → AWS → MathWorks → Samsung)
-- [ ] 1-2 case-study deep-dives (DynamoDB cellularization; auto-weight-away) with explicit trade-offs/approach content
-- [ ] Patents & publications section
-- [ ] Skills as prose/grouped mono tags
-- [ ] Contact + downloadable PDF résumé
-- [ ] Footer clock + status line
-- [ ] SEO/OG meta (title, description, og:image per key route, favicon, sitemap)
-- [ ] Responsive + accessible baseline (keyboard nav, reduced-motion, focus states)
+- [ ] Persistent night scene base layer (dark ground, starfield, Milky Way, camper silhouette + glow) painting immediately on load, no preloader
+- [ ] Panel-cycling shell with input parity (wheel, touch/swipe, arrow keys) and a clickable numeric/index orientation indicator
+- [ ] URL hash routing per panel (deep-linkable, browser back/forward intact)
+- [ ] Full keyboard operability of panel cycling with an explicit, documented resolution for the Fig. 01 keyboard-namespace conflict
+- [ ] First-visit navigation affordance (fades after first interaction)
+- [ ] Constellations with active-panel brightening, budgeted against Fig. 01's existing motion allowance
+- [ ] `prefers-reduced-motion` gating extended across every new motion source (parallax, fireflies, link-firing, brighten transitions), not just Fig. 01
+- [ ] All v1 content (systems, experience, patents, skills, contact, résumé link, both case studies) present as panels with no content loss
+- [ ] Fig. 01 embedded as its own panel with v1's interaction/a11y floors intact
+- [ ] Mobile parity: touch targets, swipe gesture with visible alternative, canvas performance validated on a mid-tier mobile GPU
+- [ ] Lighthouse ≥90 maintained across all categories on the new shell
 
-### Add After Validation (v1.x)
+### Add After Validation (v1.x of this milestone)
 
-- [ ] Additional case studies beyond the initial 2, if the first two demonstrably hold attention (add once real usage signal — e.g., time-on-page or recruiter feedback — justifies the writing effort)
-- [ ] Minimal Person/Organization JSON-LD structured data (low cost, defer only because it's genuinely optional, not because it's risky)
-- [ ] Expanded systems list entries beyond the initial 4, if new project work produces new real metrics
+- [ ] "View classic" static fallback link surfaced prominently (reusing the existing v1 editorial shell) — recommend including at launch given near-zero incremental cost, but sequence after the core deck if time-constrained
+- [ ] Panel-aware Open Graph previews (share a specific case-study panel with a matching preview), if per-panel sharing turns out to matter beyond the base hash-routing requirement
 
-### Future Consideration (v2+)
+### Future Consideration (beyond this milestone)
 
-- [ ] Blog/writing section — defer until there's a sustainable cadence commitment; a stale dated section is a worse signal than no section (already correctly deferred in PROJECT.md)
-- [ ] `/craft` chatbot experiment — only as an explicitly labeled, non-load-bearing side experiment, never presented as authoritative about the candidate's own experience
-- [ ] Light theme — defer indefinitely; no evidence surfaced that this audience needs it, and it dilutes the committed visual system
+- [ ] Neural-link firing patterns that vary by career narrative (e.g., links fire in a path tracing career progression) — defer until the base brighten-on-active-panel mechanic is proven not to compete with Fig. 01's own motion
+- [ ] Deeper parallax/depth layering beyond a single subtle layer — defer until base performance budget (scene canvas + Fig. 01 canvas concurrently) is validated on real mobile hardware
+- [ ] Full 3D/WebGL scene upgrade — explicitly out of scope; conflicts with locked stack constraint (see Anti-Features)
 
 ## Feature Prioritization Matrix
 
 | Feature | User Value | Implementation Cost | Priority |
 |---------|------------|---------------------|----------|
-| Editorial shell + hero thesis | HIGH | LOW | P1 |
-| Fig. 01 interactive figure | HIGH | HIGH | P1 |
-| Selected systems list w/ metrics | HIGH | LOW | P1 |
-| Experience section | HIGH | LOW | P1 |
-| Case-study deep-dives (2) | HIGH | MEDIUM | P1 |
-| Contact + résumé PDF | HIGH | LOW | P1 |
-| SEO/OG meta | MEDIUM | LOW | P1 |
-| Accessibility baseline (keyboard, reduced-motion, focus) | HIGH | MEDIUM | P1 |
-| Patents & publications | MEDIUM | LOW | P1 |
-| Footer clock/status line | LOW | LOW | P2 |
-| Additional case studies (3rd+) | MEDIUM | MEDIUM | P2 |
-| JSON-LD structured data | LOW | LOW | P3 |
-| Blog section | LOW (stale-risk if half-committed) | HIGH (ongoing) | P3 / deferred |
-| `/craft` chatbot experiment | LOW-MEDIUM (risk-adjusted) | MEDIUM | P3 / deferred |
+| Panel-cycling shell w/ input parity | HIGH | HIGH | P1 |
+| URL hash routing / deep links / back button | HIGH | LOW-MEDIUM | P1 |
+| Orientation indicator (numeric index) | HIGH | LOW | P1 |
+| Keyboard operability + Fig. 01 namespace resolution | HIGH | MEDIUM-HIGH | P1 |
+| prefers-reduced-motion scene-wide gating | HIGH | MEDIUM | P1 |
+| Night scene base layer (starfield, Milky Way, camper) | HIGH | MEDIUM | P1 |
+| First-visit navigation hint | MEDIUM | LOW | P1 |
+| Constellation brighten-on-active-panel | HIGH (core differentiator) | MEDIUM | P1 |
+| Mobile touch parity + canvas perf validation | HIGH | MEDIUM | P1 |
+| Neural links firing (idle ambient) | MEDIUM | HIGH | P2 |
+| Subtle parallax depth | MEDIUM | LOW-MEDIUM | P2 |
+| "View classic" fallback link | MEDIUM-HIGH (cheap given v1 reuse) | LOW | P2 |
+| Panel-aware OG previews | LOW-MEDIUM | MEDIUM | P3 |
+| Full 3D/WebGL upgrade | LOW (conflicts with constraints) | VERY HIGH | Rejected |
 
 **Priority key:**
-- P1: Must have for launch
-- P2: Should have, add when possible
-- P3: Nice to have, future consideration
+- P1: Must have for this milestone's launch
+- P2: Should have, add when possible within the milestone
+- P3: Nice to have, likely deferred past this milestone
 
 ## Competitor Feature Analysis
 
-| Feature | Elite comparables (rauno.me / antfu.me / paco.me class) | Typical bootcamp/generic dev portfolio | Our Approach |
-|---------|----------------------------------------------------------|------------------------------------------|--------------|
-| Navigation depth | Single-scroll or dock-style, few dense sections, minimal chrome | Multi-page nav bar with many top-level items (About, Skills, Projects, Blog, Contact, Testimonials) | Single-scroll editorial shell, handful of named sections — matches elite pattern, already locked |
-| Project presentation | Feed/list linking to dedicated, deep project pages | Grid of cards with tech-logo badges, live-demo/GitHub buttons, thin one-line descriptions | Systems list (index) + 2 promoted case-study deep-dives with problem/approach/impact — depth over breadth |
-| Signature interaction | Often one strong personal motion/interaction signature (varies per site, but restraint is the pattern — one thing done well, not many) | Often generic scroll animations, parallax hero, particle backgrounds with no domain meaning | Fig. 01 — one signature figure, domain-accurate (mirrors real AWS work), matches the "one motion metaphor" pattern rather than decorative effects |
-| Skills presentation | Prose or minimal tags, rarely bars | Percentage skill bars, radar charts, logo walls | Prose/grouped mono tags — matches elite pattern, explicitly avoids the generic anti-pattern |
-| Resume/CV | Typically a simple, findable link, not always a prominent PDF button | Sometimes buried or absent entirely | Prominent PDF download alongside quiet contact links — matches best-practice finding of visible, labeled "Resume (PDF)" placement |
+| Feature | Award-tier immersive/3D sites (Bruno Simon, Active Theory, OHZI, Obys) | Typical scrollytelling/narrative sites (Apple product pages, agency case studies) | Our Approach |
+|---------|---------------------------------------------------------------------|-------------------------------------------------------------------------------------|--------------|
+| Navigation mechanism | Full 3D world exploration (drive/fly), near-zero HTML chrome, in-world affordances (floor tiles, walls) | Scroll-position-driven section transitions ("sticky" sections with an internal 0→1 progress value) rather than literal scroll-speed hijacking; native scroll preserved | Discrete panel-cycling via wheel-tick/swipe/key/dot-click — closer to a "deck" than either scroll-driven storytelling or full 3D exploration, chosen for stack-constraint fit (2D canvas, no WebGL) and task-oriented-user tolerance |
+| Orientation cue | Minimal/none (in-world visual landmarks substitute) | Often none explicit — relies on section pacing/length and occasional page controls; not consistently dot-based even on flagship examples | Explicit numeric index + clickable dots, prioritizing recruiter/hiring-manager orientation needs over pure aesthetic minimalism |
+| Escape hatch | None typically offered — the 3D world *is* the site | Standard browser scroll/back always available since native scroll isn't hijacked | Deep-linkable hash-routed panels + a "view classic" static fallback — stronger escape-hatch commitment than either comparison class, driven by this project's task-oriented audience |
+| Ambient/environment reactivity | Environment often static backdrop to the interactive foreground (Bruno Simon's world doesn't change based on "progress") | Rare — sections are typically independent, not cumulative/reactive to a persistent scene | Constellation brighten-on-active-panel makes the persistent scene state-reactive to navigation — a meaningful differentiator versus both comparison classes |
+| Implementation stack | WebGL/Three.js, often a physics engine | CSS/JS scroll-timeline techniques, sometimes GSAP ScrollTrigger-class libraries | 2D canvas (proven in Fig. 01), vanilla TS, no new runtime dependency — deliberately narrower stack than either comparison class per locked project constraints |
 
 ## Sources
 
-- [Software Engineer Portfolio Website: 10 Best Examples](https://sitesplaced.com/blog/best-portfolio-website-for-software-engineers)
-- [The Complete Software Engineer Portfolio Guide + 24 Examples](https://careerfoundry.com/en/blog/web-development/software-engineer-portfolio/)
-- [Beautiful Portfolio Sites](https://dpnkr.in/beautiful-portfolio-sites)
-- [Rauno Freiberg | Killer Portfolio](https://www.killerportfolio.com/by/rauno-freiberg)
-- [How to Write an Engineering Case Study That Converts Prospects](https://jonjachura.com/2025/09/02/writing-engineering-case-study-that-converts/)
-- [Guide to Portfolio Case Studies | InfluenceFlow](https://influenceflow.io/resources/guide-to-portfolio-case-studies-showcase-your-work-land-more-opportunities-in-2026/)
-- [Optimize Your Portfolio for Search | AgentKit SEO](https://agentkit-seo.github.io/playbooks/web-portfolio/)
-- [12 Essential Open Graph Meta Tags for Facebook and Twitter](https://neilpatel.com/blog/open-graph-meta-tags/)
-- [Design accessible animation and movement with code examples](https://blog.pope.tech/2025/12/08/design-accessible-animation-and-movement/)
-- [WCAG 2.1.1 Keyboard Accessibility: Requirements, Testing & Implementation Guide](https://www.uxpin.com/studio/blog/wcag-211-keyboard-accessibility-explained/)
-- [WebAIM: Keyboard Accessibility](https://webaim.org/techniques/keyboard/)
-- [How Recruiters and Hiring Managers Actually Look at Your Portfolio](https://blog.opendoorscareers.com/p/how-recruiters-and-hiring-managers-actually-look-at-your-portfolio)
-- [Why Your Portfolio Isn't Getting You Developer Interviews and How to Fix It](https://pantheonuk.org/why-your-portfolio-isnt-getting-you-developer-interviews-and-how-to-fix-it/)
-- [How to Add a Portfolio Link to Your Resume | UseResume](https://useresume.ai/blog/posts/how-to-add-a-portfolio-to-your-resume)
-- [Link Your Portfolio in the Resume the right way – Tiiny Host Blog](https://tiiny.host/blog/link-portfolio-in-resume/)
-- [Working With Web Performance Budgets | DebugBear](https://www.debugbear.com/blog/working-with-performance-budgets)
-- [Optimizing Web Vitals using Lighthouse | web.dev](https://web.dev/articles/optimize-vitals-lighthouse)
-- Prior project research corpus (referenced in PROJECT.md): 4-agent parallel research on AI-infra design language, devtools motion grammar, elite engineer portfolios (rauno.me/paco.me/antfu.me), canvas technique catalog
+- [Best Scroll Websites — Awwwards](https://www.awwwards.com/websites/scrolling/)
+- [Immersive Website Examples 2026: A Curated Breakdown](https://metabole.studio/en/blog/immersive-website-examples)
+- [Bruno Simon Portfolio Case Study — Awwwards](https://www.awwwards.com/brunos-portfolio-case-study.html)
+- [Bruno Simon Portfolio Case Study — Medium](https://medium.com/@bruno_simon/bruno-simon-portfolio-case-study-960402cc259b)
+- [Scrolljacking 101 — Nielsen Norman Group](https://www.nngroup.com/articles/scrolljacking-101/)
+- [Scrolljacking and Accessibility: Are we Breaking the Web? — SitePoint](https://www.sitepoint.com/scrolljacking-accessibility/)
+- [Avoid scrolljacking — Webflow Accessibility Checklist](https://webflow.com/accessibility/checklist/task/avoid-scrolljacking)
+- [Scrollytelling: complete guide for premium narrative websites — Metabole](https://metabole.studio/en/blog/scrollytelling)
+- [Carousel Usability: Designing an Effective UI for Websites with Content Overload — Nielsen Norman Group](https://www.nngroup.com/articles/designing-effective-carousels/)
+- [Keyboard Navigation Patterns for Complex Widgets — UXPin](https://www.uxpin.com/studio/blog/keyboard-navigation-patterns-complex-widgets/)
+- [How Keyboard Traps Impact Web Accessibility — The A11Y Collective](https://www.a11y-collective.com/blog/keyboard-trap/)
+- [WCAG 2.1.2: Allow keyboard users to move focus freely](https://wcag.dock.codes/documentation/wcag212/)
+- [The 2025 TestParty Guide to WCAG 2.1.2 – No Keyboard Trap](https://testparty.ai/blog/wcag-2-1-2-no-keyboard-trap-2025-guide)
+- [Design accessible animation and movement with code examples — Pope Tech](https://blog.pope.tech/2025/12/08/design-accessible-animation-and-movement/)
+- [C39: Using the CSS prefers-reduced-motion query to prevent motion — W3C WAI](https://www.w3.org/WAI/WCAG22/Techniques/css/C39)
+- [prefers-reduced-motion: Sometimes less movement is more — web.dev](https://web.dev/articles/prefers-reduced-motion)
+- [Respecting Users' Motion Preferences — Smashing Magazine](https://www.smashingmagazine.com/2021/10/respecting-users-motion-preferences/)
+- [fullPage.js Best Alternatives — Alvaro Trigo's Blog](https://alvarotrigo.com/blog/fullpage-best-alternative/)
+- [How to Make Snapping Scroll Sections with CSS Scroll-Snap — Isotropic](https://isotropic.co/css-scroll-snap-tutorial/)
+- [5 Touch-Friendly Navigation Design Tips For Mobile Success](https://williamsmedia.co/touch-friendly-navigation-design)
+- [Mobile Navigation Design: 8 Types, Examples & Best Practices — UXPin](https://www.uxpin.com/studio/blog/mobile-navigation-examples/)
+- [Using Hashed vs. Non-Hashed URL Paths in Single Page Apps — Bits and Pieces](https://blog.bitsrc.io/using-hashed-vs-nonhashed-url-paths-in-single-page-apps-a66234cefc96)
+- [Efficient Animations with requestAnimationFrame — Treehouse Blog](https://blog.teamtreehouse.com/efficient-animations-with-requestanimationframe)
+- [Optimising a canvas animation — Remy Sharp](https://remysharp.com/2015/07/13/optimising-a-canvas-animation)
+- [HTML5 Canvas Optimize Animation Performance — Konva docs](https://konvajs.org/docs/performance/Optimize_Animation.html)
+- [Astro Kit NASA UI/UX Design Case Study — Fuselab Creative](https://fuselabcreative.com/our-projects/astro-kit/)
+- [Figures in the Sky — Visual Cinnamon](https://www.visualcinnamon.com/portfolio/figures-in-the-stars/)
+- [113 Design Guidelines for Homepage Usability — Nielsen Norman Group](https://www.nngroup.com/articles/113-design-guidelines-homepage-usability/)
+- [Learning from Apple - Scrolling Website Interface — Black Raven](https://blackraven.digital/learning-from-apple-scrolling-website-interface/)
+- Prior project research corpus referenced in PROJECT.md (v1): 4-agent parallel research on AI-infra design language, devtools motion grammar, elite engineer portfolios, canvas technique catalog — carried forward as background context for motion-doctrine consistency
 
 ---
-*Feature research for: Senior distributed-systems/cloud/AI engineer portfolio*
-*Researched: 2026-07-15*
+*Feature research for: Immersive single-viewport night-sky portfolio experience layer (v2.0 milestone)*
+*Researched: 2026-07-17*

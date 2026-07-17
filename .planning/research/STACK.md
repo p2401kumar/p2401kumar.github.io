@@ -1,8 +1,14 @@
 # Stack Research
 
-**Domain:** High-craft static portfolio site (Astro → GitHub Pages) with one signature interactive canvas figure
-**Researched:** 2026-07-15
-**Confidence:** MEDIUM-HIGH (core Astro/GitHub Pages facts cross-checked against official docs via two independent fetches; long-tail tooling picks are MEDIUM — no context7/curated-registry MCP was available in this environment, all findings came from live web search + WebFetch against official domains, so treat exact patch versions as "verify at build time," not gospel)
+**Domain:** Immersive canvas night-sky presentation layer + no-scroll panel deck, layered onto an existing Astro 7 static site
+**Researched:** 2026-07-17
+**Confidence:** MEDIUM — cross-verified against MDN and multiple independent sources for wheel-event/scroll-snap/canvas-layering claims (websearch, no context7/curated-registry MCP available this run); the Milky Way compositing recipe specifically is a LOW-confidence synthesis from general Canvas2D gradient/pattern primitives, not a directly-sourced authoritative technique (flagged below)
+
+> **Scope note:** This supersedes the v1.0 `STACK.md` for the v2.0 "Night Sky" milestone. It covers ONLY the new features (night scene, panel deck, constellations); it does not re-research Astro/GitHub Pages/fonts/sitemap, which remain validated from v1.0 (see `.planning/PROJECT.md` "Validated" requirements) and are carried forward unchanged.
+
+## Bottom line
+
+**No new runtime npm dependencies are needed.** Every v2.0 feature (starfield, Milky Way band, fireflies, silhouette, constellations, no-scroll panel deck) is achievable with the Web Platform APIs this project already uses in `src/lib/fig01/` — Canvas2D, `requestAnimationFrame`, `getComputedStyle`-sourced tokens, plain CSS — plus one new hand-authored inline SVG asset. The only "stack decision" here is architectural (how to structure the new modules), not a package to `npm install`.
 
 ## Recommended Stack
 
@@ -10,154 +16,96 @@
 
 | Technology | Version | Purpose | Why Recommended |
 |------------|---------|---------|-----------------|
-| **Astro** | `^7.0` (7.0.9 latest as of 2026-07-13; requires **Node.js ≥ 22.12**) | Static site generator / component framework | Zero-JS-by-default output matches the "no framework runtime" constraint exactly. Astro 7.0 (June 2026) rewrote the core compiler in Rust — 15–61% faster builds — and stabilized route caching; none of that matters much for a ~6-page site, but it means you're not adopting a stagnant tool. Content Collections (stable since v5, now on the Content Layer API) give typed frontmatter for the 1–2 case-study pages and the "selected systems" list without a CMS. `output: 'static'` (the only mode GitHub Pages supports) is Astro's default. |
-| **TypeScript** | `^5.7`+ (whatever `astro`'s peer range pulls; do not pin below Astro's own floor) | Type safety for content schemas + the canvas module | Astro ships first-class `.ts`/`.astro` TS support with zero config. The canvas demo (Fig. 01) is the one piece of real interactive logic on the site — typed state machines (node/beam/fault types) are worth it there even though the rest of the site is close to zero script. |
-| **GitHub Actions + GitHub Pages (Actions deployment mode, not the legacy branch-based mode)** | `withastro/action@v6`, `actions/checkout@v7`, `actions/deploy-pages@v5` | Build + deploy pipeline | This is Astro's own officially documented workflow (docs.astro.build/en/guides/deploy/github/), fetched and cross-verified twice. `withastro/action` auto-detects your package manager from the lockfile, runs the build, and uploads the Pages artifact; `actions/deploy-pages` then publishes it. This replaces hand-rolling `npm ci && npm run build && actions/upload-pages-artifact` — less to maintain, and it's what Astro's own docs point to as "the recommended way to deploy to GitHub Pages." |
+| **Canvas2D API** (native, no library) | Web Platform, universal support | Starfield, Milky Way band, fireflies, constellation nodes/links | Already the project's proven rendering surface (`src/lib/fig01/render.ts`) — single-rAF, DPR-capped, token-driven, and already hit the 60fps/Lighthouse ≥90 floor at production quality. Element counts here (a few hundred stars, a few dozen fireflies, ~4 constellation clusters of ~5-8 nodes each) are two to three orders of magnitude below where WebGL's throughput advantage starts to matter — see "Alternatives Considered." |
+| **Inline SVG (hand-authored)** | n/a (Web Platform) | Camper-car silhouette + single warm copper glow | Static, art-directed vector art belongs in SVG, not procedural canvas paths: crisp at every DPR with zero rasterization cost every frame, trivially hand-tweakable (unlike canvas path coordinates), and the "single warm glow" is a CSS `filter: drop-shadow()` / radial-gradient pseudo-element with one slow `@keyframes` opacity pulse — satisfies the "one moving thing per viewport" motion doctrine for near-zero cost. Mirrors the project's existing preference for plain CSS/token-driven styling over canvas wherever the content isn't per-frame data. |
+| **Vanilla TypeScript state machine** (new project-authored module, no library) | project code | No-scroll full-viewport panel deck (wheel/swipe/keys/dots) | The requirement is explicitly "no page scroll" — not "hide the scrollbar." A hand-rolled index-based controller (panels `position: fixed`, CSS-transition crossfade driven by a `data-active` swap) gives full authorial control over transition timing/choreography, which real document scrolling (even `scroll-snap`) cannot guarantee. This is the same shape of problem `src/lib/fig01/interactions.ts` already solved (`wireKeyboard`, `wirePointer`, `wireButtons`, a debounce/cooldown gate) — same author, same codebase convention, no new paradigm. |
+| **CSS custom properties + transitions** (extend existing `tokens.css`) | n/a | Panel crossfade, glow pulse, dot-nav active state, constellation-brighten opacity | Zero-JS-by-default constraint: anything that's a discrete state change (panel visible/hidden, dot active/inactive, glow pulse) belongs in CSS transitions/`@keyframes`, not a JS rAF tween. Reserve the rAF loop for genuinely continuous per-frame canvas work (star twinkle, firefly drift, beam travel). |
 
 ### Supporting Libraries
 
 | Library | Version | Purpose | When to Use |
 |---------|---------|---------|-------------|
-| `@astrojs/sitemap` | `^3.7` (3.7.3 latest, Astro-core-maintained) | Auto-generates `sitemap-index.xml` / `sitemap-0.xml` at build time | Always — one requirement is explicit ("sitemap"). Requires `site` to be set in `astro.config.mjs` (see below); zero runtime cost since it only runs at build. |
-| `@fontsource-variable/<font>` **or manually subsetted `.woff2`** | latest on npm (fontsource packages are per-font, versioned independently) | Self-hosted font files with no CDN dependency | Use **manual subsetting** (see rationale below) for the serif display face and mono face, since the glyph set is small and fixed (Latin + numerals + a handful of symbols: `·`, arrows for the beam diagram, etc.) and file-size control matters for a Lighthouse-90+ target. Fall back to Fontsource only if the chosen open-source face isn't easily subsettable in-house or you want faster iteration during design lock-in. |
-| `pyftsubset` (fonttools) or `glyphhanger` | fonttools ≥ 4.x (Python) | Font subsetting to woff2 | One-time build step (not part of the Astro build graph) — run manually or as an npm `postinstall`/pre-commit script, commit the resulting `.woff2` files to `public/fonts/`. Don't wire live subsetting into the Astro build; it adds a Python dependency to CI for no benefit on a site whose fonts never change. |
-| `astro-og-canvas` **or a single hand-authored static OG image** | `^0.6` (astro-og-canvas) | Open Graph / social preview image | GitHub Pages only serves static output (`output: 'static'`), so any *dynamic* OG generation (Satori/`@vercel/og`/Playwright screenshots) must run **at build time**, not as a server endpoint — Astro's server-endpoint OG examples assume `output: 'server'`/SSR, which Pages cannot do. Given this site has ~4–6 pages total, prefer **one bespoke, hand-designed OG image** matching the tinted-graphite/copper system (reuse the Fig.01 aesthetic as a static frame) over wiring in Satori for a handful of pages — less moving parts, guaranteed on-brand output, no extra build dependency. Revisit `astro-og-canvas` only if the case-study count grows enough to justify automation. |
-| `sharp` | pulled in automatically by `astro:assets` | Image optimization (resume photo, OG image, any raster assets) | Astro uses `sharp` under the hood for its built-in `<Image />`/`astro:assets` pipeline by default on Node-based builds (GitHub Actions runner is Node, so this is free). Use `<Image />` for any raster imagery; skip it entirely for the canvas figure, which is pure vector/procedural drawing, not an image asset. |
-| `astro/tsconfigs/strict` | bundled with `astro` | Base `tsconfig.json` | Extend `astro/tsconfigs/strict` (not `strictest`, which is often overkill for a content-driven site and fights `.astro` frontmatter ergonomics). Adds `strict`, `strictNullChecks`, `noUnusedLocals`, `noUnusedParameters`. |
-| `astro check` (via `@astrojs/check` + `typescript`) | bundled | CI type-checking of `.astro` + `.ts` files | Run as a CI step (or pre-commit) before `astro build`; catches template-level type errors the TS compiler alone won't see. |
+| *(none required by default)* | — | — | The recommended path below needs zero new `npm install` entries. |
+| `simplex-noise` (optional, ~1-2KB min+gz) | latest on npm if adopted | Higher-quality procedural texture for the Milky Way band | **Only if** the default scatter-dots + layered-gradient technique (see Architecture notes below) looks visibly flat/banded once prototyped against the real dark-graphite background. This is small enough not to violate the project's zero-heavy-dependency posture, but treat it as a fallback, not the default — try the zero-dependency version first. |
 
 ### Development Tools
 
 | Tool | Purpose | Notes |
 |------|---------|-------|
-| **Biome** | Formatting + linting (JS/TS/JSON/CSS, and — as of Biome 2.5 — `.astro` frontmatter/lint rules) | Recommended for greenfield 2026 Astro projects over the ESLint+Prettier combo: single Rust-based toolchain, one config file, faster CI. `.astro` support is newer/narrower than Prettier's, so if you hit gaps formatting `.astro` markup specifically, layer in `prettier` + `prettier-plugin-astro` for just that file type rather than reverting the whole toolchain. |
-| `prettier` + `prettier-plugin-astro` | Fallback/companion formatter for `.astro` files if Biome's Astro support proves too experimental | Official Astro-maintained plugin; the VS Code Astro extension itself uses this combo, so it's the safest choice if Biome's Astro formatting misbehaves on your specific markup. |
-| Astro official VS Code extension | Editor `.astro` syntax highlighting, IntelliSense, TS plugin auto-wiring | Not required for CI but strongly recommended for local dev — auto-installs the Astro TS plugin so editor and `astro check` stay in sync. |
-| `npm create astro@latest -- --template minimal` | Project scaffold | Start from the `minimal` template (empty `src/pages/index.astro`, no starter blog cruft) rather than the blog template — this project has a bespoke shell, not a blog layout, and stripping starter content wastes a step. |
+| *(none new)* | — | Existing Biome + `astro check` + `astro/tsconfigs/strict` cover new `.ts`/`.astro` files with no config changes. No new build step, no new CI step. |
 
 ## Installation
 
 ```bash
-# Scaffold (Node >= 22.12 required by Astro 7)
-npm create astro@latest . -- --template minimal --typescript strict
-
-# Core integrations
-npm install @astrojs/sitemap
-
-# Dev dependencies
-npm install -D @biomejs/biome prettier prettier-plugin-astro
-
-# One-time font tooling (not a runtime/build dependency — used to produce the woff2 files you commit)
-pip install fonttools brotli   # or: npm install -g glyphhanger (needs a local Chromium for glyphhanger)
+# No new runtime dependencies required for v2.0 Night Sky.
+# If Milky Way texture quality demands it during prototyping (optional, evaluate first):
+npm install simplex-noise
 ```
 
-`astro.config.mjs` (GitHub Pages project-site shape — adjust if the site takes over the user root):
+## Architecture integration notes (how this plugs into the existing fig01 pattern)
 
-```js
-import { defineConfig } from 'astro/config';
-import sitemap from '@astrojs/sitemap';
-
-export default defineConfig({
-  site: 'https://p2401kumar.github.io',
-  // Omit `base` entirely if deploying to the user root (p2401kumar.github.io).
-  // Set base: '/portfolio' (repo name) only if deploying as a project site under that root.
-  trailingSlash: 'never',
-  integrations: [sitemap()],
-});
-```
-
-`.github/workflows/deploy.yml`:
-
-```yaml
-name: Deploy to GitHub Pages
-on:
-  push:
-    branches: [main]
-  workflow_dispatch:
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-      - uses: withastro/action@v6
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v5
-```
-
-In the repo's **Settings → Pages**, set Source to "GitHub Actions" (not "Deploy from a branch") — this is required for `actions/deploy-pages` to work at all.
+- **Mirror the fig01 module skeleton** for the new engine, e.g. `src/lib/nightsky/{tokens,model,render,interactions,index}.ts`, with the same contract: `index.ts` exports one `initNightSky(root)` that wires everything and returns a teardown function, exactly like `initFig01(root)`.
+- **Extract and share, don't duplicate, the DPR/rAF/token-cache utilities.** `getDpr()`, `stopAnimationLoop()`-style rAF driver, and the `getComputedStyle`-once token-reading pattern (`fig01/tokens.ts`) are generic enough to lift into a small shared `src/lib/canvas-shared/` (or similar) module both `fig01` and `nightsky` import — avoids two independent rAF loops competing for frame budget, which the research below flags as a real perf risk once you have 2-3 canvas layers running concurrently.
+- **One shared rAF driver for the whole page**, not one per feature. The night sky's twinkle/firefly/constellation-beam updates and Fig. 01's beam animation (when its panel is active) should tick off a single `requestAnimationFrame` call site, each doing its own cheap per-layer update — matches the "single rAF loop" pattern the codebase already documents as a hard rule.
+- **Layer the rendering by update frequency, not by visual concept** (this is the single most important perf lesson from the research below):
+  - *Layer 0 — draw once, blit every frame:* deep/background starfield + the Milky Way band, pre-rendered to an offscreen canvas (or a hidden `<canvas>`/`ImageBitmap`) once at init and on resize, then `drawImage`'d into the visible canvas each frame (or simply left as its own static, never-redrawn `<canvas>` layer under the animated one). This is the same "static grid dots vs. animated beams" split fig01's `render.ts` already uses.
+  - *Layer 1 — SVG, CSS-driven only:* the camper silhouette + copper glow. Never touches the rAF loop.
+  - *Layer 2 — redrawn every frame, small element count:* a few dozen twinkling foreground stars, a few dozen fireflies, and the constellation nodes/links (which brighten based on active panel and occasionally "fire" a beam along an edge). All three are the same class of problem (a scattered set of glowing points with an alpha function of time) and can share one drawing routine parameterized by count/color/motion.
+- **Constellation graph = adapt, don't reinvent, `fig01/model.ts`.** `advanceBeams`/`spawnBeam`/route geometry already implement exactly "a point of light traveling along a route that fires occasionally" — that is a neural link. Treat each named career chapter as a node cluster and reuse the beam-travel math for "links that occasionally fire," rather than building a second animation system from scratch.
+- **Panel controller exposes a plain callback** (`onPanelChange(index: number) => void`), the same DOM-root-plus-plain-function wiring style as `initFig01(root)` — the night-scene engine subscribes to it to brighten the active panel's constellation. No event bus/pub-sub library needed for 4-6 panels.
+- **Reduced motion carries forward the existing doctrine**: `prefers-reduced-motion` should (a) freeze twinkle/firefly/beam animation to a static single frame, exactly as fig01 already does, and (b) make panel transitions an instant cut instead of an animated crossfade.
+- **New design tokens needed in `tokens.css`**, not hardcoded in canvas/TS: night-sky-specific colors (deep-space near-black, star white/blue-white, Milky Way tint, firefly warm amber) should be added as `:root` custom properties and read once via the same `getTokens()`-style pattern fig01 uses — continues the "never a hex literal in a render module" rule.
 
 ## Alternatives Considered
 
 | Recommended | Alternative | When to Use Alternative |
-|-------------|-------------|--------------------------|
-| Astro | Next.js (static export) | Only if you needed React Server Components, a framework-native image CDN, or planned client-heavy interactivity across many pages. This project has exactly one interactive island (Fig. 01) and everything else is prose/layout — shipping React's runtime for that is pure overhead against the "zero-JS-by-default" constraint. |
-| Astro | 11ty (Eleventy) | 11ty is arguably even lighter for a pure content site, but Astro's component model (`.astro` files with scoped CSS + typed props) is a meaningfully better authoring experience for a hand-crafted, non-templated design system like this one, and its GitHub Pages story (official action, docs) is more turnkey than 11ty's. |
-| Manual font subsetting | `@fontsource-variable/*` | Use Fontsource if the chosen serif/mono faces change during design iteration and you want to `npm install` a new face in seconds rather than re-run subsetting — convenience over the last few KB. Also use it if you end up wanting the *full* variable-font axis range (e.g., optical size) rather than 2–3 fixed weights. |
-| Biome | ESLint + Prettier | If you hit real gaps in Biome's `.astro` linting (still narrower than its JS/TS coverage as of mid-2026) and want mature, battle-tested `.astro`-aware lint rules, fall back to `eslint-plugin-astro` + `prettier-plugin-astro`. For a project this small, either choice is low-risk. |
-| One static OG image | `astro-og-canvas` / Satori build-time generation | Switch to automated OG generation only if the case-study count grows past a handful and hand-updating images per page becomes real toil. |
-| GitHub Actions "Actions" deployment source | Legacy "Deploy from a branch" (`gh-pages` branch + `peaceiris/actions-gh-pages` or similar) | Avoid for a new project — it's the older mechanism GitHub is steering people away from; the native Pages Actions flow (`upload-pages-artifact` / `deploy-pages`) is simpler, needs no extra branch, and is what Astro's own docs recommend. |
+|--------------|-------------|--------------------------|
+| Canvas2D layered rendering | WebGL / regl / three.js | Only if particle counts grew into the thousands, true 3D parallax/perspective were required, or per-pixel shader effects (real volumetric nebula, bloom) became a hard requirement. At this project's scale (hundreds of stars, dozens of fireflies, a handful of constellation nodes) Canvas2D comfortably holds 60fps, and WebGL adds context-loss handling, shader authoring, and a rendering paradigm with no fig01 precedent — pure downside for this element count. |
+| Hand-rolled vanilla-TS panel-deck state machine (no real document scroll) | CSS `scroll-snap` on a `100vh overflow-y:auto` container (canvas layers `position: fixed` behind it) | This is a legitimate, meaningfully simpler middle path: near-zero JS, free native touch/wheel/momentum handling, and solid accessibility (real scrollable document, works with screen readers/keyboard `PageDown` natively). Fall back to it if the hand-rolled wheel/touch state machine proves fiddly across devices (trackpad momentum over-firing, iOS Safari overscroll bounce) during implementation — but it does not literally satisfy "no page scroll" (there is still a real, if snapped, scroll position), and gives up exact cross-fade/constellation-brighten timing control, which is why it's the fallback, not the default. |
+| Hand-rolled vanilla-TS panel-deck state machine | `fullPage.js` / `swiper` / similar scroll-hijack libraries | Essentially never for this project. Research found fullPage.js is ~37KB+ with increasingly paid-gated features, and its free/lightweight alternatives are largely unmaintained since 2014-2019. A 4-6-panel deck is well within the complexity this project already proved it can hand-roll cleanly (`fig01/interactions.ts`), and doing so keeps the zero-new-dependency posture intact. |
+| Scatter-dots + layered CSS-token gradients for the Milky Way band (zero dependency) | A small `simplex-noise`/value-noise library | Adopt only if the zero-dependency version looks visibly banded/artificial once prototyped — see Supporting Libraries above. Don't default to a noise library pre-emptively; the scatter+gradient approach follows directly from Canvas2D primitives already in use (radial/linear gradients, dot scatter identical in kind to fig01's dot-grid). |
+| Main-thread pre-render of the static Layer 0 (Milky Way + deep starfield) at init/resize | `OffscreenCanvas` + a Web Worker | Only worth the added complexity if the pre-render pass were expensive/sustained (it isn't — it runs once at load and again on resize, not every frame) or if you needed to keep the main thread free during that pass for some other reason. For a one-shot pre-render, `OffscreenCanvas` buys nothing here and adds a browser-support variable (worker-based `transferControlToOffscreen` 2D-context support has historically been less consistent on Safari than the mainstream 2D canvas API). |
 
 ## What NOT to Use
 
 | Avoid | Why | Use Instead |
 |-------|-----|--------------|
-| Any UI framework (React/Vue/Svelte) as an Astro integration | Adds a client-side runtime for a site whose only interactive piece is a hand-written canvas module; violates the explicit "component model without shipping a framework runtime" constraint | Plain `.astro` components for structure + a single vanilla TypeScript module (`<script>` / `client:load`-free plain `<canvas>` + module script) for Fig. 01 |
-| Tailwind CSS | The design system is already locked with specific token values (bg `#0f1216`, accent `#d99163`, etc.) — Tailwind's utility-class model adds a build step and a class-name abstraction layer that fights a small, bespoke, already-designed token set rather than helping it | Plain CSS with `:root` custom properties for the token system; optionally CSS nesting (native, Astro/PostCSS support it) for component-scoped styles inside `.astro` files, which already get automatic scoping |
-| `output: 'server'` / SSR adapters (`@astrojs/node`, `@astrojs/vercel`, etc.) | GitHub Pages cannot run server code at all — any config that assumes a server endpoint (e.g., dynamic OG image routes, on-demand rendering) will fail to deploy there | `output: 'static'` (Astro's default) for everything, including build-time-only OG image generation |
-| Legacy `gh-pages` branch deploy scripts (`gh-pages` npm package, manual `git subtree push`) | Extra branch to manage, no artifact provenance, superseded by the native Pages-as-Actions-target flow | `actions/upload-pages-artifact` (implicit inside `withastro/action`) + `actions/deploy-pages` |
-| Google Fonts `<link>` / CDN-hosted fonts | Explicit constraint: "self-hosted (no CDN dependency)" | Fontsource npm packages or manually subsetted `.woff2` files under `public/fonts/`, loaded via `@font-face` with `font-display: swap` |
-| `astro:transitions`/`ClientRouter` (view transitions) applied blindly across the whole site | Astro's bundled module scripts run once per full page load; with the router enabled, navigating between pages does **not** re-run them, so the Fig. 01 canvas module needs explicit re-init logic on the `astro:page-load` document event, and any code assuming elements persist across navigations will throw if the element isn't on the new page. For a handful of statically-linked pages, this is complexity without much payoff | Skip `ClientRouter` for v1 (plain MPA navigation, which is instant anyway on a static Pages site); if adopted later, gate all Fig. 01 setup/teardown behind `astro:page-load`/`astro:before-swap` listeners with existence checks |
+| three.js or any WebGL/GPU library | Adds a rendering paradigm (shaders, GPU context, context-loss recovery) with real payoff only at particle/geometry counts far above this scene's needs; no reduced-motion/a11y precedent in this codebase; pure risk against the Lighthouse ≥90 + zero-framework-runtime constraints for a flat 2D scene. | Layered Canvas2D, extending `fig01`'s existing engine pattern. |
+| GSAP or any JS animation/easing library | This project has already proven it can hand-roll all the easing it needs (linear beams, staggered ease-out build-ins) in a few lines of `render.ts` math; panel crossfades and glow pulses are native CSS-transition territory, not JS-tween territory. | Plain CSS `transition`/`@keyframes` for discrete state changes; hand-rolled easing functions (already exist in `fig01/render.ts`) for continuous canvas motion. |
+| `fullPage.js`, `swiper`, or other scroll-hijacking UI libraries | ~37KB+, features increasingly paywalled, most lightweight competitors unmaintained since 2014-2019 (see research above) — worse than the ~150-200 line hand-rolled controller this codebase's own precedent (`interactions.ts`) shows it can build. | The hand-rolled panel-deck state machine described above. |
+| `shadowBlur` / CSS/canvas blur filters for star or glow "bloom" | Blur filters are comparatively GPU-expensive per-frame operations; research confirms bloom-like glow is commonly faked with layered radial-gradient fills instead, which is both cheaper and matches fig01's existing "no filter, just composited shapes" drawing style. | Layered radial-gradient fills at decreasing alpha (same technique already implicit in fig01's node-glow rendering). |
+| Real document scroll (plain unstyled scrolling, or `scroll-snap` presented as *the* implementation of "no scroll") as the literal fulfillment of the "no page scroll" requirement | The requirement explicitly says no page scroll, and real scrolling — even snapped — still has a scroll position, can show scrollbars/overscroll bounce/address-bar chrome shifts on mobile Safari, and can't guarantee the tight cross-fade/constellation-brighten choreography the design calls for. | The hand-rolled fixed-position panel-deck controller (index-based active state, CSS-transition crossfade) as primary; keep `scroll-snap` filed as the documented fallback only, not the default. |
 
 ## Stack Patterns by Variant
 
-**If the new site takes over the user root (`p2401kumar.github.io`):**
-- Omit `base` in `astro.config.mjs` entirely; `site` alone is enough.
-- Retire/archive the old `p2401kumar.github.io/home` repo content (per the open deploy-phase decision in PROJECT.md) rather than running two sites in parallel.
+**If the hand-rolled wheel/touch/key panel controller proves unreliable across real devices during implementation** (e.g., trackpad momentum repeatedly over-skipping panels, iOS Safari overscroll/rubber-band fighting a `position: fixed` scene layer):
+- Fall back to CSS `scroll-snap` (`scroll-snap-type: y mandatory` on a `100vh` container, canvas layers `position: fixed` behind it, `overscroll-behavior: none`, hidden scrollbar) with an `IntersectionObserver` to derive the "active panel index" for the constellation-brighten callback.
+- Because it trades some timing precision for materially lower implementation risk and free native input handling — acceptable if it starts eating disproportionate phase time.
 
-**If the new site instead deploys as a project site (`p2401kumar.github.io/<repo>`):**
-- Set `base: '/<repo>'` and keep `site: 'https://p2401kumar.github.io'`.
-- Every internal `href`/`src` that isn't going through Astro's `base`-aware helpers (e.g., raw strings in the canvas module or hand-written links) must be prefixed with `import.meta.env.BASE_URL` — this is the single most common GitHub Pages footgun (broken assets/links after first deploy) and worth flagging explicitly for the deploy phase.
-
-**If Lighthouse ≥ 90 is at risk because of font weight:**
-- Manually subsetted static `.woff2` (not variable) per weight, `font-display: swap`, and `<link rel="preload">` for the above-the-fold serif display face only — do not preload every weight/style used across the whole site.
+**If the zero-dependency scatter+gradient Milky Way texture looks visibly artificial once prototyped against the real dark-graphite background:**
+- Add `simplex-noise` (~1-2KB) purely for the one-time offscreen pre-render pass; it never touches the per-frame rAF loop, so the runtime cost is unchanged.
+- Because a slightly better-looking hero visual is worth a ~1-2KB one-time dependency, but only after confirming the zero-dependency version is actually insufficient — don't reach for it pre-emptively.
 
 ## Version Compatibility
 
 | Package A | Compatible With | Notes |
 |-----------|------------------|-------|
-| `astro@^7.0` | `@astrojs/sitemap@^3.7` | Astro-core-maintained integration; tracks Astro major releases closely, no known incompatibility as of Astro 5–7. |
-| `astro@^7.0` | Node.js `>= 22.12` | Hard floor as of Astro 7.0; GitHub Actions `ubuntu-latest` runners ship a recent Node by default, but pin the Node version explicitly in the workflow (or rely on `withastro/action`'s auto-detection) to avoid drift if the runner image's default changes. |
-| `withastro/action@v6` | `actions/deploy-pages@v5`, `actions/checkout@v7` | This exact trio is what Astro's own docs currently publish together; don't mix `withastro/action@v6` with an old `actions/deploy-pages@v2/v3` (older majors used a different artifact contract and Node 20, which GitHub is deprecating through 2026). |
-| Biome (Astro `.astro` lint/format support) | Astro `^5`–`^7` | Support is newer and narrower than Biome's JS/TS/CSS coverage — verify formatting output on real `.astro` files early rather than assuming parity with Prettier's plugin. |
+| Canvas2D API | All evergreen browsers, GitHub Pages static hosting | No build-time integration required; this is pure client-side script, identical in kind to the already-shipped `fig01` module — no `astro.config.mjs` changes needed. |
+| `OffscreenCanvas` (only if adopted for the Layer-0 pre-render) | Chrome/Firefox: broad support; Safari: full 2D-context `transferControlToOffscreen` support only from Safari 16.4+ | Not recommended by default (see Alternatives Considered) — flagging only in case a later phase revisits it. |
+| CSS `scroll-snap` (only if adopted as the fallback panel mechanism) | Supported in all evergreen browsers since ~2019, ~96%+ of users, iOS Safari 11+ | Verified via MDN + multiple independent sources during this research pass — MEDIUM confidence, safe to treat as broadly available if the fallback path is taken. |
+| `simplex-noise` (only if adopted) | Any modern bundler/Vite (Astro 7 uses Vite under the hood) | No known compatibility issues; would be the project's second runtime dependency after `@astrojs/sitemap`. |
 
 ## Sources
 
-- https://docs.astro.build/en/guides/deploy/github/ — official GitHub Pages deploy guide; fetched twice (via WebFetch), config shape and exact workflow YAML cross-verified identically both times — HIGH confidence for this specific claim
-- https://github.com/withastro/action — official Astro GitHub Action repo — MEDIUM confidence (websearch-sourced summary, not directly fetched)
-- https://astro.build/blog/astro-7/ — Astro 7.0 release announcement (fetched directly), release date June 22, 2026, performance/compiler rewrite claims — MEDIUM confidence (page didn't state Node floor directly; floor corroborated by a separate GitHub PR/commit search)
-- https://github.com/withastro/astro/commit/3c3b492 ("fix: increase minimum Node version to 18.20.8") and related PR #13809 — used to corroborate Node floor discussion, though the 22.12 figure for Astro 7 came from search-result synthesis, not a directly fetched primary source — MEDIUM confidence, worth re-verifying at project scaffold time with `npm create astro@latest` and reading its own engine check output
-- https://www.npmjs.com/package/@astrojs/sitemap — version 3.7.3 — MEDIUM confidence (websearch synthesis, npm registry API fetch itself failed with a TLS error in this environment; re-verify with `npm view @astrojs/sitemap version` locally before pinning)
-- https://docs.astro.build/en/guides/typescript/ and https://github.com/withastro/astro/blob/main/packages/astro/tsconfigs/strict.json — official docs, TS preset behavior — HIGH confidence
-- https://docs.astro.build/en/guides/view-transitions/ and https://docs.astro.build/en/guides/client-side-scripts/ — official docs on `astro:page-load` re-init semantics — HIGH confidence (this shaped the "skip ClientRouter for v1" recommendation)
-- Web search synthesis on Fontsource vs. manual subsetting (multiple independent blog/guide sources, no single authoritative spec) — MEDIUM confidence, directionally solid but treat specific "60–70% size reduction" style numbers as illustrative, not verified benchmarks
-- Web search synthesis on Biome vs. ESLint+Prettier for Astro in 2026 (multiple dev-blog sources) — MEDIUM confidence; this is a preference-level tooling call, not a hard technical dependency, so lower confidence here is low-risk
-- OG image generation approach (Satori/@vercel/og require `output: 'server'`) synthesized from multiple community blog posts on dynamic OG images with Astro — MEDIUM confidence; the core constraint (GitHub Pages = static only, so build-time-only) is a straightforward logical inference from Astro's own static/server docs, independently HIGH confidence
-- No context7 or other curated-registry MCP tool was available in this run (all `config.*_search` flags were `false` and no `mcp__context7__*` tool was exposed); all fetches used the built-in `WebSearch`/`WebFetch` fallback path per the tool-strategy seam
+- WebSearch: "Canvas2D realistic starfield rendering technique brightness distribution twinkle animation performance" — multiple independent blog/CodePen/dev.to sources converged on the same brightness-distribution/sine-twinkle/no-blur-filter/parallax-layering techniques — MEDIUM confidence
+- WebSearch: "CSS scroll-snap full viewport section navigation vs custom wheel touch keyboard controller accessibility" — cross-referenced against MDN (`scroll-snap-type`, "Basic concepts of scroll snap") plus CSS-Tricks/ishadeed.com — MEDIUM confidence (MDN itself is HIGH-confidence-tier; the accessibility caveats and support-percentage figure are synthesized across secondary sources, hence the blended rating)
+- WebSearch: "offscreen canvas pre-rendered gradient texture Milky Way band nebula effect canvas 2d technique" — MDN `OffscreenCanvas`/`OffscreenCanvasRenderingContext2D` pages confirm the API and worker-offload rationale; no source directly addressed a "Milky Way" compositing recipe specifically — the layered-gradient + scatter-dot technique recommended above is a LOW-confidence synthesis from general Canvas2D gradient/pattern primitives, not a verified authoritative technique — flag for a quick visual prototype/spike before committing in the roadmap
+- WebSearch: "fullpage.js alternatives lightweight vanilla javascript full page scroll library bundle size" — alvarotrigo.com, jQueryScript, SaaSHub comparisons — LOW confidence (aggregator/listicle sources, bundle-size figures not independently verified against current npm registry), used only to support a negative recommendation (don't adopt), which is a lower-risk claim than a positive one
+- WebSearch: "requestAnimationFrame single canvas particle layers performance budget 60fps mobile" — multiple independent perf-engineering sources (web.dev-adjacent, Flipboard engineering blog, dev.to) converged on the 16.67ms budget, multi-canvas-layer, and decoupled-update-cadence patterns — MEDIUM confidence
+- WebSearch: "wheel event deltaMode normalization trackpad vs mouse wheel cross browser best practice" — cross-referenced against MDN `WheelEvent`/`Element: wheel event` plus phrogz.net's normalization reference and jquery-mousewheel's README — MEDIUM confidence
+- No context7 or other curated-registry MCP tool was available in this research pass (all `config.*_search` flags false, no `mcp__context7__*` tool exposed); all fetches used the built-in `WebSearch` fallback path per the tool-strategy seam
+- Directly read for integration context (not web sources): `src/lib/fig01/index.ts`, `src/lib/fig01/render.ts`, `src/lib/fig01/tokens.ts`, `package.json`, `.planning/PROJECT.md` — HIGH confidence (primary source, this codebase)
 
 ---
-*Stack research for: high-craft Astro static portfolio → GitHub Pages*
-*Researched: 2026-07-15*
+*Stack research for: Astro 7 static portfolio — v2.0 "Night Sky" milestone (canvas night scene + no-scroll panel deck)*
+*Researched: 2026-07-17*
