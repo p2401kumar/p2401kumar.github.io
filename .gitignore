@@ -24,3 +24,4 @@ pnpm-debug.log*
 .idea/
 /PORTFOLIO-HANDOFF.md
 .gstack/
+.planning/research/.cache/
