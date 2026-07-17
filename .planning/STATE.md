@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 02
 current_phase_name: Fig. 01 — Signature Interactive Figure
 status: executing
-stopped_at: Completed 02-02-PLAN.md
-last_updated: "2026-07-17T05:03:27.192Z"
+stopped_at: Completed 02-03-PLAN.md
+last_updated: "2026-07-17T05:25:04.857Z"
 last_activity: 2026-07-17
 last_activity_desc: Phase 02 execution started
 progress:
   total_phases: 3
   completed_phases: 1
   total_plans: 12
-  completed_plans: 9
+  completed_plans: 10
   percent: 33
 ---
 
@@ -29,7 +29,7 @@ See: .planning/PROJECT.md (updated 2026-07-15)
 ## Current Position
 
 Phase: 02 (Fig. 01 — Signature Interactive Figure) — EXECUTING
-Plan: 3 of 5
+Plan: 4 of 5
 Status: Ready to execute
 Last activity: 2026-07-17 — Phase 02 execution started
 
@@ -64,6 +64,7 @@ Progress: [██████████] 100%
 | Phase 01 P07 | ~15min | 3 tasks | 0 files |
 | Phase 02 P01 | 25min | 2 tasks | 4 files |
 | Phase 02 P02 | 13min | 2 tasks | 1 files |
+| Phase 02 P03 | 15min | 3 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -94,6 +95,9 @@ Recent decisions affecting current work:
 - [Phase 02]: 02-02: client under-glyph label color sourced via rgba(tokens.dim, 0.9) instead of a hardcoded rgba triple, since it exactly matches --dim's parsed value
 - [Phase 02]: 02-02: added getDpr() helper containing the literal Math.min(devicePixelRatio||1,2) computation; layout() keeps dpr as a caller-supplied parameter per the plan's exact signature
 - [Phase 02]: 02-02: drawFrame/renderStaticFrame read ctx.canvas.clientWidth/clientHeight directly instead of threading a dims parameter, keeping function signatures matching the plan's Artifacts list exactly
+- [Phase 02]: 02-03: wireKeyboard/scheduleHeal signatures extended beyond the plan's Artifacts shorthand (added logEl+canvas to wireKeyboard, made scheduleHeal a zero-arg-trigger factory) to match the task's own action text exactly
+- [Phase 02]: 02-03: added syncProxyFaultLabels() appending the degraded-rerouting suffix to proxy-button aria-label while faulted, extending the locked FIG-03/05 color+dash dual-encoding to keyboard/screen-reader users
+- [Phase 02]: 02-03: DOM selector contract for initFig01 (.fig-stage/#fig01-canvas/#fig01-tip/#fig01-log/#send/#fault/.node-proxy[data-node]) documented at the top of index.ts since Figure01.astro (plan 02-04) doesn't exist yet
 
 ### Pending Todos
 
@@ -113,6 +117,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-17T05:02:17.263Z
-Stopped at: Completed 02-02-PLAN.md
+Last session: 2026-07-17T05:25:04.820Z
+Stopped at: Completed 02-03-PLAN.md
 Resume file: None
