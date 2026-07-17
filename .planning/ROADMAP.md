@@ -107,7 +107,7 @@ Plans:
   3. Every page (home + both case-study pages) ships title/description/OpenGraph meta, a static OG image, favicon, and a sitemap entry
   4. The home page (and the site overall) scores Lighthouse ≥ 90 in Performance, Accessibility, Best Practices, and SEO on the live deployed URL
 
-**Plans**: 2/4 plans executed
+**Plans**: 3/4 plans executed
 Plans:
 **Wave 1**
 
@@ -119,7 +119,7 @@ Plans:
 
 **Wave 3** *(blocked on Wave 2)*
 
-- [ ] 03-03-PLAN.md — SEO partial in BaseLayout + static OG image (sharp) + @astrojs/sitemap@3.7.3 + robots.txt (wave 3)
+- [x] 03-03-PLAN.md — SEO partial in BaseLayout + static OG image (sharp) + @astrojs/sitemap@3.7.3 + robots.txt (wave 3)
 
 **Wave 4** *(blocked on Wave 3)*
 
@@ -136,4 +136,4 @@ Phases execute in numeric order: 1 → 2 → 3
 |-------|----------------|--------|-----------|
 | 1. Foundation & Editorial Shell | 7/7 | Complete   | 2026-07-17 |
 | 2. Fig. 01 — Signature Interactive Figure | 5/5 | Complete   | 2026-07-17 |
-| 3. Case Studies & Launch Polish | 2/4 | In Progress|  |
+| 3. Case Studies & Launch Polish | 3/4 | In Progress|  |

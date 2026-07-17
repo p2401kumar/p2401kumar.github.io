@@ -48,7 +48,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **PLAT-03**: All internal links and assets respect the hosting target (`site`/`base` locked in foundation; root vs project path decided before scaffolding)
 - [x] **PLAT-04**: Fonts are self-hosted subsetted woff2 with preload and metrics-matched fallback (no visible CLS on the hero thesis)
 - [x] **PLAT-05**: Site is responsive from 360px mobile through desktop
-- [ ] **PLAT-06**: Every page ships title/description/OG meta, a static OG image, favicon, and sitemap
+- [x] **PLAT-06**: Every page ships title/description/OG meta, a static OG image, favicon, and sitemap
 - [ ] **PLAT-07**: Home page scores Lighthouse ≥ 90 in Performance, Accessibility, Best Practices, and SEO
 
 ## v2 Requirements
@@ -112,7 +112,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CASE-01 | Phase 3 | Complete |
 | CASE-02 | Phase 3 | Complete |
 | CASE-03 | Phase 3 | Complete |
-| PLAT-06 | Phase 3 | Pending |
+| PLAT-06 | Phase 3 | Complete |
 | PLAT-07 | Phase 3 | Pending |
 
 **Coverage:**
