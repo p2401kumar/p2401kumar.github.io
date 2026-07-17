@@ -66,13 +66,32 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (populated by roadmap) | | |
+| DECK-01 | Phase 4 | Pending |
+| DECK-02 | Phase 4 | Pending |
+| DECK-03 | Phase 4 | Pending |
+| DECK-04 | Phase 4 | Pending |
+| DECK-05 | Phase 4 | Pending |
+| DECK-06 | Phase 4 | Pending |
+| DECK-07 | Phase 4 | Pending |
+| DECK-08 | Phase 4 | Pending |
+| SKY-01 | Phase 5 | Pending |
+| SKY-02 | Phase 5 | Pending |
+| SKY-03 | Phase 5 | Pending |
+| SKY-04 | Phase 5 | Pending |
+| SKY-05 | Phase 5 | Pending |
+| CONST-01 | Phase 5 | Pending |
+| CONST-02 | Phase 5 | Pending |
+| CONST-03 | Phase 5 | Pending |
+| INTG-01 | Phase 6 | Pending |
+| INTG-02 | Phase 6 | Pending |
+| INTG-03 | Phase 6 | Pending |
+| INTG-04 | Phase 6 | Pending |
 
 **Coverage:**
 - v2.0 requirements: 20 total
-- Mapped to phases: 0
-- Unmapped: 20 ⚠️ (pending roadmap)
+- Mapped to phases: 20 ✓
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-07-17*
-*Last updated: 2026-07-17 after initial definition*
+*Last updated: 2026-07-17 after roadmap creation (Phases 4-6 mapped)*
