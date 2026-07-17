@@ -15,7 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation & Editorial Shell** - Deploy pipeline, design tokens, fonts, and every static content section land as a live, content-complete site (completed 2026-07-17)
 - [x] **Phase 2: Fig. 01 — Signature Interactive Figure** - The cellularization demo proves the résumé's distributed-systems claims through direct interaction (completed 2026-07-17)
-- [ ] **Phase 3: Case Studies & Launch Polish** - Deep-dive case studies plus the SEO/OG/Lighthouse verification pass that makes the site launch-ready
+- [x] **Phase 3: Case Studies & Launch Polish** - Deep-dive case studies plus the SEO/OG/Lighthouse verification pass that makes the site launch-ready (completed 2026-07-17)
 
 ## Phase Details
 
@@ -107,7 +107,7 @@ Plans:
   3. Every page (home + both case-study pages) ships title/description/OpenGraph meta, a static OG image, favicon, and a sitemap entry
   4. The home page (and the site overall) scores Lighthouse ≥ 90 in Performance, Accessibility, Best Practices, and SEO on the live deployed URL
 
-**Plans**: 3/4 plans executed
+**Plans**: 4/4 plans complete
 Plans:
 **Wave 1**
 
@@ -123,7 +123,7 @@ Plans:
 
 **Wave 4** *(blocked on Wave 3)*
 
-- [ ] 03-04-PLAN.md — Fast-forward deploy + live-URL checks + Lighthouse ≥90 gate + residual visual-QA checkpoint (wave 4)
+- [x] 03-04-PLAN.md — Fast-forward deploy + live-URL checks + Lighthouse ≥90 gate + residual visual-QA checkpoint (wave 4)
 
 **UI hint**: yes
 
@@ -136,4 +136,4 @@ Phases execute in numeric order: 1 → 2 → 3
 |-------|----------------|--------|-----------|
 | 1. Foundation & Editorial Shell | 7/7 | Complete   | 2026-07-17 |
 | 2. Fig. 01 — Signature Interactive Figure | 5/5 | Complete   | 2026-07-17 |
-| 3. Case Studies & Launch Polish | 3/4 | In Progress|  |
+| 3. Case Studies & Launch Polish | 4/4 | Complete   | 2026-07-17 |

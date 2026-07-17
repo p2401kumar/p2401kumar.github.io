@@ -4,17 +4,17 @@ milestone: v1.0
 milestone_name: milestone
 current_phase: 03
 current_phase_name: Case Studies & Launch Polish
-status: executing
-stopped_at: Completed 03-03-PLAN.md
-last_updated: "2026-07-17T08:13:55.857Z"
+status: verifying
+stopped_at: Completed 03-04-PLAN.md (phase 03 complete, v1 milestone shipped and verified live)
+last_updated: "2026-07-17T08:40:21.348Z"
 last_activity: 2026-07-17
 last_activity_desc: Phase 03 execution started
 progress:
   total_phases: 3
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 16
-  completed_plans: 15
-  percent: 67
+  completed_plans: 16
+  percent: 100
 ---
 
 # Project State
@@ -30,7 +30,7 @@ See: .planning/PROJECT.md (updated 2026-07-15)
 
 Phase: 03 (Case Studies & Launch Polish) — EXECUTING
 Plan: 4 of 4
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-07-17 — Phase 03 execution started
 
 Progress: [██████████] 100%
@@ -70,6 +70,7 @@ Progress: [██████████] 100%
 | Phase 03 P01 | 8min | 3 tasks | 3 files |
 | Phase 03 P02 | 6min | 2 tasks | 2 files |
 | Phase 03-case-studies-launch-polish P03 | 8min | 3 tasks | 9 files |
+| Phase 03-case-studies-launch-polish P04 | 21min | 3 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -116,6 +117,9 @@ Recent decisions affecting current work:
 - [Phase 03]: 03-03: OG SVG text uses the Georgia/Iowan Old Style fallback stack (same family FontaineTransform maps Source Serif 4 to) rather than an embedded base64 font, for visual continuity with the site's own serif fallback
 - [Phase 03]: 03-03: @astrojs/sitemap pinned as the literal exact string 3.7.3 (no caret) in package.json/package-lock.json per the plan's no-drift acceptance criterion
 - [Phase 03]: 03-03: sitemap exactly-3-URL and og:image/og:url meta counts verified via grep -o | wc -l occurrence counting (not grep -c) since Astro's minified single-line dist HTML/XML makes line-count checks undercount — same lesson as 03-02
+- [Phase 03]: 03-04: Task 1 (deploy+live-route verification) produced no commit — verification-only, no source changes needed; all live checks passed on first push
+- [Phase 03]: 03-04: No Lighthouse fix-forward needed — all four categories passed >=90 on first audit run for both home and case-study pages (home: 99/94/100/100, case study: 100/90/100/100)
+- [Phase 03]: 03-04: Residual visual QA (Task 3 checkpoint:human-verify) resolved via gstack /browse automation without a human halt — browse started successfully this session, driving the full checklist with recorded evidence per the plan's automation-first design
 
 ### Pending Todos
 
@@ -135,6 +139,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-17T08:13:55.847Z
-Stopped at: Completed 03-03-PLAN.md
+Last session: 2026-07-17T08:40:21.320Z
+Stopped at: Completed 03-04-PLAN.md (phase 03 complete, v1 milestone shipped and verified live)
 Resume file: None
