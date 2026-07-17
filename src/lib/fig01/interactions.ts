@@ -49,6 +49,21 @@ const DEGRADED_SUFFIX = ' · degraded, rerouting';
 const rm = matchMedia('(prefers-reduced-motion: reduce)');
 /** Whether the figure's stage is currently intersecting the viewport (IntersectionObserver-driven, FIG-07). */
 let intersecting = false;
+/**
+ * Whether the figure's own deck panel is the active one (MutationObserver-
+ * driven off `.panel[data-state]`, 04-03 fix). Defaults `true` so behavior
+ * is unaffected outside a deck context (no `.panel` ancestor, or before
+ * `deck.ts` has run its first `applyPanelStates`). Needed because
+ * `deck.css` hides inactive panels via opacity/pointer-events ONLY, never
+ * via a box-suppression technique — every panel (including an inactive
+ * one) still fills `position:absolute;inset:0` and therefore still
+ * geometrically intersects the viewport, so the pre-existing
+ * IntersectionObserver-only gate below never fires "not intersecting" for
+ * an inactive-but-still-viewport-filling panel, leaving the rAF loop
+ * running forever regardless of visibility (T-04-04-class CPU/Lighthouse
+ * regression found during 04-03's Lighthouse gate).
+ */
+let panelActive = true;
 
 /** Formats "now" as HH:mm:ss, 24h, America/Los_Angeles — the same Intl.DateTimeFormat shape as SiteFooter.astro's clock (02-UI-SPEC "Log timestamp format"). */
 function formatLogTimestamp(): string {
@@ -299,7 +314,7 @@ export function createRedraw(ctx: CanvasRenderingContext2D, state: FigureState, 
  * repeatedly from any of the three signal sources.
  */
 export function updateRunState(ctx: CanvasRenderingContext2D, state: FigureState, tokens: FigTokens): void {
-  const shouldRun = intersecting && !document.hidden && !rm.matches;
+  const shouldRun = intersecting && panelActive && !document.hidden && !rm.matches;
   if (shouldRun) {
     startAnimationLoop(ctx, state, tokens);
   } else {
@@ -337,11 +352,17 @@ export interface LifecycleHandle {
 }
 
 /**
- * Registers the three pause signals (IntersectionObserver, `visibilitychange`,
- * a live `prefers-reduced-motion` change listener) plus a `ResizeObserver`
- * that re-layouts the canvas on container-driven resizes (e.g. font-load
- * reflow, 02-RESEARCH.md Pattern 6). Returns a teardown disconnecting all
- * of them, for `initFig01`'s returned teardown to call.
+ * Registers the four pause signals (IntersectionObserver, `visibilitychange`,
+ * a live `prefers-reduced-motion` change listener, and — when `stage` sits
+ * inside a deck panel — a `data-state` MutationObserver) plus a
+ * `ResizeObserver` that re-layouts the canvas on container-driven resizes
+ * (e.g. font-load reflow, 02-RESEARCH.md Pattern 6). Returns a teardown
+ * disconnecting all of them, for `initFig01`'s returned teardown to call.
+ *
+ * The `data-state` observer is deck-agnostic by design: it reads only the
+ * DOM contract `.panel[data-state]` already documented in deck.ts (04-02),
+ * never imports `nightsky/*` (CONTEXT.md boundary), and no-ops if `stage`
+ * has no `.panel` ancestor (e.g. any future non-deck context).
  */
 export function wireLifecycle(
   ctx: CanvasRenderingContext2D,
@@ -372,12 +393,24 @@ export function wireLifecycle(
   const onMotionChange = (): void => applyMotionPreference(state, ctx, tokens, redraw);
   rm.addEventListener('change', onMotionChange);
 
+  const panelEl = stage.closest<HTMLElement>('.panel');
+  let panelObserver: MutationObserver | null = null;
+  if (panelEl) {
+    panelActive = panelEl.dataset.state !== 'inactive';
+    panelObserver = new MutationObserver(() => {
+      panelActive = panelEl.dataset.state !== 'inactive';
+      updateRunState(ctx, state, tokens);
+    });
+    panelObserver.observe(panelEl, { attributes: true, attributeFilter: ['data-state'] });
+  }
+
   return {
     teardown(): void {
       document.removeEventListener('visibilitychange', onVisibilityChange);
       intersectionObserver.disconnect();
       resizeObserver.disconnect();
       rm.removeEventListener('change', onMotionChange);
+      panelObserver?.disconnect();
     },
   };
 }
