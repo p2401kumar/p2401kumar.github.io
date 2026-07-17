@@ -1,12 +1,21 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import { FontaineTransform } from 'fontaine';
+import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 // User-root GitHub Pages deploy (p2401kumar.github.io) — no `base` path.
 export default defineConfig({
   site: 'https://p2401kumar.github.io',
   output: 'static',
+  integrations: [
+    // Excludes the /404 route so the sitemap covers exactly the real
+    // pages (home + 2 case studies) — verify against the BUILT
+    // dist/sitemap-0.xml, not just this config (03-RESEARCH.md Pitfall 2).
+    sitemap({
+      filter: (page) => !page.endsWith('/404/') && !page.endsWith('/404'),
+    }),
+  ],
   vite: {
     plugins: [
       // Generates metrics-matched fallback @font-face rules

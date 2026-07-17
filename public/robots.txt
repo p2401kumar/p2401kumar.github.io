@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://p2401kumar.github.io/sitemap-index.xml
