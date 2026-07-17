@@ -20,7 +20,7 @@ Requirements for this milestone. Each maps to roadmap phases (numbering continue
 
 ### Night Scene
 
-- [ ] **SKY-01**: Persistent zero-light-pollution scene — dense pre-rendered starfield + vivid Milky Way band (offscreen-rendered once, blitted) behind every panel
+- [x] **SKY-01**: Persistent zero-light-pollution scene — dense pre-rendered starfield + vivid Milky Way band (offscreen-rendered once, blitted) behind every panel
 - [ ] **SKY-02**: Camper-car camp silhouette at the horizon with a single warm copper glow (hand-authored static SVG, outside the animation loop)
 - [ ] **SKY-03**: Sparse drifting fireflies + twinkling star subset are the only per-frame canvas work; idle CPU < 10% sustained over 5 minutes
 - [ ] **SKY-04**: Scene pauses when the tab is hidden and while Fig. 01's panel is active (one-active-animation rule); `prefers-reduced-motion` renders one static frame with no animation loop
@@ -74,7 +74,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DECK-06 | Phase 4 | Complete |
 | DECK-07 | Phase 4 | Complete |
 | DECK-08 | Phase 4 | Complete |
-| SKY-01 | Phase 5 | Pending |
+| SKY-01 | Phase 5 | Complete |
 | SKY-02 | Phase 5 | Pending |
 | SKY-03 | Phase 5 | Pending |
 | SKY-04 | Phase 5 | Pending |
