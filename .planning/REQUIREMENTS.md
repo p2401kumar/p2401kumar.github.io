@@ -17,13 +17,13 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Fig. 01 — Signature Figure
 
-- [ ] **FIG-01**: Visitor sees the cellularized-region figure build in with staggered, dependency-ordered animation and ambient request beams
+- [x] **FIG-01**: Visitor sees the cellularized-region figure build in with staggered, dependency-ordered animation and ambient request beams
 - [x] **FIG-02**: Visitor can dispatch a request (button or node click) and watch it travel client → load balancer → healthy cell → pipelines → ML node
 - [x] **FIG-03**: Visitor can inject a fault: a cell degrades (amber, dashed), traffic weighs away from it, the event log narrates, and the cell self-heals after ~8s
 - [x] **FIG-04**: Visitor can hover any node to see a real production fact (tooltip with résumé-sourced metrics)
-- [ ] **FIG-05**: Visitor with `prefers-reduced-motion` gets an informative static figure where fault injection still works via instant state changes
+- [x] **FIG-05**: Visitor with `prefers-reduced-motion` gets an informative static figure where fault injection still works via instant state changes
 - [ ] **FIG-06**: Keyboard-only visitor can operate the figure (focusable controls, visible focus states, no keyboard trap)
-- [ ] **FIG-07**: Figure sustains ~60fps on average laptops (single rAF loop, DPR cap 2, batched draws) and the page holds Lighthouse ≥ 90 with the figure active
+- [x] **FIG-07**: Figure sustains ~60fps on average laptops (single rAF loop, DPR cap 2, batched draws) and the page holds Lighthouse ≥ 90 with the figure active
 
 ### Content Sections
 
@@ -102,13 +102,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PLAT-03 | Phase 1 | Complete |
 | PLAT-04 | Phase 1 | Complete |
 | PLAT-05 | Phase 1 | Complete |
-| FIG-01 | Phase 2 | Pending |
+| FIG-01 | Phase 2 | Complete |
 | FIG-02 | Phase 2 | Complete |
 | FIG-03 | Phase 2 | Complete |
 | FIG-04 | Phase 2 | Complete |
-| FIG-05 | Phase 2 | Pending |
+| FIG-05 | Phase 2 | Complete |
 | FIG-06 | Phase 2 | Pending |
-| FIG-07 | Phase 2 | Pending |
+| FIG-07 | Phase 2 | Complete |
 | CASE-01 | Phase 3 | Pending |
 | CASE-02 | Phase 3 | Pending |
 | CASE-03 | Phase 3 | Pending |

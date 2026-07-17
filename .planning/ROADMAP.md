@@ -71,7 +71,7 @@ Plans:
   4. Visitor with `prefers-reduced-motion` gets an informative static figure where fault injection still works via instant state changes; a keyboard-only visitor can operate every control with visible focus states and no keyboard trap
   5. The figure sustains ~60fps on average laptops (single rAF loop, DPR cap 2, batched draws) and the page holds Lighthouse ≥ 90 with the figure active
 
-**Plans**: 1/5 plans executed
+**Plans**: 2/5 plans executed
 Plans:
 **Wave 1**
 
@@ -79,7 +79,7 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1)*
 
-- [ ] 02-02-PLAN.md — render.ts: single-rAF driver, all draw primitives, DPR-capped HiDPI layout, renderStaticFrame reduced-motion path (wave 2)
+- [x] 02-02-PLAN.md — render.ts: single-rAF driver, all draw primitives, DPR-capped HiDPI layout, renderStaticFrame reduced-motion path (wave 2)
 
 **Wave 3** *(blocked on Wave 2)*
 
@@ -118,5 +118,5 @@ Phases execute in numeric order: 1 → 2 → 3
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & Editorial Shell | 7/7 | Complete   | 2026-07-17 |
-| 2. Fig. 01 — Signature Interactive Figure | 1/5 | In Progress|  |
+| 2. Fig. 01 — Signature Interactive Figure | 2/5 | In Progress|  |
 | 3. Case Studies & Launch Polish | 0/TBD | Not started | - |

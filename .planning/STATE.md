@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 02
 current_phase_name: Fig. 01 — Signature Interactive Figure
 status: executing
-stopped_at: Completed 02-01-PLAN.md
-last_updated: "2026-07-17T04:47:22.059Z"
+stopped_at: Completed 02-02-PLAN.md
+last_updated: "2026-07-17T05:03:27.192Z"
 last_activity: 2026-07-17
 last_activity_desc: Phase 02 execution started
 progress:
   total_phases: 3
   completed_phases: 1
   total_plans: 12
-  completed_plans: 8
+  completed_plans: 9
   percent: 33
 ---
 
@@ -29,7 +29,7 @@ See: .planning/PROJECT.md (updated 2026-07-15)
 ## Current Position
 
 Phase: 02 (Fig. 01 — Signature Interactive Figure) — EXECUTING
-Plan: 2 of 5
+Plan: 3 of 5
 Status: Ready to execute
 Last activity: 2026-07-17 — Phase 02 execution started
 
@@ -63,6 +63,7 @@ Progress: [██████████] 100%
 | Phase 01 P06 | 9min | 2 tasks | 2 files |
 | Phase 01 P07 | ~15min | 3 tasks | 0 files |
 | Phase 02 P01 | 25min | 2 tasks | 4 files |
+| Phase 02 P02 | 13min | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -89,6 +90,10 @@ Recent decisions affecting current work:
 - [Phase 02]: spawnBeam(state, fromId?) dispatches from fromId only when it names a client node (c0/c1/c2); other values fall back to a random client since the topology has no route originating elsewhere
 - [Phase 02]: dp node's honesty-gate source string extends the DynamoDB cellularization résumé citation rather than inventing a new résumé section, since it introduces no new number
 - [Phase 02]: createState() deep-clones the canonical nodes topology per call instead of sharing one module-level mutable object, keeping the state machine pure/testable
+- [Phase 02]: 02-02: node-label default/hover colors rendered via tokens.ink at two alphas (.86/1.0) instead of hardcoded hex, satisfying the zero-hex-literal gate
+- [Phase 02]: 02-02: client under-glyph label color sourced via rgba(tokens.dim, 0.9) instead of a hardcoded rgba triple, since it exactly matches --dim's parsed value
+- [Phase 02]: 02-02: added getDpr() helper containing the literal Math.min(devicePixelRatio||1,2) computation; layout() keeps dpr as a caller-supplied parameter per the plan's exact signature
+- [Phase 02]: 02-02: drawFrame/renderStaticFrame read ctx.canvas.clientWidth/clientHeight directly instead of threading a dims parameter, keeping function signatures matching the plan's Artifacts list exactly
 
 ### Pending Todos
 
@@ -108,6 +113,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-17T04:47:22.014Z
-Stopped at: Completed 02-01-PLAN.md
+Last session: 2026-07-17T05:02:17.263Z
+Stopped at: Completed 02-02-PLAN.md
 Resume file: None
