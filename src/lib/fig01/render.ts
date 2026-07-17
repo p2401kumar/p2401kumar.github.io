@@ -9,8 +9,11 @@
 // same plan. model.ts owns all topology/route/beam/fault logic.
 
 import {
+  advanceBeams,
   computeLayout,
+  order,
   pAt,
+  spawnBeam,
   type FigureState,
   type NodeId,
   type NodeSpec,
@@ -40,6 +43,23 @@ const BEAM_TAIL_LEN = 70;
 const BEAM_STROKE_WIDTH = 1.6;
 /** Beam: head dot radius, in px. */
 const BEAM_HEAD_RADIUS = 2.2;
+
+/** Node build-in: per-node stagger delay (ms). */
+const NODE_STAGGER_STEP = 60;
+/** Node build-in: per-node ease-in duration (ms). */
+const NODE_STAGGER_DURATION = 380;
+/** Node build-in: rise distance, in px, from +8px to 0. */
+const NODE_RISE_PX = 8;
+
+/** Ambient beam: no spawn before this many ms since first frame. */
+const AMBIENT_INTRO_GATE = 1400;
+/** Ambient beam: minimum interval between spawns, in ms. */
+const AMBIENT_INTERVAL_MIN = 2600;
+/** Ambient beam: additional random jitter added to the interval, in ms. */
+const AMBIENT_INTERVAL_JITTER = 1400;
+
+/** Node glow: per-frame decay multiplier. */
+const GLOW_DECAY = 0.955;
 
 /** ML node breathing ring: oscillation period, in ms. */
 const ML_RING_PERIOD = 1200;
@@ -316,6 +336,112 @@ export function drawNode(
   }
 
   ctx.globalAlpha = 1;
+}
+
+// Module-level rAF driver state — a single consolidated loop (FIG-07).
+let rafId: number | null = null;
+let lastFrameTs = 0;
+let lastSpawn = 0;
+
+/**
+ * One animated frame: clear -> grid -> routes -> beams -> nodes. Establishes
+ * `state.t0` on first call, computes delta-time, advances the intro clock,
+ * gates/spawns ambient beams, advances beams, and applies node build-in
+ * stagger + glow decay before drawing (prototype `frame()`, lines 233-297,
+ * minus the fault-heal timer which is owned by interactions.ts per plan
+ * 02-03 — decoupled from rAF per 02-RESEARCH.md Pitfall 3).
+ */
+export function drawFrame(
+  ctx: CanvasRenderingContext2D,
+  state: FigureState,
+  tokens: FigTokens,
+  ts: number
+): void {
+  if (state.t0 === null) {
+    state.t0 = ts;
+    lastFrameTs = ts;
+  }
+  const dt = Math.min(ts - lastFrameTs, 50);
+  lastFrameTs = ts;
+  const T = ts - state.t0;
+
+  const W = ctx.canvas.clientWidth;
+  const H = ctx.canvas.clientHeight;
+  ctx.clearRect(0, 0, W, H);
+
+  drawGrid(ctx, state, W, H);
+
+  state.intro = T;
+
+  drawRoutes(ctx, state, tokens, T);
+
+  if (
+    T > AMBIENT_INTRO_GATE &&
+    ts - lastSpawn > AMBIENT_INTERVAL_MIN + Math.random() * AMBIENT_INTERVAL_JITTER
+  ) {
+    lastSpawn = ts;
+    spawnBeam(state);
+  }
+  advanceBeams(state, dt);
+  drawBeams(ctx, state, tokens);
+
+  for (let i = 0; i < order.length; i++) {
+    const id = order[i];
+    const n = state.nodes[id];
+    const start = i * NODE_STAGGER_STEP;
+    const prog = Math.min(1, Math.max(0, (state.intro - start) / NODE_STAGGER_DURATION));
+    if (prog <= 0) continue;
+    const rise = (1 - prog) * NODE_RISE_PX;
+    n.glow *= GLOW_DECAY;
+    drawNode(ctx, id, n, rise, prog, T, state, tokens);
+  }
+}
+
+/**
+ * Starts the single consolidated rAF loop. Idempotent: calling this while
+ * already running is a no-op (guarded by `rafId`).
+ */
+export function startAnimationLoop(ctx: CanvasRenderingContext2D, state: FigureState, tokens: FigTokens): void {
+  if (rafId !== null) return;
+  lastFrameTs = performance.now();
+  const tick = (ts: number): void => {
+    drawFrame(ctx, state, tokens, ts);
+    rafId = requestAnimationFrame(tick);
+  };
+  rafId = requestAnimationFrame(tick);
+}
+
+/** Cancels the pending frame, if any, and leaves no rAF scheduled. */
+export function stopAnimationLoop(): void {
+  if (rafId !== null) {
+    cancelAnimationFrame(rafId);
+    rafId = null;
+  }
+}
+
+/**
+ * Renders exactly ONE complete frame with no animation and no scheduled
+ * animation-frame callback — the FIG-05 reduced-motion path. This function
+ * never enters the rAF loop driven by startAnimationLoop/stopAnimationLoop.
+ * interactions.ts calls this at init under reduced motion and again after
+ * any state mutation (fault inject / heal / focus change). All routes draw
+ * at full length (`prog=1`, dead-end dashing still applies), all nodes sit
+ * at rest (`rise=0`, `alpha=1`) with fault/focus styling but no glow decay
+ * and a fixed T so the ml breathing ring is static.
+ */
+export function renderStaticFrame(ctx: CanvasRenderingContext2D, state: FigureState, tokens: FigTokens): void {
+  const W = ctx.canvas.clientWidth;
+  const H = ctx.canvas.clientHeight;
+  ctx.clearRect(0, 0, W, H);
+  drawGrid(ctx, state, W, H);
+
+  drawRoutesAtProgress(ctx, state, tokens, () => 1);
+
+  const fixedT = 0;
+  for (const id of order) {
+    const n = state.nodes[id];
+    drawNode(ctx, id, n, 0, 1, fixedT, state, tokens);
+  }
 }
 
 // Re-exported so callers wiring up the figure only need to import from
