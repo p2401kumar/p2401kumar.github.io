@@ -4,24 +4,44 @@
  *
  * Ports the approved prototype's `.work` section verbatim (markup, spacing,
  * type, 640px collapse — PLAT-05). Rows are mapped from `systems`
- * (src/data/systems.ts), not hardcoded. No case-study links yet (Phase 3).
+ * (src/data/systems.ts), not hardcoded. The 2 rows with a matching
+ * case-study entry (dynamodb/cellularization, elb/auto-weight-away) become
+ * links into /work/{slug}; the linkage is derived from the `case-studies`
+ * collection (systemId -> entry.id), not a hardcoded slug list, so a new
+ * case-study entry auto-links its row.
  */
+import { getCollection } from "astro:content";
 import { systems } from "../data/systems";
+
+const caseStudies = await getCollection("case-studies");
+const slugsBySystemId = new Map(
+  caseStudies.map((entry) => [entry.data.systemId, entry.id]),
+);
 ---
 
 <section class="work" id="work">
   <h2>selected systems</h2>
   {
-    systems.map((entry) => (
-      <div class="row">
-        <span class="yr">{entry.year}</span>
-        <span>
-          <span class="nm">{entry.name}</span>
-          <span class="ds">{entry.description}</span>
-        </span>
-        <span class="mt">{entry.metric}</span>
-      </div>
-    ))
+    systems.map((entry) => {
+      const slug = slugsBySystemId.get(entry.name);
+      const row = (
+        <>
+          <span class="yr">{entry.year}</span>
+          <span>
+            <span class="nm">{entry.name}</span>
+            <span class="ds">{entry.description}</span>
+          </span>
+          <span class="mt">{entry.metric}</span>
+        </>
+      );
+      return slug ? (
+        <a class="row" href={`/work/${slug}`}>
+          {row}
+        </a>
+      ) : (
+        <div class="row">{row}</div>
+      );
+    })
   }
 </section>
 
@@ -54,6 +74,18 @@ import { systems } from "../data/systems";
 
   .row:hover {
     background: var(--panel2);
+  }
+
+  /* The 2 linked rows are now <a class="row">, not <div class="row"> — reset
+     the global `a` underline/color so the row-hover panel2 background stays
+     the only hover affordance (no competing underline across the row). */
+  a.row {
+    color: inherit;
+    border-bottom: none;
+  }
+
+  a.row:hover {
+    border-color: transparent;
   }
 
   .row .yr {
