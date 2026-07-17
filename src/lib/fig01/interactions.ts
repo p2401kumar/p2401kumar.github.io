@@ -1,15 +1,17 @@
 // interactions.ts — DOM wiring for Fig. 01: pointer hover/click, the
-// send/fault buttons, and the timestamped aria-live event log. Ported
-// verbatim from the approved prototype
-// (.planning/reference/prototype-shell-and-fig01.html lines 202-229) plus a
-// setTimeout-based fault self-heal, deliberately decoupled from the
-// animation loop (02-RESEARCH.md Pitfall 3) so it still fires under
-// reduced motion. The reduced-motion branch point and the dual-gate
-// lifecycle (IntersectionObserver + visibilitychange) are added in this
-// plan's next task; keyboard proxy wiring in the task after that.
+// send/fault buttons, the timestamped aria-live event log, the
+// prefers-reduced-motion branch point, and the dual-gate lifecycle
+// (IntersectionObserver + visibilitychange). Ported verbatim from the
+// approved prototype (.planning/reference/prototype-shell-and-fig01.html
+// lines 202-229) plus three hardening gaps the prototype does not
+// implement (FIG-05/FIG-07 — 02-CONTEXT.md, 02-RESEARCH.md Patterns 3-5).
+// Keyboard proxy wiring + the public initFig01 orchestrator are added in
+// this plan's next task.
 //
-// This module owns DOM events only; model.ts owns state mutation, render.ts
-// owns pixels.
+// This module owns DOM events + the render/lifecycle branch point only;
+// model.ts owns state mutation, render.ts owns pixels. The fault self-heal
+// timer is a setTimeout, deliberately decoupled from the animation loop
+// (02-RESEARCH.md Pitfall 3) so it still fires under reduced motion.
 
 import {
   healFault,
@@ -20,6 +22,8 @@ import {
   type NodeId,
   type NodeSpec,
 } from './model';
+import { getDpr, layout, renderStaticFrame, startAnimationLoop, stopAnimationLoop } from './render';
+import type { FigTokens } from './tokens';
 import { fig01Facts } from '../../data/fig01';
 
 /** Node id -> hover/keyboard-proxy fact, keyed for O(1) lookup during pointer/keyboard wiring. */
@@ -36,6 +40,13 @@ const HIT_SLOP_Y = 8;
 const TIP_OFFSET_Y = 38;
 /** Tooltip clamp margin from the stage edges, in px. */
 const TIP_EDGE_MARGIN = 8;
+
+// The reduced-motion detector is read once at module scope — this is a
+// single-instance-per-page module (one Fig. 01), matching render.ts's own
+// module-scope rAF-driver-state precedent.
+const rm = matchMedia('(prefers-reduced-motion: reduce)');
+/** Whether the figure's stage is currently intersecting the viewport (IntersectionObserver-driven, FIG-07). */
+let intersecting = false;
 
 /** Formats "now" as HH:mm:ss, 24h, America/Los_Angeles — the same Intl.DateTimeFormat shape as SiteFooter.astro's clock (02-UI-SPEC "Log timestamp format"). */
 function formatLogTimestamp(): string {
@@ -201,4 +212,109 @@ export function wireButtons(
     redraw();
     triggerHeal();
   });
+}
+
+/**
+ * Builds the `redraw()` callback threaded through every wiring function:
+ * under reduced motion it repaints one static frame after any state
+ * change (fault inject/heal/hover/focus); under animation it is a no-op
+ * because the running loop already repaints every frame. This single
+ * branch is what keeps fault injection functional and narrated in the
+ * reduced-motion path (02-RESEARCH.md Pitfall 3).
+ */
+export function createRedraw(ctx: CanvasRenderingContext2D, state: FigureState, tokens: FigTokens): () => void {
+  return (): void => {
+    if (rm.matches) {
+      renderStaticFrame(ctx, state, tokens);
+    }
+  };
+}
+
+/**
+ * Gates the single consolidated animation loop on intersection AND tab
+ * visibility AND motion preference (FIG-07). Idempotent — safe to call
+ * repeatedly from any of the three signal sources.
+ */
+export function updateRunState(ctx: CanvasRenderingContext2D, state: FigureState, tokens: FigTokens): void {
+  const shouldRun = intersecting && !document.hidden && !rm.matches;
+  if (shouldRun) {
+    startAnimationLoop(ctx, state, tokens);
+  } else {
+    stopAnimationLoop();
+  }
+}
+
+/**
+ * The reduced-motion branch point (FIG-05 acceptance bar). Always stops
+ * any running loop first, then branches: under `prefers-reduced-motion:
+ * reduce`, renders exactly one static frame and starts no loop at all —
+ * `startAnimationLoop` is never reachable from this branch, only from
+ * `updateRunState`'s non-reduced-motion path. Register this as the
+ * `matchMedia` `change` handler (via `wireLifecycle`) so a live OS toggle
+ * re-branches instead of only being checked once at load.
+ */
+export function applyMotionPreference(
+  state: FigureState,
+  ctx: CanvasRenderingContext2D,
+  tokens: FigTokens,
+  redraw: () => void
+): void {
+  stopAnimationLoop();
+  if (rm.matches) {
+    renderStaticFrame(ctx, state, tokens);
+  } else {
+    updateRunState(ctx, state, tokens);
+  }
+  redraw();
+}
+
+/** Handle returned by `wireLifecycle`, disconnecting every observer/listener it registered. */
+export interface LifecycleHandle {
+  teardown: () => void;
+}
+
+/**
+ * Registers the three pause signals (IntersectionObserver, `visibilitychange`,
+ * a live `prefers-reduced-motion` change listener) plus a `ResizeObserver`
+ * that re-layouts the canvas on container-driven resizes (e.g. font-load
+ * reflow, 02-RESEARCH.md Pattern 6). Returns a teardown disconnecting all
+ * of them, for `initFig01`'s returned teardown to call.
+ */
+export function wireLifecycle(
+  ctx: CanvasRenderingContext2D,
+  canvas: HTMLCanvasElement,
+  stage: HTMLElement,
+  state: FigureState,
+  tokens: FigTokens,
+  redraw: () => void
+): LifecycleHandle {
+  const onVisibilityChange = (): void => updateRunState(ctx, state, tokens);
+  document.addEventListener('visibilitychange', onVisibilityChange);
+
+  const intersectionObserver = new IntersectionObserver(
+    ([entry]) => {
+      intersecting = entry.isIntersecting;
+      updateRunState(ctx, state, tokens);
+    },
+    { threshold: 0 }
+  );
+  intersectionObserver.observe(stage);
+
+  const resizeObserver = new ResizeObserver(() => {
+    layout(ctx, canvas, stage, state, getDpr());
+    redraw();
+  });
+  resizeObserver.observe(stage);
+
+  const onMotionChange = (): void => applyMotionPreference(state, ctx, tokens, redraw);
+  rm.addEventListener('change', onMotionChange);
+
+  return {
+    teardown(): void {
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+      intersectionObserver.disconnect();
+      resizeObserver.disconnect();
+      rm.removeEventListener('change', onMotionChange);
+    },
+  };
 }
