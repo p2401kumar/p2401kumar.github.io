@@ -5,13 +5,17 @@
 //
 // Custom-property names read here are string literals only — the actual
 // color values live solely in src/styles/tokens.css.
+//
+// The generic getComputedStyle/parseHex/rgba mechanics live in
+// src/lib/shared/css-tokens.ts (05-CONTEXT.md Scene-architecture decision —
+// extracted so night-sky's own token bridge can reuse them without
+// duplicating hex-parsing). This module keeps only the FigTokens shape and
+// the fig01-specific token name list; behavior is unchanged.
 
-/** An RGB triple parsed from a `#rrggbb` token value. */
-export interface RgbTriple {
-  r: number;
-  g: number;
-  b: number;
-}
+import { getRootStyles, readToken, rgba, type RgbTriple } from '../shared/css-tokens';
+
+export type { RgbTriple };
+export { rgba };
 
 /** Parsed Fig. 01 color tokens, sourced from src/styles/tokens.css. */
 export interface FigTokens {
@@ -27,25 +31,6 @@ export interface FigTokens {
 
 let cached: FigTokens | null = null;
 
-function parseHex(hex: string): RgbTriple {
-  const value = hex.trim().replace(/^#/, '');
-  const full =
-    value.length === 3
-      ? value
-          .split('')
-          .map((c) => c + c)
-          .join('')
-      : value;
-  const r = Number.parseInt(full.slice(0, 2), 16);
-  const g = Number.parseInt(full.slice(2, 4), 16);
-  const b = Number.parseInt(full.slice(4, 6), 16);
-  return { r, g, b };
-}
-
-function readToken(styles: CSSStyleDeclaration, name: string): RgbTriple {
-  return parseHex(styles.getPropertyValue(name));
-}
-
 /**
  * Lazily reads the computed root styles once, caches the parsed token set,
  * and returns the same cached object on every subsequent call
@@ -53,7 +38,7 @@ function readToken(styles: CSSStyleDeclaration, name: string): RgbTriple {
  */
 export function getTokens(): FigTokens {
   if (cached) return cached;
-  const styles = getComputedStyle(document.documentElement);
+  const styles = getRootStyles();
   cached = {
     accent: readToken(styles, '--accent'),
     good: readToken(styles, '--good'),
@@ -65,9 +50,4 @@ export function getTokens(): FigTokens {
     hair: readToken(styles, '--hair'),
   };
   return cached;
-}
-
-/** Formats a parsed rgb triple + alpha as a `rgba(r, g, b, alpha)` string. */
-export function rgba(triple: RgbTriple, alpha: number): string {
-  return `rgba(${triple.r}, ${triple.g}, ${triple.b}, ${alpha})`;
 }
