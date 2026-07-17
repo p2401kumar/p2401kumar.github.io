@@ -1,0 +1,115 @@
+/*
+ * deck.css — panel deck layout: transform-based positioning, fixed chrome,
+ * body scroll-lock, reduced-motion instant snap.
+ *
+ * EVERY selector below is scoped under html.deck-active so the base no-JS
+ * page (DECK-07 progressive-enhancement floor) is completely unaffected —
+ * no script in this plan ever adds that class, so importing this stylesheet
+ * (PanelDeck.astro) has zero visual effect until deck.ts (plan 04-02) exists.
+ *
+ * Inactive panels are hidden via transform + opacity + pointer-events ONLY
+ * (never removed from layout flow, never made invisible-to-hit-testing via
+ * any box-suppression technique) — this keeps every panel's content in the
+ * accessibility tree and preserves Fig. 01's IntersectionObserver-driven
+ * render loop untouched (04-RESEARCH.md "Body Scroll Locking" /
+ * ARCHITECTURE.md Pattern 1).
+ *
+ * Zero hex literals — every value reads var(--token) from tokens.css.
+ */
+
+/* 1. Body scroll lock — applied to the document element because the
+   viewport itself, not a wrapper, must stop scrolling while the deck owns
+   navigation. */
+html.deck-active,
+html.deck-active body {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior-y: none;
+}
+
+/* Full-viewport positioned container for the panel stack — gives every
+   .panel (position: absolute; inset: 0) a predictable containing block that
+   exactly matches the viewport, independent of .page's max-width/padding
+   column. Sits below the fixed header/footer (z-index: 20). */
+html.deck-active .deck {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+}
+
+/* 2. Panel positioning — each panel fills the full deck viewport and
+   scrolls internally (tall panels like experience/skills stay usable).
+   Centered content column padding clears the fixed header (top) and
+   footer (bottom) bars so they never occlude panel content. */
+html.deck-active .panel {
+  position: absolute;
+  inset: 0;
+  overflow: auto;
+  display: flex;
+  justify-content: center;
+  padding: 96px clamp(18px, 4vw, 32px) 112px;
+}
+
+html.deck-active .panel > * {
+  width: 100%;
+  max-width: 880px;
+}
+
+/* 3. Active/inactive state — transform + opacity + pointer-events only. */
+html.deck-active .panel[data-state="active"] {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+html.deck-active .panel[data-state="inactive"] {
+  transform: translateY(24px);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* 4. Transition. */
+html.deck-active .panel {
+  transition:
+    transform 420ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 420ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* 5. Reduced motion (DECK-08) — the ONLY reduced branch: instant snap to
+   the end state, no separate "reduced but still animated" tier. */
+@media (prefers-reduced-motion: reduce) {
+  html.deck-active .panel {
+    transition: none;
+  }
+}
+
+/* 6. Fixed chrome — position change only; existing padding/hairline stay
+   in SiteHeader.astro/SiteFooter.astro's own component styles. LOCKED per
+   04-UI-SPEC.md "Fixed chrome": header/footer become fixed frame chrome
+   this phase, position-only, no markup/color change. */
+html.deck-active header {
+  position: fixed;
+  top: 0;
+  inset-inline: 0;
+  z-index: 20;
+}
+
+html.deck-active footer {
+  position: fixed;
+  bottom: 0;
+  inset-inline: 0;
+  z-index: 20;
+}
+
+/* Panel focus management (04-UI-SPEC.md "Focus management") — programmatic
+   .focus({ preventScroll: true }) on panel activation must not show a
+   default outline; keyboard-driven focus-visible still shows the ring,
+   offset inward since the panel is full-viewport. */
+html.deck-active .panel:focus {
+  outline: none;
+}
+
+html.deck-active .panel:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
