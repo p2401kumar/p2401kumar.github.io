@@ -1,14 +1,19 @@
 ---
 /**
- * PanelDeck.astro — deck shell: wraps the panel stack + DeckIndex.
+ * PanelDeck.astro — deck shell: wraps the panel stack + DeckIndex, and boots
+ * the deck.ts controller.
  *
  * Imports deck.css in frontmatter so the deck layout stylesheet only bundles
  * on pages that actually render a deck (currently just index.astro). Every
  * rule in deck.css is scoped under html.deck-active, so importing it here
- * has zero visual effect until deck.ts (plan 04-02) adds that class — the
- * no-JS / pre-init page renders this as a plain in-flow <div>.
+ * has zero visual effect until deck.ts adds that class.
  *
- * No <script> here — deck.ts wiring is plan 04-02's job.
+ * The trailing bare bundling script tag (no attributes — the Astro TS/
+ * import bundling seam, identical to Figure01.astro's boot script; any
+ * attribute on the tag opts out of that pipeline) imports and boots
+ * src/lib/nightsky/deck.ts's initDeck(root) against this component's own
+ * .deck root element. A thrown init error is swallowed so .deck-active is
+ * never added and the page stays the v1 scrolling layout (DECK-07).
  */
 import DeckIndex from "./DeckIndex.astro";
 import "../styles/deck.css";
@@ -18,3 +23,17 @@ import "../styles/deck.css";
   <slot />
   <DeckIndex />
 </div>
+
+<script>
+  import { initDeck } from "../lib/nightsky/deck";
+
+  const root = document.querySelector<HTMLElement>(".deck");
+  if (root) {
+    try {
+      initDeck(root);
+    } catch {
+      // Swallowed — .deck-active was never added, so the page stays the v1
+      // scrolling layout (DECK-07 progressive-enhancement floor).
+    }
+  }
+</script>

@@ -64,6 +64,9 @@ function writeStorage(key: string, value: string): void {
 // Module-scope deck state — single deck instance per page, matching
 // lib/fig01/interactions.ts's own single-instance-per-module precedent.
 const htmlEl = document.documentElement;
+// Read once at module scope — same idiom as lib/fig01/interactions.ts's own
+// module-scope `rm` constant.
+const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 let currentIndex = 0;
 let locked = false;
 let firstNavDone = false;
@@ -71,6 +74,16 @@ let panelEls: HTMLElement[] = [];
 let liveEl: HTMLElement;
 let indexCountEl: HTMLElement;
 let hintEl: HTMLElement;
+
+/** Under prefers-reduced-motion, transitions are instant (deck.css's own reduced-motion branch) — the transition lock window collapses to 0 so input isn't needlessly blocked. */
+function lockDuration(): number {
+  return reducedMotion.matches ? 0 : TRANSITION_LOCK_MS;
+}
+
+/** `.classic-active` disables all deck input handling — wheel/touch/keyboard/jump-list defer to native scrolling/anchor behavior while it's set. */
+function isClassicActive(): boolean {
+  return htmlEl.classList.contains('classic-active');
+}
 
 /**
  * Resolves a URL hash to a panel index. Bounds-checked against the
@@ -158,6 +171,236 @@ function wireHistory(): () => void {
   };
 }
 
+/** Normalizes a WheelEvent's deltaY to px, branching on deltaMode (04-RESEARCH.md "Wheel Normalization") — never assume deltaY is already in pixels. */
+function normalizeWheelDelta(e: WheelEvent): number {
+  switch (e.deltaMode) {
+    case 1:
+      return e.deltaY * 16; // DOM_DELTA_LINE — approximate line height
+    case 2:
+      return e.deltaY * window.innerHeight; // DOM_DELTA_PAGE
+    default:
+      return e.deltaY; // DOM_DELTA_PIXEL — the common case
+  }
+}
+
+/**
+ * Fine trackpad deltas accumulate across events; crossing WHEEL_THRESHOLD
+ * fires exactly one goTo, then locks input for the transition duration
+ * (momentum-tail suppression — checked BEFORE accumulating, so a queued
+ * tail never fires a second transition after the user has stopped
+ * scrolling). Registered `{ passive: false }` on the deck root ONLY, never
+ * `window` — never degrades /work/* scroll (DECK-01).
+ */
+function wireWheel(root: HTMLElement): () => void {
+  let accumulator = 0;
+  let lastEventTime = 0;
+
+  const onWheel = (e: WheelEvent): void => {
+    if (isClassicActive()) return; // let native scroll handle classic mode
+    e.preventDefault();
+    if (locked) return;
+
+    const now = performance.now();
+    if (now - lastEventTime > IDLE_RESET_MS) accumulator = 0;
+    lastEventTime = now;
+    accumulator += normalizeWheelDelta(e);
+
+    if (Math.abs(accumulator) >= WHEEL_THRESHOLD) {
+      const direction = accumulator > 0 ? 1 : -1;
+      accumulator = 0;
+      locked = true;
+      goTo(currentIndex + direction);
+      setTimeout(() => {
+        locked = false;
+      }, lockDuration());
+    }
+  };
+
+  root.addEventListener('wheel', onWheel, { passive: false });
+  return (): void => root.removeEventListener('wheel', onWheel);
+}
+
+/**
+ * Vertical-axis-only swipe detector (iOS edge-back collision avoidance,
+ * DECK-02): touchmove preventDefaults only once vertical intent is
+ * confirmed; horizontal-dominant gestures are never prevented, leaving the
+ * browser's own edge-swipe/back-navigation intact.
+ */
+function wireTouch(root: HTMLElement): () => void {
+  let touchStartY = 0;
+  let touchStartX = 0;
+  let touchStartTime = 0;
+
+  const onTouchStart = (e: TouchEvent): void => {
+    const t = e.touches[0];
+    touchStartY = t.clientY;
+    touchStartX = t.clientX;
+    touchStartTime = performance.now();
+  };
+
+  const onTouchMove = (e: TouchEvent): void => {
+    if (isClassicActive()) return;
+    const t = e.touches[0];
+    const dy = Math.abs(t.clientY - touchStartY);
+    const dx = Math.abs(t.clientX - touchStartX);
+    if (dy > dx) e.preventDefault(); // vertical intent confirmed — block native scroll/bounce
+  };
+
+  const onTouchEnd = (e: TouchEvent): void => {
+    if (isClassicActive() || locked) return;
+    const t = e.changedTouches[0];
+    const dy = t.clientY - touchStartY;
+    const dx = t.clientX - touchStartX;
+    const dt = performance.now() - touchStartTime;
+    const velocity = Math.abs(dy) / dt;
+
+    if (Math.abs(dx) > SWIPE_HORIZONTAL_TOLERANCE && Math.abs(dx) > Math.abs(dy)) return; // horizontal, ignore
+    if (Math.abs(dy) < SWIPE_DISTANCE || velocity < SWIPE_VELOCITY) return; // too small/slow
+
+    const direction = dy < 0 ? 1 : -1; // swipe up = next panel
+    locked = true;
+    goTo(currentIndex + direction);
+    setTimeout(() => {
+      locked = false;
+    }, lockDuration());
+  };
+
+  root.addEventListener('touchstart', onTouchStart, { passive: true });
+  root.addEventListener('touchmove', onTouchMove, { passive: false });
+  root.addEventListener('touchend', onTouchEnd, { passive: true });
+
+  return (): void => {
+    root.removeEventListener('touchstart', onTouchStart);
+    root.removeEventListener('touchmove', onTouchMove);
+    root.removeEventListener('touchend', onTouchEnd);
+  };
+}
+
+/**
+ * ArrowDown/PageDown → next, ArrowUp/PageUp → prev, Home → first, End →
+ * last. Ignored inside form controls/contenteditable or with a modifier
+ * held; Space is never hijacked (DECK-03). Collision-free with Fig. 01:
+ * lib/fig01/interactions.ts's wireKeyboard binds only focus/blur/click on
+ * .node-proxy buttons — zero keydown listeners anywhere in lib/fig01/*
+ * (04-RESEARCH.md "Fig. 01 Keyboard Ground Truth") — so this handler never
+ * collides, even when focus sits inside Fig. 01's panel.
+ */
+function wireKeyboard(): () => void {
+  const onKeyDown = (e: KeyboardEvent): void => {
+    if (isClassicActive()) return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+
+    const target = e.target as HTMLElement | null;
+    if (
+      target &&
+      (target.tagName === 'INPUT' ||
+        target.tagName === 'TEXTAREA' ||
+        target.tagName === 'SELECT' ||
+        target.isContentEditable)
+    ) {
+      return;
+    }
+
+    switch (e.key) {
+      case 'ArrowDown':
+      case 'PageDown':
+        e.preventDefault();
+        goTo(currentIndex + 1);
+        break;
+      case 'ArrowUp':
+      case 'PageUp':
+        e.preventDefault();
+        goTo(currentIndex - 1);
+        break;
+      case 'Home':
+        e.preventDefault();
+        goTo(0);
+        break;
+      case 'End':
+        e.preventDefault();
+        goTo(PANEL_COUNT - 1);
+        break;
+      default:
+        break;
+    }
+  };
+
+  document.addEventListener('keydown', onKeyDown);
+  return (): void => document.removeEventListener('keydown', onKeyDown);
+}
+
+/**
+ * Intercepts jump-list anchor clicks and routes them through goTo (the
+ * primary jump path; wireHistory's hashchange listener is the safety net
+ * for clicks that aren't intercepted in time). In classic mode, defers to
+ * the anchor's native in-page navigation instead (DECK-04, DECK-05).
+ */
+function wireJumpList(anchors: NodeListOf<HTMLAnchorElement>): () => void {
+  const onClick = (e: MouseEvent): void => {
+    if (isClassicActive()) return;
+    const anchor = e.currentTarget as HTMLAnchorElement;
+    const index = Number(anchor.dataset.panelIndex);
+    if (Number.isNaN(index)) return;
+    e.preventDefault();
+    goTo(index);
+  };
+
+  anchors.forEach((a) => a.addEventListener('click', onClick));
+  return (): void => anchors.forEach((a) => a.removeEventListener('click', onClick));
+}
+
+/**
+ * First-visit hint (DECK-06): if `deck-hint-seen` is already set, hide it
+ * immediately at init (no fade — it should never have been visible for a
+ * returning visitor). Otherwise it stays visible until `dismissHint` (called
+ * from the first successful `goTo`) fades it out and remembers the
+ * dismissal. No listeners of its own — returns a no-op teardown to match
+ * every other wire* function's shape.
+ */
+function wireHint(): () => void {
+  if (readStorage(HINT_SEEN_KEY) === '1') {
+    hintEl.style.opacity = '0';
+    hintEl.style.pointerEvents = 'none';
+    firstNavDone = true;
+  }
+  return (): void => {};
+}
+
+/**
+ * "view classic" disables the deck (removes .deck-active, restores native
+ * scrolling) and persists the choice; "deck view" reverses it. Both
+ * re-apply the current panel's inert/aria-hidden state so the visible
+ * content stays coherent after the mode flip (DECK-07).
+ */
+function wireViewToggle(viewClassicLink: HTMLAnchorElement, viewDeckLink: HTMLAnchorElement): () => void {
+  const enterClassic = (e: MouseEvent): void => {
+    e.preventDefault();
+    htmlEl.classList.remove('deck-active');
+    htmlEl.classList.add('classic-active');
+    panelEls.forEach((el) => {
+      el.inert = false;
+      el.removeAttribute('aria-hidden');
+    });
+    writeStorage(VIEW_PREF_KEY, 'classic');
+  };
+
+  const enterDeck = (e: MouseEvent): void => {
+    e.preventDefault();
+    htmlEl.classList.remove('classic-active');
+    htmlEl.classList.add('deck-active');
+    applyPanelStates(currentIndex);
+    writeStorage(VIEW_PREF_KEY, 'deck');
+  };
+
+  viewClassicLink.addEventListener('click', enterClassic);
+  viewDeckLink.addEventListener('click', enterDeck);
+
+  return (): void => {
+    viewClassicLink.removeEventListener('click', enterClassic);
+    viewDeckLink.removeEventListener('click', enterDeck);
+  };
+}
+
 /**
  * Boots the deck against `root` in the exact progressive-enhancement order
  * (04-RESEARCH.md "Progressive-enhancement bootstrap ordering", DECK-07):
@@ -177,6 +420,15 @@ export function initDeck(root: HTMLElement): () => void {
   liveEl = required(root.querySelector<HTMLElement>('#deck-live'), '#deck-live');
   indexCountEl = required(root.querySelector<HTMLElement>('#deck-index-count'), '#deck-index-count');
   hintEl = required(root.querySelector<HTMLElement>('#deck-hint'), '#deck-hint');
+  const jumpAnchors = root.querySelectorAll<HTMLAnchorElement>('.deck-jump a[data-panel-index]');
+  if (jumpAnchors.length !== PANEL_COUNT) {
+    throw new Error(`initDeck: expected ${PANEL_COUNT} jump-list anchors, found ${jumpAnchors.length}`);
+  }
+  const viewClassicLink = required(
+    root.querySelector<HTMLAnchorElement>('.deck-view-classic'),
+    '.deck-view-classic',
+  );
+  const viewDeckLink = required(root.querySelector<HTMLAnchorElement>('.deck-view-deck'), '.deck-view-deck');
 
   // 2-3. Resolve + apply the initial panel state SYNCHRONOUSLY — a
   // cold-load to #patents paints #patents first, never panel 0.
@@ -185,9 +437,14 @@ export function initDeck(root: HTMLElement): () => void {
   currentIndex = initialIndex;
   announce(initialIndex);
 
-  // 4. Wire input. History routing lands in this task; wheel/touch/
-  // keyboard/jump-list/hint/view-toggle wiring lands in 04-02 Task 2.
+  // 4. Wire input.
   const teardownHistory = wireHistory();
+  const teardownWheel = wireWheel(root);
+  const teardownTouch = wireTouch(root);
+  const teardownKeyboard = wireKeyboard();
+  const teardownJumpList = wireJumpList(jumpAnchors);
+  const teardownHint = wireHint();
+  const teardownViewToggle = wireViewToggle(viewClassicLink, viewDeckLink);
 
   // 5. LAST — decide starting mode from the persisted view preference.
   // Everything above must have succeeded for this line to run at all.
@@ -204,5 +461,11 @@ export function initDeck(root: HTMLElement): () => void {
   // 6. Teardown.
   return (): void => {
     teardownHistory();
+    teardownWheel();
+    teardownTouch();
+    teardownKeyboard();
+    teardownJumpList();
+    teardownHint();
+    teardownViewToggle();
   };
 }
