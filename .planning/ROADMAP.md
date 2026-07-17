@@ -71,7 +71,28 @@ Plans:
   4. Visitor with `prefers-reduced-motion` gets an informative static figure where fault injection still works via instant state changes; a keyboard-only visitor can operate every control with visible focus states and no keyboard trap
   5. The figure sustains ~60fps on average laptops (single rAF loop, DPR cap 2, batched draws) and the page holds Lighthouse ≥ 90 with the figure active
 
-**Plans**: TBD
+**Plans**: 5 plans
+Plans:
+**Wave 1**
+
+- [ ] 02-01-PLAN.md — Foundations: source-annotated fact data, runtime token reader, pure model.ts topology + beam/fault state machine (wave 1)
+
+**Wave 2** *(blocked on Wave 1)*
+
+- [ ] 02-02-PLAN.md — render.ts: single-rAF driver, all draw primitives, DPR-capped HiDPI layout, renderStaticFrame reduced-motion path (wave 2)
+
+**Wave 3** *(blocked on Wave 2)*
+
+- [ ] 02-03-PLAN.md — interactions.ts + index.ts: pointer/buttons/aria-live log, reduced-motion no-loop branch, IntersectionObserver+visibilitychange gating, setTimeout self-heal, keyboard proxy controls (wave 3)
+
+**Wave 4** *(blocked on Wave 3)*
+
+- [ ] 02-04-PLAN.md — Figure01.astro chrome + ARIA surface + 10 proxy buttons + bare bundling script; index.astro slot fill (wave 4)
+
+**Wave 5** *(blocked on Wave 4)*
+
+- [ ] 02-05-PLAN.md — Aggregate verification battery + fast-forward deploy to GitHub Pages + live-URL chrome check (wave 5)
+
 **UI hint**: yes
 
 ### Phase 3: Case Studies & Launch Polish
@@ -97,5 +118,5 @@ Phases execute in numeric order: 1 → 2 → 3
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & Editorial Shell | 7/7 | Complete   | 2026-07-17 |
-| 2. Fig. 01 — Signature Interactive Figure | 0/TBD | Not started | - |
+| 2. Fig. 01 — Signature Interactive Figure | 0/5 | Not started | - |
 | 3. Case Studies & Launch Polish | 0/TBD | Not started | - |
