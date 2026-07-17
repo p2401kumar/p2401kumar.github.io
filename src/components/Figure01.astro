@@ -1,0 +1,231 @@
+---
+/**
+ * Figure01.astro — Fig. 01, the signature interactive systems figure.
+ *
+ * Bespoke markup shell (ARCHITECTURE.md "Figure01.astro ↔ lib/fig01/*"
+ * boundary): fig-bar chrome (title + send/inject-fault buttons), a canvas
+ * stage (role="img" + aria-label, an HTML tooltip overlay, and 10
+ * visually-hidden keyboard-proxy buttons in topology order), an
+ * aria-live="polite" event log, and the caption. The trailing bare
+ * bundling script tag (no attributes — the Astro TS/import bundling seam,
+ * 02-RESEARCH.md Pattern 1; any attribute on the tag opts out of that
+ * pipeline) imports and boots `src/lib/fig01/index.ts`'s `initFig01(root)`
+ * against this component's own `.fig` root element.
+ *
+ * DOM contract wired by `initFig01` (src/lib/fig01/index.ts, plan 02-03) —
+ * every selector below must exist exactly as written:
+ *   .fig-stage, #fig01-canvas, #fig01-tip, #fig01-log, #send, #fault,
+ *   .node-proxy[data-node]
+ */
+import { fig01Facts } from "../data/fig01";
+---
+
+<figure class="fig">
+  <div class="fig-bar">
+    <span class="t"
+      ><b>fig. 01</b> — request path through a cellularized region <span style="color: var(--faint)"
+        >· live</span
+      ></span
+    >
+    <span class="fig-actions">
+      <button class="btn" id="send">send request</button>
+      <button class="btn warn" id="fault">inject fault</button>
+    </span>
+  </div>
+  <div class="fig-stage">
+    <canvas
+      id="fig01-canvas"
+      role="img"
+      aria-label="Diagram: three client devices route through a load balancer to four isolated cells, then to data pipelines and an ML health-snapshot service. Live simulation — request traffic flows continuously; a fault can be injected to show automatic rerouting."
+    ></canvas>
+    <div class="tip" id="fig01-tip" aria-hidden="true"></div>
+    {
+      fig01Facts.map((fact) => (
+        <button class="node-proxy visually-hidden" data-node={fact.nodeId} aria-label={fact.accessibleName}>
+          {fact.accessibleName}
+        </button>
+      ))
+    }
+  </div>
+  <div class="fig-log" id="fig01-log" aria-live="polite"></div>
+  <div class="fig-cap">
+    The pattern I shipped at AWS: isolated cells cap blast radius; unhealthy cells are weighed away automatically.
+    Hover a node · numbers are from production.
+  </div>
+</figure>
+
+<script>
+  import { initFig01 } from "../lib/fig01/index";
+
+  const root = document.querySelector<HTMLElement>(".fig");
+  if (root) {
+    initFig01(root);
+  }
+</script>
+
+<style>
+  .fig {
+    margin: 54px 0 0;
+    border: 1px solid var(--hair);
+    border-radius: 10px;
+    background: var(--panel);
+    overflow: hidden;
+  }
+
+  .fig-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--hair);
+  }
+
+  .fig-bar .t {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--dim);
+    letter-spacing: 0.03em;
+  }
+
+  .fig-bar .t b {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .fig-actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  .btn {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    background: none;
+    border: 1px solid var(--hair2);
+    color: var(--body);
+    border-radius: 6px;
+    padding: 6px 12px;
+    transition:
+      border-color 0.15s,
+      color 0.15s;
+  }
+
+  .btn:hover {
+    border-color: var(--accent);
+    color: var(--ink);
+  }
+
+  .btn.warn:hover {
+    border-color: var(--amber);
+  }
+
+  .btn:disabled {
+    opacity: 0.45;
+    cursor: default;
+  }
+
+  .fig-stage {
+    position: relative;
+  }
+
+  canvas {
+    display: block;
+    width: 100%;
+    height: 380px;
+  }
+
+  .tip {
+    position: absolute;
+    pointer-events: none;
+    z-index: 3;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--ink);
+    /* Prototype hardcoded a bespoke near-black literal here; no existing
+       token matches that exact value (Anti-Pattern 2 forbids a new hex
+       literal), so this maps to the closest existing surface token, --bg,
+       the darkest tone already declared in tokens.css. See
+       02-04-SUMMARY.md Deviations. */
+    background: var(--bg);
+    border: 1px solid var(--hair2);
+    border-radius: 6px;
+    padding: 7px 10px;
+    opacity: 0;
+    transition: opacity 0.12s;
+    white-space: nowrap;
+  }
+
+  /* tooltipHtml is written via innerHTML at runtime (interactions.ts
+     showTip) — the .m span it may contain is never present in this
+     template's static markup, so it needs :global() to match Astro's
+     per-file style scoping. */
+  .tip :global(.m) {
+    color: var(--accent);
+  }
+
+  .fig-log {
+    border-top: 1px solid var(--hair);
+    padding: 10px 16px;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--dim);
+    min-height: 38px;
+  }
+
+  /* Log lines are appended at runtime (interactions.ts writeLog) — :global()
+     for the same reason as .tip :global(.m) above. */
+  .fig-log :global(div) {
+    opacity: 0;
+    animation: lg 0.3s ease-out forwards;
+  }
+
+  @keyframes lg {
+    from {
+      opacity: 0;
+      transform: translateY(3px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .fig-log :global(.hl) {
+    color: var(--amber);
+  }
+
+  .fig-log :global(.ok) {
+    color: var(--good);
+  }
+
+  .fig-cap {
+    padding: 0 16px 12px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--faint);
+  }
+
+  /* Standard visually-hidden recipe: clipped to zero size but never
+     display:none/aria-hidden, so the 10 node-proxy buttons stay in the
+     accessibility tree and native tab order (FIG-06). */
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  @media (max-width: 640px) {
+    canvas {
+      height: 300px;
+    }
+  }
+</style>
