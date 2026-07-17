@@ -40,10 +40,10 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
   5. With JS disabled the page renders the v1 scrolling layout (`.deck-active` added only after successful init); under `prefers-reduced-motion` panel transitions are instant
 
 **Research gate**: Lighthouse ≥90 with the deck active but no scene yet; real-device input testing on iPhone + mid-tier Android; case-study routing architecture decided here (not deferred to Integration); Fig. 01 keymap resolved against actual `src/lib/fig01/` source.
-**Plans**: 3 plans
+**Plans**: 1/3 plans executed
 **Wave 1**
 
-- [ ] 04-01-PLAN.md — Panel manifest + deck shell components + index restructure + deck.css (no-JS-safe static foundation)
+- [x] 04-01-PLAN.md — Panel manifest + deck shell components + index restructure + deck.css (no-JS-safe static foundation)
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
@@ -95,7 +95,7 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 | 1. Foundation & Editorial Shell | v1.0 | 7/7 | Complete | 2026-07-17 |
 | 2. Fig. 01 — Signature Interactive Figure | v1.0 | 5/5 | Complete | 2026-07-17 |
 | 3. Case Studies & Launch Polish | v1.0 | 4/4 | Complete | 2026-07-17 |
-| 4. Deck Mechanics | v2.0 | 0/3 | Not started | - |
+| 4. Deck Mechanics | v2.0 | 1/3 | In Progress|  |
 | 5. Night-Sky Scene | v2.0 | 0/TBD | Not started | - |
 | 6. Integration & Launch | v2.0 | 0/TBD | Not started | - |
 

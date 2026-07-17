@@ -2,14 +2,18 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Night Sky
-status: planning
-last_updated: "2026-07-17T10:45:00.000Z"
+current_phase: 04
+current_phase_name: Deck Mechanics
+status: executing
+stopped_at: Completed 04-01-PLAN.md
+last_updated: "2026-07-17T20:43:39.873Z"
 last_activity: 2026-07-17
+last_activity_desc: Phase 04 execution started
 progress:
   total_phases: 3
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
+  total_plans: 3
+  completed_plans: 1
   percent: 0
 ---
 
@@ -20,14 +24,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-17)
 
 **Core value:** Within seconds of landing, a senior engineering leader should think "this person operates at our level" — credibility delivered through demonstrated craft (a live systems demo), not adjectives. v2.0 adds: the first seconds should also be *beautiful*.
-**Current focus:** Phase 4 — Deck Mechanics (roadmap created, ready to plan)
+**Current focus:** Phase 04 — Deck Mechanics
 
 ## Current Position
 
-Phase: 4 — Deck Mechanics (planned, not started)
-Plan: —
-Status: v2.0 roadmap created — ready for phase planning
-Last activity: 2026-07-17 — v2.0 "Night Sky" roadmap created (Phases 4-6, 20/20 requirements mapped)
+Phase: 04 (Deck Mechanics) — EXECUTING
+Plan: 2 of 3
+Status: Ready to execute
+Last activity: 2026-07-17 — Phase 04 execution started
 
 ## Performance Metrics
 
@@ -73,6 +77,7 @@ Last activity: 2026-07-17 — v2.0 "Night Sky" roadmap created (Phases 4-6, 20/2
 | Phase 03-case-studies-launch-polish P04 | 21min | 3 tasks | 3 files |
 
 </details>
+| Phase 04 P01 | 12min | 3 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -106,6 +111,9 @@ Recent decisions affecting current work:
 
 </details>
 
+- [Phase 04-01]: Added html.deck-active .deck { position:fixed; inset:0 } as the panel stack's containing block (Rule 2 — not in the plan's literal deck.css list, required for .panel's inset:0 to resolve reliably against the viewport)
+- [Phase 04-01]: Followed 04-UI-SPEC's locked fixed header/footer values (inset-inline:0) literally with no compensating horizontal padding — visual QA of the edge-to-edge chrome deferred to the plan that first wires .deck-active
+
 ### Pending Todos
 
 None yet.
@@ -127,8 +135,8 @@ Items acknowledged and carried forward:
 
 ## Session Continuity
 
-Last session: 2026-07-17T10:45:00.000Z
-Stopped at: v2.0 "Night Sky" roadmap created — Phases 4-6 defined, 20/20 requirements mapped, traceability updated
+Last session: 2026-07-17T20:43:39.812Z
+Stopped at: Completed 04-01-PLAN.md
 Resume file: None
 
 ## Operator Next Steps

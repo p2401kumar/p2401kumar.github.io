@@ -12,11 +12,11 @@ Requirements for this milestone. Each maps to roadmap phases (numbering continue
 - [ ] **DECK-01**: Visitor advances/retreats panels via mouse wheel — one gesture = one panel (delta accumulation + transition lock; no trackpad double-fire, no dead mouse feel)
 - [ ] **DECK-02**: Visitor advances/retreats via vertical touch swipe on mobile
 - [ ] **DECK-03**: Visitor navigates fully by keyboard with a keymap that does not collide with Fig. 01's inner controls; hidden panels are `inert`; panel changes are announced via `aria-live`
-- [ ] **DECK-04**: Visitor sees a progress indicator (mono index) and can jump directly to any panel from it
-- [ ] **DECK-05**: Every panel has a URL hash — browser back/forward work, deep links cold-load to the correct panel
-- [ ] **DECK-06**: First-visit affordance hints how to navigate, then gets out of the way
-- [ ] **DECK-07**: With JS unavailable the page renders as the v1 scrolling layout (progressive enhancement — `.deck-active` added only after successful init); a quiet "view classic" link offers the scrolling view anytime
-- [ ] **DECK-08**: Panel transitions are instant under `prefers-reduced-motion`
+- [x] **DECK-04**: Visitor sees a progress indicator (mono index) and can jump directly to any panel from it
+- [x] **DECK-05**: Every panel has a URL hash — browser back/forward work, deep links cold-load to the correct panel
+- [x] **DECK-06**: First-visit affordance hints how to navigate, then gets out of the way
+- [x] **DECK-07**: With JS unavailable the page renders as the v1 scrolling layout (progressive enhancement — `.deck-active` added only after successful init); a quiet "view classic" link offers the scrolling view anytime
+- [x] **DECK-08**: Panel transitions are instant under `prefers-reduced-motion`
 
 ### Night Scene
 
@@ -69,11 +69,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DECK-01 | Phase 4 | Pending |
 | DECK-02 | Phase 4 | Pending |
 | DECK-03 | Phase 4 | Pending |
-| DECK-04 | Phase 4 | Pending |
-| DECK-05 | Phase 4 | Pending |
-| DECK-06 | Phase 4 | Pending |
-| DECK-07 | Phase 4 | Pending |
-| DECK-08 | Phase 4 | Pending |
+| DECK-04 | Phase 4 | Complete |
+| DECK-05 | Phase 4 | Complete |
+| DECK-06 | Phase 4 | Complete |
+| DECK-07 | Phase 4 | Complete |
+| DECK-08 | Phase 4 | Complete |
 | SKY-01 | Phase 5 | Pending |
 | SKY-02 | Phase 5 | Pending |
 | SKY-03 | Phase 5 | Pending |
@@ -88,6 +88,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | INTG-04 | Phase 6 | Pending |
 
 **Coverage:**
+
 - v2.0 requirements: 20 total
 - Mapped to phases: 20 ✓
 - Unmapped: 0
