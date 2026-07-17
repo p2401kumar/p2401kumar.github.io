@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  og-source.svg: hand-authored 1200x630 Open Graph image source (PLAT-06).
+
+  Rasterized to public/og/og-default.png by scripts/render-og.mjs (sharp).
+  Reuses the Fig. 01 aesthetic per 03-UI-SPEC.md "OG image composition":
+  bg ground plus a low-opacity 22px dot-grid substrate plus a simplified
+  cell/route motif in the lower-right third, name + thesis text, accent
+  budget under 5 percent of surface (never a fill).
+
+  Colors are the exact literals from src/styles/tokens.css (this file sits
+  outside the site's var(token) pipeline, so the hex values are hardcoded
+  intentionally, not invented):
+    bg #0f1216, panel2 #141a22, ink #e8ebef, body #aab2bd,
+    hair #1e242d, hair2 #28303b, accent #d99163
+-->
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id="dotgrid" width="22" height="22" patternUnits="userSpaceOnUse">
+      <circle cx="11" cy="11" r="0.7" fill="#28303b" />
+    </pattern>
+  </defs>
+
+  <!-- Ground -->
+  <rect x="0" y="0" width="1200" height="630" fill="#0f1216" />
+
+  <!-- Dot-grid substrate: Fig. 01 idiom, 22px pitch, 1.4x1.4 dots, low opacity -->
+  <rect x="0" y="0" width="1200" height="630" fill="url(#dotgrid)" opacity="0.55" />
+
+  <!-- Name -->
+  <text
+    x="90"
+    y="248"
+    font-family="'Iowan Old Style','Palatino Linotype',Georgia,serif"
+    font-size="72"
+    font-weight="500"
+    fill="#e8ebef"
+  >Prateek Kumar</text>
+
+  <!-- Accent underline: single accent mark, not a full-width fill -->
+  <rect x="91" y="266" width="64" height="3" fill="#d99163" />
+
+  <!-- Thesis -->
+  <text
+    x="90"
+    y="322"
+    font-family="'Iowan Old Style','Palatino Linotype',Georgia,serif"
+    font-size="30"
+    fill="#aab2bd"
+  >I build the infrastructure</text>
+  <text
+    x="90"
+    y="362"
+    font-family="'Iowan Old Style','Palatino Linotype',Georgia,serif"
+    font-size="30"
+    fill="#aab2bd"
+  >that intelligence runs on.</text>
+
+  <!-- Cell/route motif, lower-right third: quiet echo of Fig. 01, not a screenshot -->
+  <g>
+    <path
+      d="M 855 432 L 1015 432 L 1015 492 L 895 492 L 895 552"
+      fill="none"
+      stroke="#d99163"
+      stroke-width="1.6"
+      opacity="0.6"
+    />
+    <rect x="800" y="400" width="110" height="64" rx="8" fill="#141a22" stroke="#1e242d" stroke-width="1" />
+    <rect x="960" y="460" width="110" height="64" rx="8" fill="#141a22" stroke="#1e242d" stroke-width="1" />
+    <rect x="840" y="520" width="110" height="64" rx="8" fill="#141a22" stroke="#1e242d" stroke-width="1" />
+    <circle cx="855" cy="432" r="3" fill="#d99163" opacity="0.6" />
+    <circle cx="1015" cy="492" r="3" fill="#d99163" opacity="0.6" />
+    <circle cx="895" cy="552" r="3" fill="#d99163" opacity="0.6" />
+  </g>
+</svg>
