@@ -8,6 +8,8 @@
  */
 import BaseLayout from "../layouts/BaseLayout.astro";
 import SiteHeader from "../components/SiteHeader.astro";
+import PanelDeck from "../components/PanelDeck.astro";
+import Panel from "../components/Panel.astro";
 import Hero from "../components/Hero.astro";
 import Figure01 from "../components/Figure01.astro";
 import SystemsList from "../components/SystemsList.astro";
@@ -21,13 +23,29 @@ import SiteFooter from "../components/SiteFooter.astro";
 <BaseLayout>
   <div class="page">
     <SiteHeader />
-    <Hero />
-    <Figure01 />
-    <SystemsList />
-    <ExperienceSection />
-    <PatentsSection />
-    <SkillsSection />
-    <ContactSection />
+    <PanelDeck>
+      <Panel id="hero" label="hero">
+        <Hero />
+      </Panel>
+      <Panel id="fig-01" label="fig. 01">
+        <Figure01 />
+      </Panel>
+      <Panel id="systems" label="selected systems">
+        <SystemsList />
+      </Panel>
+      <Panel id="experience" label="experience">
+        <ExperienceSection />
+      </Panel>
+      <Panel id="patents" label="patents & publications">
+        <PatentsSection />
+      </Panel>
+      <Panel id="skills" label="skills">
+        <SkillsSection />
+      </Panel>
+      <Panel id="contact" label="contact" emitId={false}>
+        <ContactSection />
+      </Panel>
+    </PanelDeck>
     <SiteFooter />
   </div>
 </BaseLayout>

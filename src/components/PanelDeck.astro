@@ -1,0 +1,20 @@
+---
+/**
+ * PanelDeck.astro — deck shell: wraps the panel stack + DeckIndex.
+ *
+ * Imports deck.css in frontmatter so the deck layout stylesheet only bundles
+ * on pages that actually render a deck (currently just index.astro). Every
+ * rule in deck.css is scoped under html.deck-active, so importing it here
+ * has zero visual effect until deck.ts (plan 04-02) adds that class — the
+ * no-JS / pre-init page renders this as a plain in-flow <div>.
+ *
+ * No <script> here — deck.ts wiring is plan 04-02's job.
+ */
+import DeckIndex from "./DeckIndex.astro";
+import "../styles/deck.css";
+---
+
+<div class="deck">
+  <slot />
+  <DeckIndex />
+</div>

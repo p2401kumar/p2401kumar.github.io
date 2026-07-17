@@ -1,0 +1,213 @@
+---
+/**
+ * DeckIndex.astro — progress index pill + jump list + first-visit hint +
+ * view-classic/deck-view links + aria-live announcement region.
+ *
+ * Entirely manifest-driven: every panel-derived label/count/anchor below is
+ * mapped from `panels` (src/data/panels.ts) — there is no second hardcoded
+ * panel list anywhere in this component (04-01-PLAN.md Task 1 contract).
+ *
+ * ZERO runtime behavior wired here (that's deck.ts, plan 04-02). All show/
+ * hide state driven purely by CSS presence of html.deck-active /
+ * html.classic-active, which no script in this plan ever adds — so this
+ * entire component renders `display: none` on the pure no-JS page
+ * (DECK-07 progressive-enhancement base case).
+ *
+ * Query hooks deck.ts (04-02) will use: #deck-index, #deck-index-count,
+ * .deck-jump a[data-panel-index], .deck-hint, .deck-view-classic,
+ * .deck-view-deck, #deck-live.
+ */
+import { panels, PANEL_COUNT } from "../data/panels";
+
+const total = String(PANEL_COUNT).padStart(2, "0");
+const initialCount = `01 / ${total}`;
+---
+
+<div class="deck-index" id="deck-index">
+  <button
+    type="button"
+    class="deck-index-toggle"
+    aria-expanded="false"
+    aria-controls="deck-jump-list"
+  >
+    <span id="deck-index-count">{initialCount}</span>
+  </button>
+  <ul class="deck-jump" id="deck-jump-list">
+    {
+      panels.map((p, i) => (
+        <li>
+          <a href={`#${p.hash}`} data-panel-index={i} aria-current={i === 0 ? "true" : undefined}>
+            {i === 0 && (
+              <span class="marker" aria-hidden="true">
+                ▸
+              </span>
+            )}
+            {p.label}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+<div class="deck-hint" id="deck-hint">scroll · ↓ · swipe</div>
+
+<a href="#" class="deck-view-classic">view classic →</a>
+<a href="#" class="deck-view-deck">deck view →</a>
+
+<div id="deck-live" class="sr-only" aria-live="polite" aria-atomic="false"></div>
+
+<style>
+  /* Every element this component renders is hidden by default — no script
+     in this plan ever adds html.deck-active/html.classic-active, so the
+     pure no-JS page shows none of this chrome (DECK-07). */
+  .deck-index,
+  .deck-hint,
+  .deck-view-classic,
+  .deck-view-deck {
+    display: none;
+  }
+
+  html.deck-active .deck-index {
+    display: block;
+    position: fixed;
+    right: clamp(18px, 4vw, 32px);
+    bottom: 58px;
+    z-index: 21;
+  }
+
+  .deck-index-toggle {
+    display: block;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: 0.03em;
+    color: var(--body);
+    background: var(--bg);
+    border: 1px solid var(--hair2);
+    border-radius: 6px;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition:
+      border-color 0.15s,
+      color 0.15s;
+  }
+
+  .deck-index-toggle:hover,
+  .deck-index:focus-within .deck-index-toggle {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .deck-jump {
+    display: none;
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + 8px);
+    margin: 0;
+    padding: 4px;
+    list-style: none;
+    min-width: 180px;
+    background: var(--bg);
+    border: 1px solid var(--hair2);
+    border-radius: 6px;
+  }
+
+  .deck-index:hover .deck-jump,
+  .deck-index:focus-within .deck-jump {
+    display: block;
+  }
+
+  .deck-jump li {
+    display: block;
+  }
+
+  .deck-jump a {
+    display: block;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--dim);
+    border: none;
+    padding: 8px 12px;
+    white-space: nowrap;
+  }
+
+  .deck-jump a:hover,
+  .deck-jump a:focus-visible {
+    color: var(--ink);
+  }
+
+  .deck-jump a[aria-current="true"] {
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  .deck-jump .marker {
+    color: var(--accent);
+    margin-right: 4px;
+  }
+
+  html.deck-active .deck-hint {
+    display: block;
+    position: fixed;
+    right: clamp(18px, 4vw, 32px);
+    bottom: 96px;
+    z-index: 21;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--faint);
+    transition: opacity 0.3s;
+  }
+
+  html.deck-active .deck-view-classic,
+  html.classic-active .deck-view-deck {
+    display: inline-block;
+    position: fixed;
+    left: clamp(18px, 4vw, 32px);
+    bottom: 58px;
+    z-index: 21;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--ink);
+  }
+
+  /* html.classic-active never shows the "view classic" link — that link's
+     job is escaping deck mode, which is already inactive in classic mode. */
+  html.classic-active .deck-view-classic {
+    display: none;
+  }
+
+  html.deck-active .deck-view-deck {
+    display: none;
+  }
+
+  /* Standard visually-hidden recipe (matches Figure01.astro's
+     .visually-hidden) — the aria-live region must stay in the accessibility
+     tree, never display:none/aria-hidden. */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  @media (max-width: 640px) {
+    .deck-index:hover .deck-jump,
+    .deck-index:focus-within .deck-jump {
+      position: fixed;
+      inset-inline: 0;
+      bottom: 0;
+      right: auto;
+      min-width: 0;
+      border-radius: 6px 6px 0 0;
+    }
+
+    .deck-jump a {
+      padding: 12px 12px;
+    }
+  }
+</style>

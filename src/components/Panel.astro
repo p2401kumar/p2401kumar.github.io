@@ -1,0 +1,33 @@
+---
+/**
+ * Panel.astro — thin full-viewport panel wrapper.
+ *
+ * Renders every deck panel's content root. Deliberately a <div>, not a
+ * <section>, to avoid nested landmark/id semantics (each v1 section
+ * component underneath already owns its own semantics). Carries
+ * `data-panel-id` UNCONDITIONALLY — deck.ts (plan 04-02) keys the
+ * change-event `detail.id` and focus target off `.panel`/`data-panel-id`,
+ * never off the DOM `id` attribute, because `id` is conditionally omitted
+ * (see `emitId` below) to avoid a duplicate id when the wrapped section
+ * already renders its own id (e.g. ContactSection's id="contact").
+ *
+ * All layout/positioning/hiding CSS lives in src/styles/deck.css, scoped
+ * under html.deck-active — this component ships zero layout styling of its
+ * own so the v1 no-JS page renders these as plain in-flow <div>s.
+ */
+interface Props {
+  id: string;
+  label?: string;
+  emitId?: boolean;
+}
+
+const { id, label, emitId = true } = Astro.props;
+// `label` is accepted (and passed by every index.astro call site per the
+// UI-SPEC copywriting contract) but not rendered by this wrapper — the
+// manifest-driven DeckIndex.astro is the sole consumer of panel labels.
+void label;
+---
+
+<div class="panel" data-panel-id={id} id={emitId ? id : undefined} tabindex="-1">
+  <slot />
+</div>
