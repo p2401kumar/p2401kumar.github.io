@@ -1,0 +1,235 @@
+---
+/**
+ * src/pages/work/[slug].astro — case-study article page template.
+ *
+ * One template, both routes: `getStaticPaths` maps `getCollection('case-studies')`
+ * to `/work/{entry.id}` (entry.id is the filename-derived route key — there is
+ * no reserved `slug` frontmatter field, 03-RESEARCH.md Pattern 2). Composed
+ * exactly like 404.astro: BaseLayout + SiteHeader + SiteFooter (every-page
+ * contract, 01-VERIFICATION.md).
+ */
+import { getCollection, type CollectionEntry } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import SiteHeader from "../../components/SiteHeader.astro";
+import SiteFooter from "../../components/SiteFooter.astro";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("case-studies");
+  return entries.map((entry) => {
+    const other = entries.find((candidate) => candidate.id !== entry.id);
+    return {
+      params: { slug: entry.id },
+      props: { entry, other },
+    };
+  });
+}
+
+interface Props {
+  entry: CollectionEntry<"case-studies">;
+  other: CollectionEntry<"case-studies"> | undefined;
+}
+
+const { entry, other } = Astro.props;
+
+// Frontmatter sections are plain strings (03-01 schema) — split on blank
+// lines into paragraphs rather than rendering via render()/<Content />.
+function paragraphs(text: string) {
+  return text
+    .split(/\n\s*\n/)
+    .map((p) => p.trim())
+    .filter(Boolean);
+}
+---
+
+<BaseLayout title={entry.data.title} description={entry.data.standfirst}>
+  <div class="page">
+    <SiteHeader />
+    <main>
+      <article>
+        <h1>{entry.data.systemId}</h1>
+        <p class="standfirst">{entry.data.standfirst}</p>
+
+        <div class="metrics">
+          {
+            entry.data.metrics.map((metric) => (
+              <div class="metric">
+                <span class="ml">{metric.label}</span>
+                <span class="mv" title={metric.source}>
+                  {metric.value}
+                </span>
+              </div>
+            ))
+          }
+        </div>
+
+        <section>
+          <h2>problem</h2>
+          {paragraphs(entry.data.problem).map((p) => (
+            <p>{p}</p>
+          ))}
+        </section>
+
+        <section>
+          <h2>approach</h2>
+          {paragraphs(entry.data.approach).map((p) => (
+            <p>{p}</p>
+          ))}
+          <h3>trade-offs considered</h3>
+          {paragraphs(entry.data.tradeoffs).map((p) => (
+            <p>{p}</p>
+          ))}
+        </section>
+
+        <section>
+          <h2>impact</h2>
+          {paragraphs(entry.data.impact).map((p) => (
+            <p>{p}</p>
+          ))}
+        </section>
+
+        <div class="crosslinks">
+          <a href="/#work">back to work →</a>
+          {other && <a href={`/work/${other.id}`}>next: {other.data.systemId} →</a>}
+        </div>
+      </article>
+    </main>
+    <SiteFooter />
+  </div>
+</BaseLayout>
+
+<style>
+  .page {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 0 clamp(18px, 4vw, 32px);
+  }
+
+  main {
+    padding: 88px 0 20px;
+  }
+
+  h1 {
+    font-family: var(--mono);
+    font-size: clamp(22px, 3.4vw, 32px);
+    font-weight: 500;
+    letter-spacing: -0.005em;
+    line-height: 1.2;
+    color: var(--ink);
+    margin: 0 0 16px;
+  }
+
+  .standfirst {
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.4;
+    color: var(--body);
+    max-width: 58ch;
+    margin: 0 0 32px;
+  }
+
+  .metrics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    padding: 16px 0;
+    border-top: 1px solid var(--hair);
+    border-bottom: 1px solid var(--hair);
+  }
+
+  .metric {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .ml {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+
+  .mv {
+    font-family: var(--mono);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--accent);
+  }
+
+  section {
+    margin-top: 48px;
+  }
+
+  .metrics + section {
+    margin-top: 32px;
+  }
+
+  section h2 {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin: 0 0 12px;
+  }
+
+  section h3 {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin: 24px 0 12px;
+  }
+
+  section p {
+    font-family: var(--sans);
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.6;
+    color: var(--body);
+    margin: 0 0 16px;
+  }
+
+  section p a {
+    color: var(--ink);
+    border-bottom: 1px solid var(--hair2);
+  }
+
+  section p a:hover {
+    border-color: var(--accent);
+  }
+
+  .crosslinks {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--hair);
+  }
+
+  .crosslinks a {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--ink);
+    border-bottom: 1px solid var(--hair2);
+  }
+
+  .crosslinks a:hover {
+    border-color: var(--accent);
+  }
+
+  @media (max-width: 640px) {
+    .metrics {
+      gap: 16px;
+    }
+  }
+</style>
