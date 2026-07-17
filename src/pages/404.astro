@@ -5,15 +5,21 @@
  * No apology copy, no humor (01-UI-SPEC.md "Error state (404 page)").
  */
 import BaseLayout from "../layouts/BaseLayout.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
 ---
 
 <BaseLayout title="404 — Prateek Kumar">
   <div class="page">
-    <div class="notfound">
-      <p class="code">404</p>
-      <p class="msg">this route doesn't exist.</p>
-      <a href="/">back to work →</a>
-    </div>
+    <SiteHeader />
+    <main>
+      <div class="notfound">
+        <p class="code">404</p>
+        <p class="msg">this route doesn't exist.</p>
+        <a href="/">back to work →</a>
+      </div>
+    </main>
+    <SiteFooter />
   </div>
 </BaseLayout>
 
