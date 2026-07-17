@@ -6,13 +6,14 @@
  * token flow — ARCHITECTURE.md "Internal Boundaries"), preloads both
  * self-hosted fonts, and exposes a single slot element every page fills.
  *
- * Scope note: only basic title/description/favicon ship in this phase.
- * OpenGraph, sitemap, and full meta are explicitly Phase 3 scope
- * (01-CONTEXT.md "Phase Boundary") — do not add them here.
+ * SEO/OpenGraph/twitter meta (title/description/canonical/OG/twitter:card)
+ * is delegated to the SEO partial (PLAT-06, Phase 3) so every page inherits
+ * full meta coverage from this one shell.
  */
 import "../styles/tokens.css";
 import "../styles/fonts.css";
 import "../styles/global.css";
+import SEO from "../components/SEO.astro";
 
 interface Props {
   title?: string;
@@ -30,8 +31,7 @@ const {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title}</title>
-    <meta name="description" content={description} />
+    <SEO title={title} description={description} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
     <!-- Above-the-fold, LCP-relevant font preloads (PLAT-04) -->

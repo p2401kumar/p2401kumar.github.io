@@ -1,0 +1,29 @@
+---
+/**
+ * SEO.astro — reusable head partial (PLAT-06).
+ *
+ * Emits title/description/canonical + OpenGraph + twitter:card meta.
+ * Absolute canonical/OG URLs are built from Astro.site via `new URL(...)`
+ * (03-RESEARCH.md Pattern 3 / Don't-Hand-Roll — never string-concatenate).
+ */
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+}
+
+const { title, description, ogImage = "/og/og-default.png" } = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const ogImageURL = new URL(ogImage, Astro.site);
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonicalURL} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonicalURL} />
+<meta property="og:image" content={ogImageURL} />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary_large_image" />
