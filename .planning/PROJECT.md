@@ -14,6 +14,16 @@ Within seconds of landing, a senior engineering leader should think "this person
 
 Codebase: Astro 7.0.7 static, ~3.2k LOC (`src/` components + `src/lib/fig01/` canvas engine + typed `src/data/` modules + Content Layer case studies). One dependency beyond Astro: `@astrojs/sitemap@3.7.3`. Deploys on push to `main` via GitHub Actions.
 
+## Current Milestone: v2.0 Night Sky
+
+**Goal:** Transform the portfolio into a zero-light-pollution night experience — camper-car camp scene, vivid Milky Way, career-chapter constellations with neural links — with the CV cycling as full-viewport overlay panels instead of scrolling. The sky is the hero; the substance and quality floors survive intact.
+
+**Target features:**
+- Persistent illustrated night scene (dark ground, dense starfield, Milky Way, camper silhouette + single warm glow, sparse fireflies)
+- Named career constellations that brighten with their panel; subtle neural links firing quietly
+- No-scroll panel cycling (wheel/swipe/keys/dots) with all v1 content as overlays; Fig. 01 as a panel
+- Reduced-motion/keyboard/Lighthouse/honesty floors carried forward; v1 editorial layout remains the fallback bones
+
 ## Requirements
 
 ### Validated
@@ -27,14 +37,17 @@ Codebase: Astro 7.0.7 static, ~3.2k LOC (`src/` components + `src/lib/fig01/` ca
 
 ### Active
 
-(None — next milestone not yet defined. Run `/gsd-new-milestone`. Candidates below.)
+- [ ] Zero-light-pollution night scene: pitch-dark ground, dense realistic starfield, vivid Milky Way band, silhouetted camper-car camp with a single warm copper glow, sparse fireflies
+- [ ] Constellations with meaning: named career-chapter constellations (AWS, Microsoft, Samsung, patents/education) with subtle neural links that occasionally fire; active panel's constellation brightens
+- [ ] CV as overlay: no page scroll — wheel/swipe/arrows/dots cycle full-viewport content panels over the persistent scene (all v1 content, Fig. 01 as its own panel, case studies reachable)
+- [ ] Floors carried forward: Lighthouse ≥ 90, reduced-motion readable fallback, keyboard operable, honesty gate
 
-**v2 candidates (from v1 backlog):**
-- [ ] Notes/writing section (NOTE-01) — only once a content pipeline exists
-- [ ] `/craft` experiments page (NOTE-02) — dated interactive prototypes; a curated AI-twin could live here
-- [ ] Third case study: azure/health-snapshots (CASE-04)
-- [ ] JSON-LD Person structured data (PLAT-08)
-- [ ] Post-launch task: retire/redirect the old `p2401kumar.github.io/home` repo
+**Future candidates (not this milestone):**
+- Notes/writing section (NOTE-01) — only once a content pipeline exists
+- `/craft` experiments page (NOTE-02) — dated interactive prototypes; a curated AI-twin could live here
+- Third case study: azure/health-snapshots (CASE-04)
+- JSON-LD Person structured data (PLAT-08)
+- Post-launch task: retire/redirect the old `p2401kumar.github.io/home` repo
 
 ### Out of Scope
 
@@ -98,4 +111,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-07-17 after v1.0 milestone*
+*Last updated: 2026-07-17 after v2.0 milestone start*
