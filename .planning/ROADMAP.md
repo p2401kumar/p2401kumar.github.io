@@ -69,7 +69,29 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
   5. All text over the sky passes WCAG 1.4.3 contrast at worst-case brightness points via a scrim that preserves the dark aesthetic
 
 **Research gate**: Milky Way visual spike FIRST (~2-3h, LOW-confidence technique — evaluate zero-dep scatter+gradient before adding any noise dependency); idle-CPU <10% sustained over 5 min; contrast ≥4.5:1 measured at worst-case brightness points (not averages); Lighthouse ≥90 immediately after scene layered in.
-**Plans**: TBD
+**Plans**: 6 plans
+
+**Wave 1** *(parallel — zero file overlap)*
+
+- [ ] 05-01-PLAN.md — Milky Way visual spike (standalone HTML + SPIKE.md verdict; conditional simplex-noise fallback behind a blocking-human legitimacy checkpoint)
+- [ ] 05-02-PLAN.md — Foundation: shared/css-tokens.ts extraction (fig01 non-regression) + src/data/constellations.ts typed data module (honesty gate)
+
+**Wave 2** *(blocked on 05-01 + 05-02)*
+
+- [ ] 05-03-PLAN.md — Scene shell + Layer 0: sky tokens, nightsky/tokens.ts, NightSky.astro (canvas host + camper SVG + glow, behind .deck), starfield.ts offscreen generation
+
+**Wave 3** *(blocked on 05-03)*
+
+- [ ] 05-04-PLAN.md — Scene engine: single-rAF scene.ts, pause state machine {hidden, fig01-active, reduced-motion}, Layer 2 twinkle + fireflies
+
+**Wave 4** *(blocked on 05-04 + 05-02)*
+
+- [ ] 05-05-PLAN.md — Constellations: render + panel-reactive brighten/dim (nightsky:panel-change) + quiet link-firing (Fig. 01 beam math mirrored)
+
+**Wave 5** *(blocked on 05-05)*
+
+- [ ] 05-06-PLAN.md — Scrim + worst-case contrast verifier (SKY-05) + full gate battery + human scene sign-off
+
 **UI hint**: yes
 
 ### Phase 6: Integration & Launch
@@ -96,7 +118,7 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 | 2. Fig. 01 — Signature Interactive Figure | v1.0 | 5/5 | Complete | 2026-07-17 |
 | 3. Case Studies & Launch Polish | v1.0 | 4/4 | Complete | 2026-07-17 |
 | 4. Deck Mechanics | v2.0 | 3/3 | Complete   | 2026-07-17 |
-| 5. Night-Sky Scene | v2.0 | 0/TBD | Not started | - |
+| 5. Night-Sky Scene | v2.0 | 0/6 | Planned | - |
 | 6. Integration & Launch | v2.0 | 0/TBD | Not started | - |
 
 ---
