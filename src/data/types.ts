@@ -71,3 +71,20 @@ export interface ProfileLink {
   /** Honesty-gate traceability to the résumé/profile source — not rendered on page */
   source: string;
 }
+
+/**
+ * One hover/keyboard-proxy fact for a Fig. 01 node (Phase 2).
+ * Extends the CONT-07 honesty-gate `source` pattern established above.
+ */
+export interface Fig01Fact {
+  /** Node id this fact belongs to, e.g. "lb", "cell2" (matches model.ts NodeId) */
+  nodeId: string;
+  /** Mono node label as drawn on canvas, e.g. "elb/weight-away" (empty string for unlabeled client nodes) */
+  label: string;
+  /** Hover-tooltip HTML, may include a `<span class="m">…</span>` metric highlight — developer-authored build-time content */
+  tooltipHtml: string;
+  /** Plain-text, HTML-stripped equivalent for the keyboard-proxy button's accessible name */
+  accessibleName: string;
+  /** Honesty-gate traceability to the résumé — not rendered on page */
+  source: string;
+}
