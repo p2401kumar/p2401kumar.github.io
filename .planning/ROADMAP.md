@@ -37,7 +37,10 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
   4. A first-visit affordance hints how to navigate then recedes; a quiet "view classic" link exposes the scrolling view at any time
   5. With JS disabled the page renders the v1 scrolling layout (`.deck-active` added only after successful init); under `prefers-reduced-motion` panel transitions are instant
 **Research gate**: Lighthouse ≥90 with the deck active but no scene yet; real-device input testing on iPhone + mid-tier Android; case-study routing architecture decided here (not deferred to Integration); Fig. 01 keymap resolved against actual `src/lib/fig01/` source.
-**Plans**: TBD
+**Plans**: 3 plans
+- [ ] 04-01-PLAN.md — Panel manifest + deck shell components + index restructure + deck.css (no-JS-safe static foundation)
+- [ ] 04-02-PLAN.md — deck.ts engine: wheel/touch/keyboard/jump input, hash routing, inert/aria-live, hint + view-classic, change-event; boot from PanelDeck
+- [ ] 04-03-PLAN.md — Automated gate (build/hex/fallback/leak/Lighthouse local) + human-verify checkpoint (feel, cold-load, back/forward, reduced-motion)
 **UI hint**: yes
 
 ### Phase 5: Night-Sky Scene
@@ -74,7 +77,7 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 | 1. Foundation & Editorial Shell | v1.0 | 7/7 | Complete | 2026-07-17 |
 | 2. Fig. 01 — Signature Interactive Figure | v1.0 | 5/5 | Complete | 2026-07-17 |
 | 3. Case Studies & Launch Polish | v1.0 | 4/4 | Complete | 2026-07-17 |
-| 4. Deck Mechanics | v2.0 | 0/TBD | Not started | - |
+| 4. Deck Mechanics | v2.0 | 0/3 | Not started | - |
 | 5. Night-Sky Scene | v2.0 | 0/TBD | Not started | - |
 | 6. Integration & Launch | v2.0 | 0/TBD | Not started | - |
 
