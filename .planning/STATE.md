@@ -2,18 +2,18 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-current_phase: 01
-current_phase_name: Foundation & Editorial Shell
+current_phase: 02
+current_phase_name: Fig. 01 — Signature Interactive Figure
 status: executing
-stopped_at: Phase 2 UI-SPEC approved; phase research in flight
-last_updated: "2026-07-17T04:35:50.444Z"
+stopped_at: Completed 02-01-PLAN.md
+last_updated: "2026-07-17T04:47:22.059Z"
 last_activity: 2026-07-17
-last_activity_desc: "01-07-PLAN.md complete, site live at https://p2401kumar.github.io"
+last_activity_desc: Phase 02 execution started
 progress:
   total_phases: 3
   completed_phases: 1
-  total_plans: 7
-  completed_plans: 7
+  total_plans: 12
+  completed_plans: 8
   percent: 33
 ---
 
@@ -24,14 +24,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-15)
 
 **Core value:** Within seconds of landing, a senior engineering leader should think "this person operates at our level" — credibility delivered through demonstrated craft (a live systems demo), not adjectives.
-**Current focus:** Phase 01 — Foundation & Editorial Shell
+**Current focus:** Phase 02 — Fig. 01 — Signature Interactive Figure
 
 ## Current Position
 
-Phase: 01 (Foundation & Editorial Shell) — READY FOR VERIFICATION
-Plan: 7 of 7
+Phase: 02 (Fig. 01 — Signature Interactive Figure) — EXECUTING
+Plan: 2 of 5
 Status: Ready to execute
-Last activity: 2026-07-17 — 01-07-PLAN.md complete, site live at https://p2401kumar.github.io
+Last activity: 2026-07-17 — Phase 02 execution started
 
 Progress: [██████████] 100%
 
@@ -62,6 +62,7 @@ Progress: [██████████] 100%
 | Phase 01 P05 | 9min | 3 tasks | 5 files |
 | Phase 01 P06 | 9min | 2 tasks | 2 files |
 | Phase 01 P07 | ~15min | 3 tasks | 0 files |
+| Phase 02 P01 | 25min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -85,6 +86,9 @@ Recent decisions affecting current work:
 - [Phase 01]: Backup-then-replace selected at 01-07 decision checkpoint; 2021 repo content preserved as branch legacy-2021 @ 00b240e9c0193cf790028aaecc9f1ff60b6d5010
 - [Phase 01]: 01-07 human-verify checkpoint resolved by explicit user direction plus automated curl evidence; full in-browser visual QA deferred to Phase 3 polish pass since headless browser tooling failed to start in-session
 - [Phase 01]: REQUIREMENTS.md reconciliation: SHELL-05 and PLAT-04 (owned by plan 01-02, whose executor was interrupted by an API error before tracking-file bookkeeping) marked complete based on 01-02-SUMMARY.md's already-verified, already-complete status
+- [Phase 02]: spawnBeam(state, fromId?) dispatches from fromId only when it names a client node (c0/c1/c2); other values fall back to a random client since the topology has no route originating elsewhere
+- [Phase 02]: dp node's honesty-gate source string extends the DynamoDB cellularization résumé citation rather than inventing a new résumé section, since it introduces no new number
+- [Phase 02]: createState() deep-clones the canonical nodes topology per call instead of sharing one module-level mutable object, keeping the state machine pure/testable
 
 ### Pending Todos
 
@@ -104,6 +108,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-17T04:06:46.835Z
-Stopped at: Phase 2 UI-SPEC approved; phase research in flight
-Resume file: .planning/phases/02-fig01-signature-figure/02-UI-SPEC.md
+Last session: 2026-07-17T04:47:22.014Z
+Stopped at: Completed 02-01-PLAN.md
+Resume file: None
