@@ -2,19 +2,19 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-current_phase: 03
-current_phase_name: Case Studies & Launch Polish
-status: verifying
+current_phase: 0
+status: Awaiting next milestone
 stopped_at: Completed 03-04-PLAN.md (phase 03 complete, v1 milestone shipped and verified live)
-last_updated: "2026-07-17T08:53:48.102Z"
+last_updated: "2026-07-17T09:43:15.782Z"
 last_activity: 2026-07-17
-last_activity_desc: Phase 03 execution started
+last_activity_desc: Milestone v1.0 completed and archived
 progress:
   total_phases: 3
   completed_phases: 3
   total_plans: 16
   completed_plans: 16
   percent: 100
+current_phase_name: Case Studies & Launch Polish
 ---
 
 # Project State
@@ -28,12 +28,10 @@ See: .planning/PROJECT.md (updated 2026-07-15)
 
 ## Current Position
 
-Phase: 03 (Case Studies & Launch Polish) — EXECUTING
-Plan: 4 of 4
-Status: v1 complete — all 3 phases verified, site live
-Last activity: 2026-07-17 — Phase 03 execution started
-
-Progress: [██████████] 100%
+Phase: Milestone v1.0 complete
+Plan: —
+Status: Awaiting next milestone
+Last activity: 2026-07-17 — Milestone v1.0 completed and archived
 
 ## Performance Metrics
 
@@ -142,3 +140,7 @@ Items acknowledged and carried forward from previous milestone close:
 Last session: 2026-07-17T08:40:21.320Z
 Stopped at: Completed 03-04-PLAN.md (phase 03 complete, v1 milestone shipped and verified live)
 Resume file: None
+
+## Operator Next Steps
+
+- Start the next milestone with /gsd-new-milestone
