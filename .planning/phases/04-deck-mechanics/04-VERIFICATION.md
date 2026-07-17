@@ -1,8 +1,9 @@
 ---
 phase: 04-deck-mechanics
 verified: 2026-07-17T22:45:09Z
-status: gaps_found
-score: 5/6 must-haves verified
+status: passed
+score: 6/6 must-haves verified
+gap_closure: "2026-07-17 — commit 23922ba: DeckIndex.astro now renders the ▸ marker in every jump anchor (CSS shows it only under [aria-current=true]); deck.ts adds updateJumpList(index) called from applyPanelStates (covers goTo, popstate/hashchange, cold-load init) moving aria-current across anchors. Verified: astro check 0 errors, build green, 7 markers in dist, exactly 1 build-time aria-current, jumpAnchorEls populated before the initial applyPanelStates."
 behavior_unverified: 0
 overrides_applied: 0
 gaps:
