@@ -13,7 +13,7 @@ The site ships in three delivery boundaries. Phase 1 stands up the entire static
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation & Editorial Shell** - Deploy pipeline, design tokens, fonts, and every static content section land as a live, content-complete site
+- [x] **Phase 1: Foundation & Editorial Shell** - Deploy pipeline, design tokens, fonts, and every static content section land as a live, content-complete site (completed 2026-07-17)
 - [ ] **Phase 2: Fig. 01 — Signature Interactive Figure** - The cellularization demo proves the résumé's distributed-systems claims through direct interaction
 - [ ] **Phase 3: Case Studies & Launch Polish** - Deep-dive case studies plus the SEO/OG/Lighthouse verification pass that makes the site launch-ready
 
@@ -32,7 +32,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   4. Visitor sees a footer with a live Seattle clock and "all systems operational" status line on every page
   5. Site renders responsively from 360px through desktop using self-hosted subsetted fonts with no visible CLS/FOUT on the hero, all from a single design-token source, and auto-deploys to GitHub Pages on push to main
 
-**Plans**: 6/7 plans executed
+**Plans**: 7/7 plans complete
 Plans:
 **Wave 1**
 
@@ -54,7 +54,7 @@ Plans:
 
 **Wave 5** *(blocked on Wave 4 completion)*
 
-- [ ] 01-07-PLAN.md — Gated live deploy to GitHub Pages + live-URL verification (wave 5)
+- [x] 01-07-PLAN.md — Gated live deploy to GitHub Pages + live-URL verification (wave 5)
 
 **UI hint**: yes
 
@@ -96,6 +96,6 @@ Phases execute in numeric order: 1 → 2 → 3
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Editorial Shell | 6/7 | In Progress|  |
+| 1. Foundation & Editorial Shell | 7/7 | Complete   | 2026-07-17 |
 | 2. Fig. 01 — Signature Interactive Figure | 0/TBD | Not started | - |
 | 3. Case Studies & Launch Polish | 0/TBD | Not started | - |

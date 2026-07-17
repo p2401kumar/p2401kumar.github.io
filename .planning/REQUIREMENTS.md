@@ -13,7 +13,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **SHELL-02**: Visitor reads the serif declarative thesis and a one-line bio naming Microsoft/AWS/Samsung within the first viewport
 - [x] **SHELL-03**: Visitor can reach résumé, LinkedIn, and GitHub via quiet text links in the hero
 - [x] **SHELL-04**: Visitor sees a footer with a live Seattle clock and "all systems operational" status line
-- [ ] **SHELL-05**: All pages render from a single design-token source (tokens.css: graphite/copper palette, serif + sans + mono roles)
+- [x] **SHELL-05**: All pages render from a single design-token source (tokens.css: graphite/copper palette, serif + sans + mono roles)
 
 ### Fig. 01 — Signature Figure
 
@@ -46,7 +46,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **PLAT-01**: Site builds as fully static Astro 7 output with zero framework runtime (Fig. 01 is a vanilla TS module)
 - [x] **PLAT-02**: Site deploys to GitHub Pages automatically on push to main via GitHub Actions (withastro/action)
 - [x] **PLAT-03**: All internal links and assets respect the hosting target (`site`/`base` locked in foundation; root vs project path decided before scaffolding)
-- [ ] **PLAT-04**: Fonts are self-hosted subsetted woff2 with preload and metrics-matched fallback (no visible CLS on the hero thesis)
+- [x] **PLAT-04**: Fonts are self-hosted subsetted woff2 with preload and metrics-matched fallback (no visible CLS on the hero thesis)
 - [x] **PLAT-05**: Site is responsive from 360px mobile through desktop
 - [ ] **PLAT-06**: Every page ships title/description/OG meta, a static OG image, favicon, and sitemap
 - [ ] **PLAT-07**: Home page scores Lighthouse ≥ 90 in Performance, Accessibility, Best Practices, and SEO
@@ -89,7 +89,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SHELL-02 | Phase 1 | Complete |
 | SHELL-03 | Phase 1 | Complete |
 | SHELL-04 | Phase 1 | Complete |
-| SHELL-05 | Phase 1 | Pending |
+| SHELL-05 | Phase 1 | Complete |
 | CONT-01 | Phase 1 | Complete |
 | CONT-02 | Phase 1 | Complete |
 | CONT-03 | Phase 1 | Complete |
@@ -100,7 +100,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PLAT-01 | Phase 1 | Complete |
 | PLAT-02 | Phase 1 | Complete |
 | PLAT-03 | Phase 1 | Complete |
-| PLAT-04 | Phase 1 | Pending |
+| PLAT-04 | Phase 1 | Complete |
 | PLAT-05 | Phase 1 | Complete |
 | FIG-01 | Phase 2 | Pending |
 | FIG-02 | Phase 2 | Pending |
