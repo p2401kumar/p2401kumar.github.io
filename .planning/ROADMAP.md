@@ -71,7 +71,7 @@ Plans:
   4. Visitor with `prefers-reduced-motion` gets an informative static figure where fault injection still works via instant state changes; a keyboard-only visitor can operate every control with visible focus states and no keyboard trap
   5. The figure sustains ~60fps on average laptops (single rAF loop, DPR cap 2, batched draws) and the page holds Lighthouse ≥ 90 with the figure active
 
-**Plans**: 3/5 plans executed
+**Plans**: 4/5 plans executed
 Plans:
 **Wave 1**
 
@@ -87,7 +87,7 @@ Plans:
 
 **Wave 4** *(blocked on Wave 3)*
 
-- [ ] 02-04-PLAN.md — Figure01.astro chrome + ARIA surface + 10 proxy buttons + bare bundling script; index.astro slot fill (wave 4)
+- [x] 02-04-PLAN.md — Figure01.astro chrome + ARIA surface + 10 proxy buttons + bare bundling script; index.astro slot fill (wave 4)
 
 **Wave 5** *(blocked on Wave 4)*
 
@@ -118,5 +118,5 @@ Phases execute in numeric order: 1 → 2 → 3
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & Editorial Shell | 7/7 | Complete   | 2026-07-17 |
-| 2. Fig. 01 — Signature Interactive Figure | 3/5 | In Progress|  |
+| 2. Fig. 01 — Signature Interactive Figure | 4/5 | In Progress|  |
 | 3. Case Studies & Launch Polish | 0/TBD | Not started | - |

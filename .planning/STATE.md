@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 02
 current_phase_name: Fig. 01 — Signature Interactive Figure
 status: executing
-stopped_at: Completed 02-03-PLAN.md
-last_updated: "2026-07-17T05:25:04.857Z"
+stopped_at: Completed 02-04-PLAN.md
+last_updated: "2026-07-17T05:40:44.104Z"
 last_activity: 2026-07-17
 last_activity_desc: Phase 02 execution started
 progress:
   total_phases: 3
   completed_phases: 1
   total_plans: 12
-  completed_plans: 10
+  completed_plans: 11
   percent: 33
 ---
 
@@ -29,7 +29,7 @@ See: .planning/PROJECT.md (updated 2026-07-15)
 ## Current Position
 
 Phase: 02 (Fig. 01 — Signature Interactive Figure) — EXECUTING
-Plan: 4 of 5
+Plan: 5 of 5
 Status: Ready to execute
 Last activity: 2026-07-17 — Phase 02 execution started
 
@@ -65,6 +65,7 @@ Progress: [██████████] 100%
 | Phase 02 P01 | 25min | 2 tasks | 4 files |
 | Phase 02 P02 | 13min | 2 tasks | 1 files |
 | Phase 02 P03 | 15min | 3 tasks | 2 files |
+| Phase 02-fig01-signature-figure P04 | 13min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -98,6 +99,9 @@ Recent decisions affecting current work:
 - [Phase 02]: 02-03: wireKeyboard/scheduleHeal signatures extended beyond the plan's Artifacts shorthand (added logEl+canvas to wireKeyboard, made scheduleHeal a zero-arg-trigger factory) to match the task's own action text exactly
 - [Phase 02]: 02-03: added syncProxyFaultLabels() appending the degraded-rerouting suffix to proxy-button aria-label while faulted, extending the locked FIG-03/05 color+dash dual-encoding to keyboard/screen-reader users
 - [Phase 02]: 02-03: DOM selector contract for initFig01 (.fig-stage/#fig01-canvas/#fig01-tip/#fig01-log/#send/#fault/.node-proxy[data-node]) documented at the top of index.ts since Figure01.astro (plan 02-04) doesn't exist yet
+- [Phase 02-fig01-signature-figure]: 02-04: mapped the prototype tooltip's literal near-black background to var(--bg) (closest existing token) rather than introducing a new hex literal, since the plan's file scope excludes tokens.css and the zero-hex-literal gate is a hard acceptance criterion
+- [Phase 02-fig01-signature-figure]: 02-04: node-proxy buttons carry both an aria-label attribute (matching interactions.ts's syncProxyFaultLabels overwrite target) and matching text content (matching the plan's literal action text) with no behavioral conflict
+- [Phase 02-fig01-signature-figure]: 02-04: bundling script resolves its root via document.querySelector('.fig') with a null check instead of ARCHITECTURE.md's illustrative document.currentScript!.parentElement!, since currentScript is null inside ES modules (what Astro emits for bare-bundled scripts)
 
 ### Pending Todos
 
@@ -117,6 +121,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-17T05:25:04.820Z
-Stopped at: Completed 02-03-PLAN.md
+Last session: 2026-07-17T05:40:44.076Z
+Stopped at: Completed 02-04-PLAN.md
 Resume file: None
