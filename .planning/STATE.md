@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 01
 current_phase_name: Foundation & Editorial Shell
 status: executing
-stopped_at: Completed 01-05-PLAN.md
-last_updated: "2026-07-16T23:48:41.451Z"
+stopped_at: Completed 01-06-PLAN.md
+last_updated: "2026-07-17T00:00:26.616Z"
 last_activity: 2026-07-16
 last_activity_desc: Phase 01 execution started
 progress:
   total_phases: 3
   completed_phases: 0
   total_plans: 7
-  completed_plans: 5
+  completed_plans: 6
   percent: 0
 ---
 
@@ -29,7 +29,7 @@ See: .planning/PROJECT.md (updated 2026-07-15)
 ## Current Position
 
 Phase: 01 (Foundation & Editorial Shell) — EXECUTING
-Plan: 6 of 7
+Plan: 7 of 7
 Status: Ready to execute
 Last activity: 2026-07-16 — Phase 01 execution started
 
@@ -60,6 +60,7 @@ Progress: [███████░░░] 71%
 | Phase 01 P03 | 15min | 3 tasks | 6 files |
 | Phase 01 P04 | 12min | 3 tasks | 3 files |
 | Phase 01 P05 | 9min | 3 tasks | 5 files |
+| Phase 01 P06 | 9min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -79,6 +80,7 @@ Recent decisions affecting current work:
 - [Phase 01]: ExperienceSection and PatentsSection reuse SystemsList's quiet editorial row idiom (mono meta line + sans description, hairline top-border) even though only SystemsList's grid was locked verbatim by the prototype — Plan 01-05 action text instructed reusing the section spacing/heading pattern for visual consistency across list-shaped sections
 - [Phase 01]: ContactSection mailto link renders as visible copy "email -> " rather than the raw address, matching the mono quiet-link idiom used elsewhere — Consistency with resume/linkedin/github link styling; address itself lives in profile.links.email.href
 - [Phase 01]: SkillsSection tags styled as bordered mono pills using existing --panel2/--hair2 tokens — 01-UI-SPEC.md specifies grouped mono tags without prescribing exact chrome; reused existing tokens rather than inventing new ones
+- [Phase 01]: index.astro composes BaseLayout + all 8 shell/section components in the locked order; 404.astro duplicates the .page container CSS locally rather than extracting a shared frame component
 
 ### Pending Todos
 
@@ -98,6 +100,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-16T23:48:41.385Z
-Stopped at: Completed 01-05-PLAN.md
+Last session: 2026-07-17T00:00:13.693Z
+Stopped at: Completed 01-06-PLAN.md
 Resume file: None
