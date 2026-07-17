@@ -1,8 +1,9 @@
 ---
 phase: 01-foundation-editorial-shell
 verified: 2026-07-17T03:42:22Z
-status: gaps_found
-score: 4/5 must-haves verified
+status: passed
+score: 5/5 must-haves verified
+gap_closure: "2026-07-17 — commit eee5b5f: src/pages/404.astro now imports and renders <SiteHeader /> and <SiteFooter /> matching index.astro's composition; verified in dist/404.html (header, footer, 'all systems operational', 'seattle' all present, build exit 0)"
 behavior_unverified: 0
 overrides_applied: 0
 gaps:
