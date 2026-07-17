@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 03
 current_phase_name: Case Studies & Launch Polish
 status: executing
-stopped_at: Completed 03-01-PLAN.md
-last_updated: "2026-07-17T07:53:08.878Z"
+stopped_at: Completed 03-02-PLAN.md
+last_updated: "2026-07-17T08:02:07.571Z"
 last_activity: 2026-07-17
 last_activity_desc: Phase 03 execution started
 progress:
   total_phases: 3
   completed_phases: 2
   total_plans: 16
-  completed_plans: 13
+  completed_plans: 14
   percent: 67
 ---
 
@@ -29,7 +29,7 @@ See: .planning/PROJECT.md (updated 2026-07-15)
 ## Current Position
 
 Phase: 03 (Case Studies & Launch Polish) — EXECUTING
-Plan: 2 of 4
+Plan: 3 of 4
 Status: Ready to execute
 Last activity: 2026-07-17 — Phase 03 execution started
 
@@ -68,6 +68,7 @@ Progress: [██████████] 100%
 | Phase 02-fig01-signature-figure P04 | 13min | 2 tasks | 2 files |
 | Phase 02 P05 | 6min | 2 tasks | 0 files |
 | Phase 03 P01 | 8min | 3 tasks | 3 files |
+| Phase 03 P02 | 6min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -108,6 +109,9 @@ Recent decisions affecting current work:
 - [Phase 03]: 03-01: Imported z from astro/zod instead of the deprecated astro:content re-export, since astro check flagged the latter as deprecated (0 hints after switch vs 15 before) — Keeps schema on Astro's current recommended import surface without changing schema shape
 - [Phase 03]: 03-01: Case-study title fields use the mono artifact-name string (dynamodb/cellularization, elb/auto-weight-away) rather than inventing separate prose titles — Matches the plan's plain factual title instruction and the systems-list naming idiom
 - [Phase 03]: 03-01: ELB metric source strings combine both resume numbers (-10% peak-hour latency, 90% capacity ops automated) per the plan's literal action text — Extends beyond systems.ts's existing single-metric source annotation, corroborated by 03-CONTEXT.md decisions block
+- [Phase 03]: [Phase 03]: 03-02: Rendered metric label/value as a two-line stat column (label above, value below) rather than an inline 'label: value' string, since the UI-SPEC typography table gives label and value distinct sizes/weights/colors
+- [Phase 03]: [Phase 03]: 03-02: Added new a.row / a.row:hover CSS rules rather than editing the existing .row rule in SystemsList.astro, keeping .row/.row:hover/the 640px collapse byte-identical to before
+- [Phase 03]: [Phase 03]: 03-02: Plan's literal grep -c verify command for the exactly-2-links check undercounts on minified single-line dist/index.html (counts lines not occurrences); verified via grep -o | wc -l instead — no code change, verification-methodology correction only
 
 ### Pending Todos
 
@@ -127,6 +131,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-17T07:53:08.867Z
-Stopped at: Completed 03-01-PLAN.md
+Last session: 2026-07-17T08:02:07.560Z
+Stopped at: Completed 03-02-PLAN.md
 Resume file: None
