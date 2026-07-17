@@ -409,6 +409,15 @@ function wireViewToggle(viewClassicLink: HTMLAnchorElement, viewDeckLink: HTMLAn
  * last step. Nothing before that last step may throw for any reason other
  * than "JS truly cannot run" — a bad hash degrades to index 0, it never
  * throws.
+ *
+ * Coordinates with PanelDeck.astro's guarded pre-paint `is:inline` script
+ * (04-03): that script may have already speculatively added `.deck-active`
+ * to <html> before this module even loaded, so `classList.add` here must
+ * stay idempotent (it already is) and the classic-mode branch below must
+ * explicitly clear that speculative class rather than assume it was never
+ * set. `data-deck-ready="true"` is set as the final step of every
+ * successful init (either mode) — the pre-paint script's watchdog uses its
+ * absence to detect and undo a speculative add when init never completes.
  */
 export function initDeck(root: HTMLElement): () => void {
   // 1. required() every DOM node this task uses up front.
@@ -449,6 +458,14 @@ export function initDeck(root: HTMLElement): () => void {
   // 5. LAST — decide starting mode from the persisted view preference.
   // Everything above must have succeeded for this line to run at all.
   if (readStorage(VIEW_PREF_KEY) === 'classic') {
+    // Defensive: PanelDeck.astro's pre-paint script may have already
+    // speculatively added .deck-active before this module executed. If the
+    // persisted preference actually resolves to classic here, clear that
+    // speculative class so the two modes never coexist — deck.css's layout
+    // rules are gated on .deck-active alone, so leaving it set would show
+    // the deck layout while every input handler behaves as classic via
+    // isClassicActive().
+    htmlEl.classList.remove('deck-active');
     htmlEl.classList.add('classic-active');
     panelEls.forEach((el) => {
       el.inert = false;
@@ -457,6 +474,11 @@ export function initDeck(root: HTMLElement): () => void {
   } else {
     htmlEl.classList.add('deck-active');
   }
+
+  // Signals successful init to PanelDeck.astro's pre-paint watchdog (see
+  // that component's own comments) — set regardless of which mode was
+  // resolved above, since it only means "JS booted successfully."
+  htmlEl.dataset.deckReady = 'true';
 
   // 6. Teardown.
   return (): void => {

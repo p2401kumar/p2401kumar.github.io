@@ -8,16 +8,61 @@
  * rule in deck.css is scoped under html.deck-active, so importing it here
  * has zero visual effect until deck.ts adds that class.
  *
- * The trailing bare bundling script tag (no attributes — the Astro TS/
- * import bundling seam, identical to Figure01.astro's boot script; any
- * attribute on the tag opts out of that pipeline) imports and boots
- * src/lib/nightsky/deck.ts's initDeck(root) against this component's own
- * .deck root element. A thrown init error is swallowed so .deck-active is
- * never added and the page stays the v1 scrolling layout (DECK-07).
+ * Guarded pre-paint activation (04-03, "fix now, guarded" human decision —
+ * eliminates the CLS=1 first-paint reflow documented in lighthouse-scores.md
+ * "Known Issue" while preserving the DECK-07 fallback guarantee):
+ *
+ * 1. The `is:inline` script below runs synchronously, in document order,
+ *    BEFORE the .deck markup — so it executes during initial HTML parsing,
+ *    before first paint. It speculatively adds `.deck-active` to <html>
+ *    ONLY when both synchronous preconditions hold: no `deck-view-
+ *    preference: classic` in localStorage (the same strict check deck.ts's
+ *    own init uses — the key/value are duplicated here on purpose, since an
+ *    is:inline script can't import deck.ts's constants; keep both in sync
+ *    if either ever changes) AND `location.hash` is empty or `#hero`.
+ *    Non-hero deep links are deliberately left unguarded — deck.ts's own
+ *    synchronous hash resolution (before it adds the class itself) already
+ *    paints the correct panel first, so pre-applying here would risk a
+ *    flash of the wrong panel. Lighthouse audits `/` (no hash), so this is
+ *    the path that matters for the CLS metric.
+ * 2. A ~2.5s watchdog (armed only when the class was speculatively added)
+ *    removes it again if `html[data-deck-ready]` never appears — covering
+ *    the "module never executes" case (blocked, network failure, disabled
+ *    JS entirely; is:inline scripts don't run at all with JS disabled, so
+ *    nothing is ever added and this branch never even arms).
+ * 3. The bundled module boot script below closes the remaining gap: if
+ *    `.deck` is missing or `initDeck()` throws, it now explicitly removes
+ *    `.deck-active` too, since the class may already be present from the
+ *    speculative pre-paint add — so any init failure still falls back to
+ *    the v1 scrolling layout (DECK-07), even with pre-paint activation.
+ * 4. `deck.ts` itself sets `data-deck-ready="true"` on <html> as the very
+ *    last step of a successful init (both modes) and defensively removes a
+ *    stray speculative `.deck-active` if the resolved preference actually
+ *    turns out to be classic — see deck.ts's own comments.
  */
 import DeckIndex from "./DeckIndex.astro";
 import "../styles/deck.css";
 ---
+
+<script is:inline>
+  (function () {
+    try {
+      var htmlEl = document.documentElement;
+      var pref = localStorage.getItem("deck-view-preference");
+      var hash = location.hash;
+      if (pref !== "classic" && (hash === "" || hash === "#hero")) {
+        htmlEl.classList.add("deck-active");
+        setTimeout(function () {
+          try {
+            if (htmlEl.dataset.deckReady !== "true") {
+              htmlEl.classList.remove("deck-active");
+            }
+          } catch (e) {}
+        }, 2500);
+      }
+    } catch (e) {}
+  })();
+</script>
 
 <div class="deck">
   <slot />
@@ -28,12 +73,16 @@ import "../styles/deck.css";
   import { initDeck } from "../lib/nightsky/deck";
 
   const root = document.querySelector<HTMLElement>(".deck");
-  if (root) {
-    try {
+  try {
+    if (root) {
       initDeck(root);
-    } catch {
-      // Swallowed — .deck-active was never added, so the page stays the v1
-      // scrolling layout (DECK-07 progressive-enhancement floor).
+    } else {
+      throw new Error("PanelDeck: .deck root not found");
     }
+  } catch {
+    // .deck-active may already be present from the pre-paint speculative
+    // add above — remove it defensively so init failure always falls back
+    // to the v1 scrolling layout (DECK-07 progressive-enhancement floor).
+    document.documentElement.classList.remove("deck-active");
   }
 </script>
