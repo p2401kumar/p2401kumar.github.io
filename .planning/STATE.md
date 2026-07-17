@@ -5,15 +5,15 @@ milestone_name: Night Sky
 current_phase: 04
 current_phase_name: Deck Mechanics
 status: executing
-stopped_at: Completed 04-01-PLAN.md
-last_updated: "2026-07-17T20:43:39.873Z"
+stopped_at: Completed 04-02-PLAN.md
+last_updated: "2026-07-17T21:03:02.938Z"
 last_activity: 2026-07-17
 last_activity_desc: Phase 04 execution started
 progress:
   total_phases: 3
   completed_phases: 0
   total_plans: 3
-  completed_plans: 1
+  completed_plans: 2
   percent: 0
 ---
 
@@ -29,7 +29,7 @@ See: .planning/PROJECT.md (updated 2026-07-17)
 ## Current Position
 
 Phase: 04 (Deck Mechanics) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 Status: Ready to execute
 Last activity: 2026-07-17 — Phase 04 execution started
 
@@ -78,6 +78,7 @@ Last activity: 2026-07-17 — Phase 04 execution started
 
 </details>
 | Phase 04 P01 | 12min | 3 tasks | 7 files |
+| Phase 04-deck-mechanics P02 | 14min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -113,6 +114,9 @@ Recent decisions affecting current work:
 
 - [Phase 04-01]: Added html.deck-active .deck { position:fixed; inset:0 } as the panel stack's containing block (Rule 2 — not in the plan's literal deck.css list, required for .panel's inset:0 to resolve reliably against the viewport)
 - [Phase 04-01]: Followed 04-UI-SPEC's locked fixed header/footer values (inset-inline:0) literally with no compensating horizontal padding — visual QA of the edge-to-edge chrome deferred to the plan that first wires .deck-active
+- [Phase 04-deck-mechanics]: Split .deck-jump/.deck-view-classic/.deck-view-deck DOM validation from Task 1 into Task 2, placed next to the handlers that consume them — Avoids unused-but-declared bindings under noUnusedLocals in Task 1's astro check
+- [Phase 04-deck-mechanics]: applyPanelStates(index) takes no animate parameter — Cold-load no-flash guarantee is already structural (state set before .deck-active exists); an unused option would fail noUnusedParameters
+- [Phase 04-deck-mechanics]: Gated every deck input handler (wheel/touch/keyboard/jump-list) behind isClassicActive() — Rule 2 fix — without the guard, the next wheel tick or arrow key after entering view-classic mode would immediately re-hide panels, breaking the escape hatch
 
 ### Pending Todos
 
@@ -135,8 +139,8 @@ Items acknowledged and carried forward:
 
 ## Session Continuity
 
-Last session: 2026-07-17T20:43:39.812Z
-Stopped at: Completed 04-01-PLAN.md
+Last session: 2026-07-17T21:03:02.907Z
+Stopped at: Completed 04-02-PLAN.md
 Resume file: None
 
 ## Operator Next Steps

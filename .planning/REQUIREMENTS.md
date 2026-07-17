@@ -9,9 +9,9 @@ Requirements for this milestone. Each maps to roadmap phases (numbering continue
 
 ### Deck Mechanics
 
-- [ ] **DECK-01**: Visitor advances/retreats panels via mouse wheel — one gesture = one panel (delta accumulation + transition lock; no trackpad double-fire, no dead mouse feel)
-- [ ] **DECK-02**: Visitor advances/retreats via vertical touch swipe on mobile
-- [ ] **DECK-03**: Visitor navigates fully by keyboard with a keymap that does not collide with Fig. 01's inner controls; hidden panels are `inert`; panel changes are announced via `aria-live`
+- [x] **DECK-01**: Visitor advances/retreats panels via mouse wheel — one gesture = one panel (delta accumulation + transition lock; no trackpad double-fire, no dead mouse feel)
+- [x] **DECK-02**: Visitor advances/retreats via vertical touch swipe on mobile
+- [x] **DECK-03**: Visitor navigates fully by keyboard with a keymap that does not collide with Fig. 01's inner controls; hidden panels are `inert`; panel changes are announced via `aria-live`
 - [x] **DECK-04**: Visitor sees a progress indicator (mono index) and can jump directly to any panel from it
 - [x] **DECK-05**: Every panel has a URL hash — browser back/forward work, deep links cold-load to the correct panel
 - [x] **DECK-06**: First-visit affordance hints how to navigate, then gets out of the way
@@ -66,9 +66,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DECK-01 | Phase 4 | Pending |
-| DECK-02 | Phase 4 | Pending |
-| DECK-03 | Phase 4 | Pending |
+| DECK-01 | Phase 4 | Complete |
+| DECK-02 | Phase 4 | Complete |
+| DECK-03 | Phase 4 | Complete |
 | DECK-04 | Phase 4 | Complete |
 | DECK-05 | Phase 4 | Complete |
 | DECK-06 | Phase 4 | Complete |
