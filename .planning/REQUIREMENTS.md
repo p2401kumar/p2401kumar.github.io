@@ -37,9 +37,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Case Studies
 
-- [ ] **CASE-01**: Visitor can read the DynamoDB cellularization case study (problem → approach with trade-offs considered → impact)
-- [ ] **CASE-02**: Visitor can read the ELB auto-weight-away case study (same structure)
-- [ ] **CASE-03**: Case studies are a typed Astro content collection whose schema enforces the problem/approach/impact structure
+- [x] **CASE-01**: Visitor can read the DynamoDB cellularization case study (problem → approach with trade-offs considered → impact)
+- [x] **CASE-02**: Visitor can read the ELB auto-weight-away case study (same structure)
+- [x] **CASE-03**: Case studies are a typed Astro content collection whose schema enforces the problem/approach/impact structure
 
 ### Platform & Deploy
 
@@ -109,9 +109,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FIG-05 | Phase 2 | Complete |
 | FIG-06 | Phase 2 | Complete |
 | FIG-07 | Phase 2 | Complete |
-| CASE-01 | Phase 3 | Pending |
-| CASE-02 | Phase 3 | Pending |
-| CASE-03 | Phase 3 | Pending |
+| CASE-01 | Phase 3 | Complete |
+| CASE-02 | Phase 3 | Complete |
+| CASE-03 | Phase 3 | Complete |
 | PLAT-06 | Phase 3 | Pending |
 | PLAT-07 | Phase 3 | Pending |
 

@@ -2,18 +2,18 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-current_phase: 02
-current_phase_name: Fig. 01 — Signature Interactive Figure
+current_phase: 03
+current_phase_name: Case Studies & Launch Polish
 status: executing
-stopped_at: Completed 02-05-PLAN.md
-last_updated: "2026-07-17T07:42:13.645Z"
+stopped_at: Completed 03-01-PLAN.md
+last_updated: "2026-07-17T07:53:08.878Z"
 last_activity: 2026-07-17
-last_activity_desc: Phase 02 execution started
+last_activity_desc: Phase 03 execution started
 progress:
   total_phases: 3
   completed_phases: 2
-  total_plans: 12
-  completed_plans: 12
+  total_plans: 16
+  completed_plans: 13
   percent: 67
 ---
 
@@ -24,14 +24,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-15)
 
 **Core value:** Within seconds of landing, a senior engineering leader should think "this person operates at our level" — credibility delivered through demonstrated craft (a live systems demo), not adjectives.
-**Current focus:** Phase 02 — Fig. 01 — Signature Interactive Figure
+**Current focus:** Phase 03 — Case Studies & Launch Polish
 
 ## Current Position
 
-Phase: 02 (Fig. 01 — Signature Interactive Figure) — EXECUTING
-Plan: 5 of 5
+Phase: 03 (Case Studies & Launch Polish) — EXECUTING
+Plan: 2 of 4
 Status: Ready to execute
-Last activity: 2026-07-17 — Phase 02 execution started
+Last activity: 2026-07-17 — Phase 03 execution started
 
 Progress: [██████████] 100%
 
@@ -67,6 +67,7 @@ Progress: [██████████] 100%
 | Phase 02 P03 | 15min | 3 tasks | 2 files |
 | Phase 02-fig01-signature-figure P04 | 13min | 2 tasks | 2 files |
 | Phase 02 P05 | 6min | 2 tasks | 0 files |
+| Phase 03 P01 | 8min | 3 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -104,6 +105,9 @@ Recent decisions affecting current work:
 - [Phase 02-fig01-signature-figure]: 02-04: node-proxy buttons carry both an aria-label attribute (matching interactions.ts's syncProxyFaultLabels overwrite target) and matching text content (matching the plan's literal action text) with no behavioral conflict
 - [Phase 02-fig01-signature-figure]: 02-04: bundling script resolves its root via document.querySelector('.fig') with a null check instead of ARCHITECTURE.md's illustrative document.currentScript!.parentElement!, since currentScript is null inside ES modules (what Astro emits for bare-bundled scripts)
 - [Phase 02-fig01-signature-figure]: 02-05: verified the 10 keyboard-proxy data-node buttons against the BUILT dist/index.html (10 unique values) rather than the .astro source, since Figure01.astro renders them via a single fig01Facts.map() template expression, not 10 duplicated literal attributes — a plan-criterion/architecture mismatch, not a defect
+- [Phase 03]: 03-01: Imported z from astro/zod instead of the deprecated astro:content re-export, since astro check flagged the latter as deprecated (0 hints after switch vs 15 before) — Keeps schema on Astro's current recommended import surface without changing schema shape
+- [Phase 03]: 03-01: Case-study title fields use the mono artifact-name string (dynamodb/cellularization, elb/auto-weight-away) rather than inventing separate prose titles — Matches the plan's plain factual title instruction and the systems-list naming idiom
+- [Phase 03]: 03-01: ELB metric source strings combine both resume numbers (-10% peak-hour latency, 90% capacity ops automated) per the plan's literal action text — Extends beyond systems.ts's existing single-metric source annotation, corroborated by 03-CONTEXT.md decisions block
 
 ### Pending Todos
 
@@ -123,6 +127,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-17T07:00:44.911Z
-Stopped at: Completed 02-05-PLAN.md
+Last session: 2026-07-17T07:53:08.867Z
+Stopped at: Completed 03-01-PLAN.md
 Resume file: None
