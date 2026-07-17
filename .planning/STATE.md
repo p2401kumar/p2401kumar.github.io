@@ -4,17 +4,17 @@ milestone: v2.0
 milestone_name: Night Sky
 current_phase: 04
 current_phase_name: Deck Mechanics
-status: executing
-stopped_at: Completed 04-02-PLAN.md
-last_updated: "2026-07-17T21:03:02.938Z"
+status: verifying
+stopped_at: Completed 04-03-PLAN.md — Phase 04 (Deck Mechanics) complete, ready for verification
+last_updated: "2026-07-17T22:29:04.293Z"
 last_activity: 2026-07-17
 last_activity_desc: Phase 04 execution started
 progress:
   total_phases: 3
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 3
-  completed_plans: 2
-  percent: 0
+  completed_plans: 3
+  percent: 33
 ---
 
 # Project State
@@ -28,9 +28,9 @@ See: .planning/PROJECT.md (updated 2026-07-17)
 
 ## Current Position
 
-Phase: 04 (Deck Mechanics) — EXECUTING
+Phase: 04 (Deck Mechanics) — READY FOR VERIFICATION
 Plan: 3 of 3
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-07-17 — Phase 04 execution started
 
 ## Performance Metrics
@@ -79,6 +79,7 @@ Last activity: 2026-07-17 — Phase 04 execution started
 </details>
 | Phase 04 P01 | 12min | 3 tasks | 7 files |
 | Phase 04-deck-mechanics P02 | 14min | 2 tasks | 2 files |
+| Phase 04 P03 | 70min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -117,6 +118,9 @@ Recent decisions affecting current work:
 - [Phase 04-deck-mechanics]: Split .deck-jump/.deck-view-classic/.deck-view-deck DOM validation from Task 1 into Task 2, placed next to the handlers that consume them — Avoids unused-but-declared bindings under noUnusedLocals in Task 1's astro check
 - [Phase 04-deck-mechanics]: applyPanelStates(index) takes no animate parameter — Cold-load no-flash guarantee is already structural (state set before .deck-active exists); an unused option would fail noUnusedParameters
 - [Phase 04-deck-mechanics]: Gated every deck input handler (wheel/touch/keyboard/jump-list) behind isClassicActive() — Rule 2 fix — without the guard, the next wheel tick or arrow key after entering view-classic mode would immediately re-hide panels, breaking the escape hatch
+- [Phase 04-03]: Human decision 'Fix now, guarded' — CLS=1 regression fixed inside this plan via guarded pre-paint deck activation rather than deferred to Phase 6, preserving DECK-07's init-failure fallback guarantee
+- [Phase 04-03]: Non-hero deep-link hash loads deliberately excluded from pre-paint speculation (Lighthouse only audits '/'; speculating on arbitrary hashes risked flash-of-wrong-panel) — accepted, documented trade-off
+- [Phase 04-03]: Human checkpoint resolved by explicit user direction ('proceed'); real-device touch testing carries forward to Phase 6's checkpoint as pre-agreed
 
 ### Pending Todos
 
@@ -139,8 +143,8 @@ Items acknowledged and carried forward:
 
 ## Session Continuity
 
-Last session: 2026-07-17T21:03:02.907Z
-Stopped at: Completed 04-02-PLAN.md
+Last session: 2026-07-17T22:28:48.473Z
+Stopped at: Completed 04-03-PLAN.md — Phase 04 (Deck Mechanics) complete, ready for verification
 Resume file: None
 
 ## Operator Next Steps

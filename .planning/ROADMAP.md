@@ -20,7 +20,7 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 
 ### v2.0 Night Sky (current)
 
-- [ ] **Phase 4: Deck Mechanics** - No-scroll panel deck: full input parity (wheel/swipe/keys/dots), hash routing, focus management, progressive-enhancement fallback
+- [x] **Phase 4: Deck Mechanics** - No-scroll panel deck: full input parity (wheel/swipe/keys/dots), hash routing, focus management, progressive-enhancement fallback (completed 2026-07-17)
 - [ ] **Phase 5: Night-Sky Scene** - Persistent zero-light-pollution scene: pre-rendered starfield + Milky Way, camper silhouette, fireflies, panel-reactive career constellations
 - [ ] **Phase 6: Integration & Launch** - v1 content layered as panels, Fig. 01 re-verified embedded, case-study URLs intact, live Lighthouse ≥90
 
@@ -40,7 +40,7 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
   5. With JS disabled the page renders the v1 scrolling layout (`.deck-active` added only after successful init); under `prefers-reduced-motion` panel transitions are instant
 
 **Research gate**: Lighthouse ≥90 with the deck active but no scene yet; real-device input testing on iPhone + mid-tier Android; case-study routing architecture decided here (not deferred to Integration); Fig. 01 keymap resolved against actual `src/lib/fig01/` source.
-**Plans**: 2/3 plans executed
+**Plans**: 3/3 plans complete
 **Wave 1**
 
 - [x] 04-01-PLAN.md — Panel manifest + deck shell components + index restructure + deck.css (no-JS-safe static foundation)
@@ -51,7 +51,7 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
-- [ ] 04-03-PLAN.md — Automated gate (build/hex/fallback/leak/Lighthouse local) + human-verify checkpoint (feel, cold-load, back/forward, reduced-motion)
+- [x] 04-03-PLAN.md — Automated gate (build/hex/fallback/leak/Lighthouse local) + human-verify checkpoint (feel, cold-load, back/forward, reduced-motion)
 
 **UI hint**: yes
 
@@ -95,7 +95,7 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 | 1. Foundation & Editorial Shell | v1.0 | 7/7 | Complete | 2026-07-17 |
 | 2. Fig. 01 — Signature Interactive Figure | v1.0 | 5/5 | Complete | 2026-07-17 |
 | 3. Case Studies & Launch Polish | v1.0 | 4/4 | Complete | 2026-07-17 |
-| 4. Deck Mechanics | v2.0 | 2/3 | In Progress|  |
+| 4. Deck Mechanics | v2.0 | 3/3 | Complete   | 2026-07-17 |
 | 5. Night-Sky Scene | v2.0 | 0/TBD | Not started | - |
 | 6. Integration & Launch | v2.0 | 0/TBD | Not started | - |
 
