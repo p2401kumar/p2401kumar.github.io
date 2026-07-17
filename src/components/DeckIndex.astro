@@ -37,11 +37,9 @@ const initialCount = `01 / ${total}`;
       panels.map((p, i) => (
         <li>
           <a href={`#${p.hash}`} data-panel-index={i} aria-current={i === 0 ? "true" : undefined}>
-            {i === 0 && (
-              <span class="marker" aria-hidden="true">
-                ▸
-              </span>
-            )}
+            <span class="marker" aria-hidden="true">
+              ▸
+            </span>
             {p.label}
           </a>
         </li>
@@ -144,6 +142,12 @@ const initialCount = `01 / ${total}`;
   .deck-jump .marker {
     color: var(--accent);
     margin-right: 4px;
+    /* marker is rendered in every anchor; only the current one shows it */
+    visibility: hidden;
+  }
+
+  .deck-jump a[aria-current="true"] .marker {
+    visibility: visible;
   }
 
   html.deck-active .deck-hint {

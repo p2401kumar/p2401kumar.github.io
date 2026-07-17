@@ -71,6 +71,7 @@ let currentIndex = 0;
 let locked = false;
 let firstNavDone = false;
 let panelEls: HTMLElement[] = [];
+let jumpAnchorEls: HTMLAnchorElement[] = [];
 let liveEl: HTMLElement;
 let indexCountEl: HTMLElement;
 let hintEl: HTMLElement;
@@ -107,6 +108,18 @@ function applyPanelStates(index: number): void {
       el.removeAttribute('aria-hidden');
     } else {
       el.setAttribute('aria-hidden', 'true');
+    }
+  });
+  updateJumpList(index);
+}
+
+/** Moves aria-current across the jump-list anchors so the expanded index always reports the real current panel (the ▸ marker follows via CSS `[aria-current="true"] .marker`). */
+function updateJumpList(index: number): void {
+  jumpAnchorEls.forEach((a, i) => {
+    if (i === index) {
+      a.setAttribute('aria-current', 'true');
+    } else {
+      a.removeAttribute('aria-current');
     }
   });
 }
@@ -433,6 +446,7 @@ export function initDeck(root: HTMLElement): () => void {
   if (jumpAnchors.length !== PANEL_COUNT) {
     throw new Error(`initDeck: expected ${PANEL_COUNT} jump-list anchors, found ${jumpAnchors.length}`);
   }
+  jumpAnchorEls = Array.from(jumpAnchors);
   const viewClassicLink = required(
     root.querySelector<HTMLAnchorElement>('.deck-view-classic'),
     '.deck-view-classic',
