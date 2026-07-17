@@ -4,17 +4,17 @@ milestone: v1.0
 milestone_name: milestone
 current_phase: 02
 current_phase_name: Fig. 01 — Signature Interactive Figure
-status: executing
-stopped_at: Completed 02-04-PLAN.md
-last_updated: "2026-07-17T05:40:44.104Z"
+status: verifying
+stopped_at: Completed 02-05-PLAN.md
+last_updated: "2026-07-17T07:00:53.449Z"
 last_activity: 2026-07-17
 last_activity_desc: Phase 02 execution started
 progress:
   total_phases: 3
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 12
-  completed_plans: 11
-  percent: 33
+  completed_plans: 12
+  percent: 67
 ---
 
 # Project State
@@ -30,7 +30,7 @@ See: .planning/PROJECT.md (updated 2026-07-15)
 
 Phase: 02 (Fig. 01 — Signature Interactive Figure) — EXECUTING
 Plan: 5 of 5
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-07-17 — Phase 02 execution started
 
 Progress: [██████████] 100%
@@ -66,6 +66,7 @@ Progress: [██████████] 100%
 | Phase 02 P02 | 13min | 2 tasks | 1 files |
 | Phase 02 P03 | 15min | 3 tasks | 2 files |
 | Phase 02-fig01-signature-figure P04 | 13min | 2 tasks | 2 files |
+| Phase 02 P05 | 6min | 2 tasks | 0 files |
 
 ## Accumulated Context
 
@@ -102,6 +103,7 @@ Recent decisions affecting current work:
 - [Phase 02-fig01-signature-figure]: 02-04: mapped the prototype tooltip's literal near-black background to var(--bg) (closest existing token) rather than introducing a new hex literal, since the plan's file scope excludes tokens.css and the zero-hex-literal gate is a hard acceptance criterion
 - [Phase 02-fig01-signature-figure]: 02-04: node-proxy buttons carry both an aria-label attribute (matching interactions.ts's syncProxyFaultLabels overwrite target) and matching text content (matching the plan's literal action text) with no behavioral conflict
 - [Phase 02-fig01-signature-figure]: 02-04: bundling script resolves its root via document.querySelector('.fig') with a null check instead of ARCHITECTURE.md's illustrative document.currentScript!.parentElement!, since currentScript is null inside ES modules (what Astro emits for bare-bundled scripts)
+- [Phase 02-fig01-signature-figure]: 02-05: verified the 10 keyboard-proxy data-node buttons against the BUILT dist/index.html (10 unique values) rather than the .astro source, since Figure01.astro renders them via a single fig01Facts.map() template expression, not 10 duplicated literal attributes — a plan-criterion/architecture mismatch, not a defect
 
 ### Pending Todos
 
@@ -121,6 +123,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-17T05:40:44.076Z
-Stopped at: Completed 02-04-PLAN.md
+Last session: 2026-07-17T07:00:44.911Z
+Stopped at: Completed 02-05-PLAN.md
 Resume file: None
