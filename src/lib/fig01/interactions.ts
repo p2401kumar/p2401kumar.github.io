@@ -1,12 +1,11 @@
 // interactions.ts — DOM wiring for Fig. 01: pointer hover/click, the
 // send/fault buttons, the timestamped aria-live event log, the
-// prefers-reduced-motion branch point, and the dual-gate lifecycle
-// (IntersectionObserver + visibilitychange). Ported verbatim from the
-// approved prototype (.planning/reference/prototype-shell-and-fig01.html
-// lines 202-229) plus three hardening gaps the prototype does not
-// implement (FIG-05/FIG-07 — 02-CONTEXT.md, 02-RESEARCH.md Patterns 3-5).
-// Keyboard proxy wiring + the public initFig01 orchestrator are added in
-// this plan's next task.
+// prefers-reduced-motion branch point, the dual-gate lifecycle
+// (IntersectionObserver + visibilitychange), and keyboard access via
+// native proxy <button>s. Ported behavior verbatim from the approved
+// prototype (.planning/reference/prototype-shell-and-fig01.html lines
+// 202-336) plus three hardening gaps the prototype does not implement
+// (FIG-05/06/07 — 02-CONTEXT.md, 02-RESEARCH.md Patterns 3-5).
 //
 // This module owns DOM events + the render/lifecycle branch point only;
 // model.ts owns state mutation, render.ts owns pixels. The fault self-heal
@@ -40,6 +39,9 @@ const HIT_SLOP_Y = 8;
 const TIP_OFFSET_Y = 38;
 /** Tooltip clamp margin from the stage edges, in px. */
 const TIP_EDGE_MARGIN = 8;
+
+/** Accessible-name suffix appended to a proxy button when its node is the currently-faulted cell (02-UI-SPEC Accessibility copy — mirrors the log narration for keyboard/screen-reader users). */
+const DEGRADED_SUFFIX = ' · degraded, rerouting';
 
 // The reduced-motion detector is read once at module scope — this is a
 // single-instance-per-page module (one Fig. 01), matching render.ts's own
@@ -211,6 +213,67 @@ export function wireButtons(
     faultBtn.disabled = true;
     redraw();
     triggerHeal();
+  });
+}
+
+/**
+ * Refreshes each keyboard-proxy button's accessible name with a
+ * `· degraded, rerouting` suffix when its node is the currently-faulted
+ * cell — mirrors the log narration and the on-canvas amber/dashed
+ * encoding for keyboard/screen-reader users (02-UI-SPEC Accessibility
+ * copy table; Claude's-discretion recommendation, extends the FIG-03/05
+ * locked dual-encoding requirement to non-visual users).
+ */
+export function syncProxyFaultLabels(proxyButtons: NodeListOf<HTMLButtonElement>, degraded: NodeId | null): void {
+  proxyButtons.forEach((btn) => {
+    const id = btn.dataset.node as NodeId | undefined;
+    if (!id) return;
+    const fact = factsByNode.get(id);
+    if (!fact) return;
+    const suffix = id === degraded ? DEGRADED_SUFFIX : '';
+    btn.setAttribute('aria-label', `${fact.accessibleName}${suffix}`);
+  });
+}
+
+/**
+ * Wires the visually-hidden `.node-proxy` `<button>`s (one per node,
+ * `data-node` carries the node id) that give every node sequential
+ * keyboard reachability (FIG-06, 02-UI-SPEC "Keyboard"). Focus shows the
+ * tooltip + sets `state.focusedNode` (render.ts draws the on-canvas focus
+ * ring keyed on that field); blur clears it; native Enter/Space
+ * activation (the `click` event) dispatches a beam from that node — no
+ * keydown interception, so native sequential tab order is preserved and
+ * no keyboard trap is possible.
+ */
+export function wireKeyboard(
+  state: FigureState,
+  proxyButtons: NodeListOf<HTMLButtonElement>,
+  tipEl: HTMLElement,
+  logEl: HTMLElement,
+  canvas: HTMLCanvasElement,
+  redraw: () => void
+): void {
+  proxyButtons.forEach((btn) => {
+    const id = btn.dataset.node as NodeId | undefined;
+    if (!id) return;
+
+    btn.addEventListener('focus', () => {
+      state.focusedNode = id;
+      showTip(tipEl, id, state.nodes[id], canvas.clientWidth);
+      redraw();
+    });
+
+    btn.addEventListener('blur', () => {
+      state.focusedNode = null;
+      hideTip(tipEl);
+      redraw();
+    });
+
+    btn.addEventListener('click', () => {
+      spawnBeam(state, id);
+      writeLog(logEl, 'request dispatched → region');
+      redraw();
+    });
   });
 }
 
