@@ -3,13 +3,13 @@
  * index.astro — the single-scroll home page.
  *
  * Composes BaseLayout with the full editorial shell + content sections in
- * the locked order (01-CONTEXT.md "Page structure"). Fig. 01 is left as a
- * comment placeholder between Hero and SystemsList — Phase 2 fills it in;
- * Phase 1 renders nothing there.
+ * the locked order (01-CONTEXT.md "Page structure"). Fig. 01 renders
+ * between Hero and SystemsList (Phase 2, plan 02-04).
  */
 import BaseLayout from "../layouts/BaseLayout.astro";
 import SiteHeader from "../components/SiteHeader.astro";
 import Hero from "../components/Hero.astro";
+import Figure01 from "../components/Figure01.astro";
 import SystemsList from "../components/SystemsList.astro";
 import ExperienceSection from "../components/ExperienceSection.astro";
 import PatentsSection from "../components/PatentsSection.astro";
@@ -22,7 +22,7 @@ import SiteFooter from "../components/SiteFooter.astro";
   <div class="page">
     <SiteHeader />
     <Hero />
-    <!-- Fig. 01 slot — Phase 2 -->
+    <Figure01 />
     <SystemsList />
     <ExperienceSection />
     <PatentsSection />
