@@ -352,6 +352,39 @@ export function initNightSky(root: HTMLElement): () => void {
   visibleCtx = ctx;
   tokens = getSkyTokens();
 
+  // --- Pause-signal listeners (SKY-04). The panel-change subscription is
+  // by LITERAL event name — deck.ts is never imported (module-boundary
+  // rule; deck.ts documents the detail shape { index, id, total }). This
+  // listener owns ONLY the pause gate — 05-05's constellation brighten/
+  // dim registers its own independent listener on the same event
+  // (05-RESEARCH.md Pattern 6's two-independent-listeners note). ---
+  const onVisibilityChange = (): void => {
+    tabVisible = !document.hidden;
+    updateRunState();
+  };
+  document.addEventListener('visibilitychange', onVisibilityChange);
+
+  const onPanelChange = (e: Event): void => {
+    const detail = (e as CustomEvent<{ id: string }>).detail;
+    fig01Active = detail?.id === 'fig-01';
+    updateRunState();
+  };
+  document.addEventListener('nightsky:panel-change', onPanelChange);
+
+  // Reduced-motion re-branch (live OS toggle): always stop first, then
+  // either paint the one static frame or re-enter the normal gate — the
+  // loop is never reachable while rm.matches (05-RESEARCH.md Pattern 6 /
+  // Anti-Patterns: reduced motion is stop, not dampen).
+  const onMotionChange = (): void => {
+    stopAnimationLoop();
+    if (rm.matches) {
+      renderStaticFrame();
+    } else {
+      updateRunState();
+    }
+  };
+  rm.addEventListener('change', onMotionChange);
+
   // --- Debounced resize → regenerate Layer 0 once the gesture settles
   // (never per resize tick; the loop itself is left untouched here). ---
   let resizeTimer: ReturnType<typeof setTimeout> | null = null;
@@ -373,6 +406,9 @@ export function initNightSky(root: HTMLElement): () => void {
   return function teardown(): void {
     generation++; // invalidate any in-flight generation
     stopAnimationLoop();
+    document.removeEventListener('visibilitychange', onVisibilityChange);
+    document.removeEventListener('nightsky:panel-change', onPanelChange);
+    rm.removeEventListener('change', onMotionChange);
     window.removeEventListener('resize', onResize);
     if (resizeTimer !== null) {
       clearTimeout(resizeTimer);
