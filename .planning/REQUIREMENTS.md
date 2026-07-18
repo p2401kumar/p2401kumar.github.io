@@ -25,6 +25,8 @@ Requirements for this milestone. Each maps to roadmap phases (numbering continue
 - [ ] **SKY-03**: Sparse drifting fireflies + twinkling star subset are the only per-frame canvas work; idle CPU < 10% sustained over 5 minutes
 - [ ] **SKY-04**: Scene pauses when the tab is hidden and while Fig. 01's panel is active (one-active-animation rule); `prefers-reduced-motion` renders one static frame with no animation loop
 - [ ] **SKY-05**: All text over the sky passes WCAG 1.4.3 contrast at worst-case brightness points via a scrim that preserves the dark aesthetic
+- [ ] **SKY-06**: Occasional shooting stars streak the upper sky — one at a time, ~20–45s cadence, fading trail — absent under reduced-motion and while the scene is paused *(Phase 5.1, INSERTED)*
+- [ ] **SKY-07**: A thin crescent moon (static Layer 0, tokens-only, procedural — no image assets) sits low and dim, clear of the Milky Way band, preserving the zero-light-pollution premise *(Phase 5.1, INSERTED)*
 
 ### Constellations
 
@@ -82,6 +84,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CONST-01 | Phase 5 | Complete |
 | CONST-02 | Phase 5 | Pending |
 | CONST-03 | Phase 5 | Pending |
+| SKY-06 | Phase 5.1 | Pending |
+| SKY-07 | Phase 5.1 | Pending |
 | INTG-01 | Phase 6 | Pending |
 | INTG-02 | Phase 6 | Pending |
 | INTG-03 | Phase 6 | Pending |
@@ -89,8 +93,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 **Coverage:**
 
-- v2.0 requirements: 20 total
-- Mapped to phases: 20 ✓
+- v2.0 requirements: 22 total (20 original + 2 inserted via Phase 5.1)
+- Mapped to phases: 22 ✓
 - Unmapped: 0
 
 ---

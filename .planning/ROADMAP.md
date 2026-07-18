@@ -22,6 +22,7 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 
 - [x] **Phase 4: Deck Mechanics** - No-scroll panel deck: full input parity (wheel/swipe/keys/dots), hash routing, focus management, progressive-enhancement fallback (completed 2026-07-17)
 - [ ] **Phase 5: Night-Sky Scene** - Persistent zero-light-pollution scene: pre-rendered starfield + Milky Way, camper silhouette, fireflies, panel-reactive career constellations
+- [ ] **Phase 5.1: Celestial Extras (INSERTED)** - Shooting stars + thin crescent moon, inside the established engine's floors
 - [ ] **Phase 6: Integration & Launch** - v1 content layered as panels, Fig. 01 re-verified embedded, case-study URLs intact, live Lighthouse ≥90
 
 ## Phase Details
@@ -94,6 +95,22 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 
 **UI hint**: yes
 
+### Phase 5.1: Celestial Extras (INSERTED)
+
+**Goal**: The night gains its final celestial touches — occasional shooting stars streak the upper sky and a thin crescent moon sits low and dim, both inside the established engine's performance, pause, and reduced-motion floors, without compromising the zero-light-pollution premise.
+**Depends on**: Phase 5 (extends scene.ts's Layer 2 and starfield.ts's Layer 0; reuses the pause state machine and token bridge)
+**Requirements**: SKY-06, SKY-07
+**Success Criteria** (what must be TRUE):
+
+  1. Occasional meteor streaks cross the upper sky — one active at a time, ~20–45s randomized cadence, brief (~0.6–1s) streak with a fading trail — absent under `prefers-reduced-motion` and while the scene is paused (hidden tab / Fig. 01 panel)
+  2. A thin crescent moon renders in Layer 0 (static, pre-rendered, tokens-only) — placed clear of the Milky Way band and the content column, dim enough that the Milky Way stays the brightest surface (zero-light-pollution premise preserved)
+  3. Idle per-frame cost is unchanged (meteor work only exists while a streak is active); the full Phase 5 gate battery re-passes: astro check, build, zero-hex, fig01 + deck non-regression, local Lighthouse ≥90 both presets
+  4. Reduced-motion static frame includes the moon but never a meteor; no new dependencies; no push to origin
+
+**Research gate**: none new — pure extension of the Phase 5 engine (SPIKE.md technique, pause machine, Layer 0/2 split all validated); moon is drawn procedurally (gradient crescent), no image assets.
+**Plans**: TBD
+**UI hint**: yes
+
 ### Phase 6: Integration & Launch
 
 **Goal**: All v1 content is layered into the deck as panels over the scene without forking markup, Fig. 01 works fully as a panel with its complete v1 verification checklist re-passed while embedded, case studies keep cold-loadable URLs, and the live home page holds Lighthouse ≥90 on both mobile and desktop.
@@ -119,6 +136,7 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 | 3. Case Studies & Launch Polish | v1.0 | 4/4 | Complete | 2026-07-17 |
 | 4. Deck Mechanics | v2.0 | 3/3 | Complete   | 2026-07-17 |
 | 5. Night-Sky Scene | v2.0 | 2/6 | In Progress|  |
+| 5.1 Celestial Extras (INSERTED) | v2.0 | 0/TBD | Not started | - |
 | 6. Integration & Launch | v2.0 | 0/TBD | Not started | - |
 
 ---
