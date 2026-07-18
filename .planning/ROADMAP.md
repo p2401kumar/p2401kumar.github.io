@@ -108,7 +108,8 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
   4. Reduced-motion static frame includes the moon but never a meteor; no new dependencies; no push to origin
 
 **Research gate**: none new — pure extension of the Phase 5 engine (SPIKE.md technique, pause machine, Layer 0/2 split all validated); moon is drawn procedurally (gradient crescent), no image assets.
-**Plans**: TBD
+**Plans**: 1 plan
+- [ ] 05.1-01-PLAN.md — Crescent moon in Layer 0 (starfield.ts) + meteor streaks (meteors.ts) riding scene.ts's tick + full gate battery re-run (moon-dimness assertion, frame-cost delta, moon-region screenshots)
 **UI hint**: yes
 
 ### Phase 6: Integration & Launch
