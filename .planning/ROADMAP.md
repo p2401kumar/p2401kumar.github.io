@@ -22,7 +22,7 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 
 - [x] **Phase 4: Deck Mechanics** - No-scroll panel deck: full input parity (wheel/swipe/keys/dots), hash routing, focus management, progressive-enhancement fallback (completed 2026-07-17)
 - [x] **Phase 5: Night-Sky Scene** - Persistent zero-light-pollution scene: pre-rendered starfield + Milky Way, camper silhouette, fireflies, panel-reactive career constellations (completed 2026-07-18)
-- [ ] **Phase 5.1: Celestial Extras (INSERTED)** - Shooting stars + thin crescent moon, inside the established engine's floors
+- [x] **Phase 5.1: Celestial Extras (INSERTED)** - Shooting stars + thin crescent moon, inside the established engine's floors (completed 2026-07-18)
 - [ ] **Phase 6: Integration & Launch** - v1 content layered as panels, Fig. 01 re-verified embedded, case-study URLs intact, live Lighthouse ≥90
 
 ## Phase Details
@@ -108,8 +108,8 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
   4. Reduced-motion static frame includes the moon but never a meteor; no new dependencies; no push to origin
 
 **Research gate**: none new — pure extension of the Phase 5 engine (SPIKE.md technique, pause machine, Layer 0/2 split all validated); moon is drawn procedurally (gradient crescent), no image assets.
-**Plans**: 1 plan
-- [ ] 05.1-01-PLAN.md — Crescent moon in Layer 0 (starfield.ts) + meteor streaks (meteors.ts) riding scene.ts's tick + full gate battery re-run (moon-dimness assertion, frame-cost delta, moon-region screenshots)
+**Plans**: 1/1 plans complete
+- [x] 05.1-01-PLAN.md — Crescent moon in Layer 0 (starfield.ts) + meteor streaks (meteors.ts) riding scene.ts's tick + full gate battery re-run (moon-dimness assertion, frame-cost delta, moon-region screenshots)
 **UI hint**: yes
 
 ### Phase 6: Integration & Launch
@@ -137,7 +137,7 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 | 3. Case Studies & Launch Polish | v1.0 | 4/4 | Complete | 2026-07-17 |
 | 4. Deck Mechanics | v2.0 | 3/3 | Complete   | 2026-07-17 |
 | 5. Night-Sky Scene | v2.0 | 6/6 | Complete   | 2026-07-18 |
-| 5.1 Celestial Extras (INSERTED) | v2.0 | 0/TBD | Not started | - |
+| 5.1 Celestial Extras (INSERTED) | v2.0 | 1/1 | Complete | 2026-07-18 |
 | 6. Integration & Launch | v2.0 | 0/TBD | Not started | - |
 
 ---
