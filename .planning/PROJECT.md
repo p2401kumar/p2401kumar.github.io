@@ -8,21 +8,15 @@ A personal portfolio site for Prateek Kumar (SDE 2 at Microsoft; previously AWS 
 
 Within seconds of landing, a senior engineering leader should think "this person operates at our level" — credibility delivered through demonstrated craft (a live systems demo), not adjectives.
 
-## Current State (v1.0 shipped 2026-07-17)
+## Current State (v2.0 shipped 2026-07-18)
 
-**Live at https://p2401kumar.github.io** — 3 phases, 16 plans, all 29 v1 requirements complete and verified (see `.planning/MILESTONES.md`). Lighthouse ≥90 all categories on all 3 pages. Old 2021 site preserved as branch `legacy-2021`.
+**Live at https://p2401kumar.github.io** — the v2.0 "Night Sky" experience: a zero-light-pollution night scene (pre-rendered starfield + Milky Way, camper silhouette with copper glow, crescent moon, fireflies, occasional meteors) behind a no-scroll panel deck cycling all seven CV sections, with career-chapter constellations that brighten per panel. Fig. 01 lives as a panel with its full v1 checklist re-verified embedded (36/36). Live Lighthouse: mobile 98/100/100/100, desktop 100×4. Case studies remain scene-free editorial pages; "view classic" + no-JS fallback restore the v1 scrolling layout. Tags `v1.0` and `v2.0`; 2021 site preserved as `legacy-2021`.
 
-Codebase: Astro 7.0.7 static, ~3.2k LOC (`src/` components + `src/lib/fig01/` canvas engine + typed `src/data/` modules + Content Layer case studies). One dependency beyond Astro: `@astrojs/sitemap@3.7.3`. Deploys on push to `main` via GitHub Actions.
+Milestone stats: 4 phases (4, 5, 5.1 inserted, 6), 12 plans, all 22 v2.0 requirements complete and verified (archives: `milestones/v2.0-*`). Codebase: Astro 7.0.7 static; `src/lib/fig01/` + `src/lib/nightsky/` canvas engines (one rAF loop each, event-contract coupling only); zero new dependencies added in v2.0. Deploys on push to `main` via GitHub Actions.
 
-## Current Milestone: v2.0 Night Sky
+## Current Milestone: none (between milestones)
 
-**Goal:** Transform the portfolio into a zero-light-pollution night experience — camper-car camp scene, vivid Milky Way, career-chapter constellations with neural links — with the CV cycling as full-viewport overlay panels instead of scrolling. The sky is the hero; the substance and quality floors survive intact.
-
-**Target features:**
-- Persistent illustrated night scene (dark ground, dense starfield, Milky Way, camper silhouette + single warm glow, sparse fireflies)
-- Named career constellations that brighten with their panel; subtle neural links firing quietly
-- No-scroll panel cycling (wheel/swipe/keys/dots) with all v1 content as overlays; Fig. 01 as a panel
-- Reduced-motion/keyboard/Lighthouse/honesty floors carried forward; v1 editorial layout remains the fallback bones
+v2.0 closed 2026-07-18. Next-milestone candidates live in Future candidates below and REQUIREMENTS.md Future Requirements. Open post-launch items: retire/redirect the old `/home` repo; user-run real-device touch checklist + 5-min idle-CPU check (documented in `milestones/v2.0-phases/06-integration-launch/06-01-LAUNCH-READINESS.md` §5–6, rollback path included).
 
 ## Requirements
 
@@ -35,12 +29,14 @@ Codebase: Astro 7.0.7 static, ~3.2k LOC (`src/` components + `src/lib/fig01/` ca
 - ✓ User-root GitHub Pages deploy via Actions; responsive 360px→desktop; self-hosted subset fonts with no hero CLS — v1.0
 - ✓ SEO/OG/meta, static OG image, 3-URL sitemap, robots.txt; Lighthouse ≥90 ×4 categories on live URL — v1.0
 
+- ✓ Zero-light-pollution night scene: dense pre-rendered starfield, vivid Milky Way, camper silhouette + single copper glow, crescent moon, fireflies, rare meteors — v2.0
+- ✓ Constellations with meaning: AWS/Microsoft/Samsung/education-patents clusters, panel-reactive brightening, quiet neural link-firing — v2.0
+- ✓ CV as overlay: no-scroll deck (wheel/swipe/keys/jump index), hash routing + back/forward, Fig. 01 as a panel, classic + no-JS fallbacks — v2.0
+- ✓ Floors carried forward: live Lighthouse ≥90 ×4 both presets, reduced-motion static frame, keyboard operable, honesty gate, worst-case contrast ≥4.5:1 — v2.0
+
 ### Active
 
-- [ ] Zero-light-pollution night scene: pitch-dark ground, dense realistic starfield, vivid Milky Way band, silhouetted camper-car camp with a single warm copper glow, sparse fireflies
-- [ ] Constellations with meaning: named career-chapter constellations (AWS, Microsoft, Samsung, patents/education) with subtle neural links that occasionally fire; active panel's constellation brightens
-- [ ] CV as overlay: no page scroll — wheel/swipe/arrows/dots cycle full-viewport content panels over the persistent scene (all v1 content, Fig. 01 as its own panel, case studies reachable)
-- [ ] Floors carried forward: Lighthouse ≥ 90, reduced-motion readable fallback, keyboard operable, honesty gate
+*(none — between milestones)*
 
 **Future candidates (not this milestone):**
 - Notes/writing section (NOTE-01) — only once a content pipeline exists
@@ -92,6 +88,10 @@ Codebase: Astro 7.0.7 static, ~3.2k LOC (`src/` components + `src/lib/fig01/` ca
 | No blog, no chatbot in v1 | Stale-blog risk; top-tier portfolios avoid chatbots; both revisitable in v2 | ✓ Good (v1.0 — revisit in v2 as /craft) |
 | Dark-only tinted-graphite + copper system | Committed visual world reads more deliberate than a toggle; accent <5% per AI-infra research | ✓ Good (v1.0 — Lighthouse a11y ≥90) |
 | Deploy to user root `p2401kumar.github.io` (new repo), retire old `/home` after launch | Cleanest résumé URL, zero base-path risk (top research-flagged pitfall); user decision 2026-07-15 | ✓ Good (v1.0 live; /home retirement still open) |
+| v2.0 re-skin keeps all v1 substance (panels wrap v1 components unforked) | User decision: "Re-skin, keep substance" — beauty layered over verified content, not a rewrite | ✓ Good (v2.0 — 0 content forks, honesty gate intact) |
+| Zero-dep procedural sky (spike-validated scatter+gradient, no noise lib, no NASA imagery) | Spike passed the banding bar first try; 0 bytes vs 400KB+ image; DPR-perfect; authored constellations need procedural stars | ✓ Good (v2.0 — Milky Way + moon + meteors, 0 new deps) |
+| One rAF per engine, event-name-only coupling (`nightsky:panel-change`), scene pauses when hidden/fig01-active | One-active-animation doctrine scaled from v1; grep-enforced module boundary kept both engines independent | ✓ Good (v2.0 — idle 5.6% CPU @60fps; TBT 0–170ms) |
+| Deploy gated on explicit user go despite autonomous mode (fix-2-edges-then-launch chosen) | Replacing the live professional site is outward-facing; user gated the v1 equivalent personally | ✓ Good (v2.0 — launched with both fixes verified live 11/11) |
 
 ## Evolution
 
@@ -111,4 +111,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-07-17 after v2.0 milestone start*
+*Last updated: 2026-07-18 after v2.0 milestone completion (shipped + live-verified)*

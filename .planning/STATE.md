@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Night Sky
-current_phase: 06
-current_phase_name: Integration & Launch
-status: milestone_execution_complete
-stopped_at: Phase 6 complete — v2.0 LIVE at p2401kumar.github.io (06-02 deployed, INTG-01..04 done)
+current_phase: none
+current_phase_name: Between milestones
+status: milestone_complete
+stopped_at: v2.0 Night Sky SHIPPED + closed 2026-07-18 (tag v2.0; archives at milestones/v2.0-*); autonomous chain ended
 last_updated: "2026-07-18T08:18:03.701Z"
 last_activity: 2026-07-18
 last_activity_desc: Completed 06-02-PLAN.md — v2.0 launched (live Lighthouse 98+100x3 / 100x4)
