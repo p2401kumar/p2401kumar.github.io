@@ -7,6 +7,7 @@
  * between Hero and SystemsList (Phase 2, plan 02-04).
  */
 import BaseLayout from "../layouts/BaseLayout.astro";
+import NightSky from "../components/NightSky.astro";
 import SiteHeader from "../components/SiteHeader.astro";
 import PanelDeck from "../components/PanelDeck.astro";
 import Panel from "../components/Panel.astro";
@@ -22,6 +23,7 @@ import SiteFooter from "../components/SiteFooter.astro";
 
 <BaseLayout>
   <div class="page">
+    <NightSky />
     <SiteHeader />
     <PanelDeck>
       <Panel id="hero" label="hero">

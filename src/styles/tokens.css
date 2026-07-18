@@ -36,4 +36,15 @@
   --mono:ui-monospace,"Cascadia Code","SF Mono",Consolas,monospace;
   --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
   --sans:"Helvetica Neue","Segoe UI",Arial,system-ui,sans-serif;
+
+  /* Night-sky scene (Phase 5) — spike-validated final values (SPIKE.md).
+     Exactly 4 tokens: zenith (deepest sky + ground fill), horizon (gradient
+     base + faint atmospheric glow), milkyway (the band's pale core tint),
+     the one star-white token (all magnitude bands read it at varying
+     alpha). Fireflies + camper glow reuse --accent; constellation
+     stars/links/beams reuse the star token above. No fifth token. */
+  --sky-zenith:#05070a;
+  --sky-horizon:#141a2c;
+  --milkyway:#cfd9f2;
+  --star:#eef2fa;
 }
