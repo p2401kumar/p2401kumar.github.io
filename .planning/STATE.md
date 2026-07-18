@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Night Sky
-current_phase: 05.1
-current_phase_name: Celestial Extras, INSERTED
-status: verifying
-stopped_at: Phase 5.1 verified PASSED 4/4 (f34b9cc); Phase 6 planning started (deploy gated on explicit user go)
+current_phase: 06
+current_phase_name: Integration & Launch
+status: awaiting_launch_approval
+stopped_at: 06-01 complete (all local gates green, Fig. 01 36/36); 06-02 deploy BLOCKED on explicit user go
 last_updated: "2026-07-18T04:56:30.503Z"
 last_activity: 2026-07-18
 last_activity_desc: Completed 05.1-01-PLAN.md (moon + meteors)
