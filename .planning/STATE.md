@@ -6,14 +6,14 @@ current_phase: 05
 current_phase_name: Night-Sky Scene
 status: executing
 stopped_at: Completed 05-03-PLAN.md
-last_updated: "2026-07-18T00:42:05.126Z"
+last_updated: "2026-07-18T00:58:51.229Z"
 last_activity: 2026-07-17
 last_activity_desc: Phase 05 execution started
 progress:
   total_phases: 4
   completed_phases: 1
   total_plans: 9
-  completed_plans: 7
+  completed_plans: 8
   percent: 25
 ---
 
@@ -29,7 +29,7 @@ See: .planning/PROJECT.md (updated 2026-07-17)
 ## Current Position
 
 Phase: 05 (Night-Sky Scene) — EXECUTING
-Plan: 5 of 6
+Plan: 6 of 6
 Status: Ready to execute
 Last activity: 2026-07-17 — Phase 05 execution started
 
@@ -84,6 +84,7 @@ Last activity: 2026-07-17 — Phase 05 execution started
 | Phase 05 P02 | 10min | 2 tasks | 3 files |
 | Phase 05 P03 | 25min | 2 tasks | 5 files |
 | Phase 05 P04 | 12min | 2 tasks | 2 files |
+| Phase 05 P05 | 13min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -134,6 +135,9 @@ Recent decisions affecting current work:
 - [Phase ?]: 05-04: twinkle subset = uniform-stride half of Mid/Bright metadata (~6.5% of field, inside the locked 5-8% window)
 - [Phase ?]: 05-04: renderStaticFrame is clear + Layer-0 blit only — stars already baked at base alpha; twinkle/fireflies fully OFF under reduced motion
 - [Phase ?]: 05-04: NightSky.astro's 05-03 bootstrap fully superseded by initNightSky — single boot path, no dead script
+- [Phase 05]: 05-05: constellation star alphas carry a magnitude split within each locked UI-SPEC range (bright anchors top, mid connectors lower) for internal cluster hierarchy in every state
+- [Phase 05]: 05-05: link-firing candidates = all non-Brightened constellations (Dimmed included); beam geometry recomputed from the per-size cache each advance so resize never strands a beam
+- [Phase 05]: 05-05: setFiringSuppressed(true) discards the in-flight beam as well as the pending timer — paused/static frames are structurally beam-free
 
 ### Pending Todos
 
@@ -156,7 +160,7 @@ Items acknowledged and carried forward:
 
 ## Session Continuity
 
-Last session: 2026-07-18T00:41:36.787Z
+Last session: 2026-07-18T00:58:01.865Z
 Stopped at: Completed 05-03-PLAN.md
 Resume file: None
 

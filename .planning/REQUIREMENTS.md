@@ -31,8 +31,8 @@ Requirements for this milestone. Each maps to roadmap phases (numbering continue
 ### Constellations
 
 - [x] **CONST-01**: Stars form named career-chapter constellations (AWS · Microsoft · Samsung · education/patents) defined in a typed data module with source-annotated labels (honesty gate)
-- [ ] **CONST-02**: The active panel's constellation brightens while others dim, driven by the `nightsky:panel-change` event contract
-- [ ] **CONST-03**: Neural links between constellation stars occasionally fire a quiet signal (reusing the Fig. 01 beam pattern; sparse, decorative-classified motion)
+- [x] **CONST-02**: The active panel's constellation brightens while others dim, driven by the `nightsky:panel-change` event contract
+- [x] **CONST-03**: Neural links between constellation stars occasionally fire a quiet signal (reusing the Fig. 01 beam pattern; sparse, decorative-classified motion)
 
 ### Integration & Floors
 
@@ -82,8 +82,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SKY-04 | Phase 5 | Complete |
 | SKY-05 | Phase 5 | Pending |
 | CONST-01 | Phase 5 | Complete |
-| CONST-02 | Phase 5 | Pending |
-| CONST-03 | Phase 5 | Pending |
+| CONST-02 | Phase 5 | Complete |
+| CONST-03 | Phase 5 | Complete |
 | SKY-06 | Phase 5.1 | Pending |
 | SKY-07 | Phase 5.1 | Pending |
 | INTG-01 | Phase 6 | Pending |
