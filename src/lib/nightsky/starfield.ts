@@ -80,7 +80,7 @@ const MW_REFERENCE_WIDTH = 1440;
 // DARKER sky regions by design") — but the spike-locked band geometry
 // (top x:0.63 -> horizon x:0.87) necessarily crosses the column's upper
 // half, and 05-06's worst-case canvas-readback verification measured
-// saturated 'lighter'-accumulated dust pixels (up to #ffffff) plus
+// saturated 'lighter'-accumulated dust pixels (up to full white) plus
 // near-full-alpha Bright-band stars directly under real text lines —
 // unfixable by any scrim inside the locked <=0.38 opacity ceiling.
 // The governor restores the spec'd property at the source: inside the

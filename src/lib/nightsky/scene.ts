@@ -196,6 +196,14 @@ function clamp01(v: number): number {
  * composited over the star's own baked-in disk (one sin + one arc per
  * twinkling star per frame — the whole twinkle budget). */
 function seedTwinkles(twinkleStars: StarMeta[]): void {
+  // Narrow viewports can yield ZERO twinkle-eligible stars (the SKY-05
+  // column governor excludes capped in-column stars, and on small screens
+  // the column spans the whole width) — an empty pool must mean an empty
+  // subset, not an out-of-bounds [-1] read.
+  if (!twinkleStars.length) {
+    twinkles = [];
+    return;
+  }
   const target = Math.max(1, Math.round(twinkleStars.length * TWINKLE_SUBSET_FRACTION));
   // Uniform stride sampling keeps the subset spatially spread without a
   // shuffle allocation; metadata order is already random scatter order.
