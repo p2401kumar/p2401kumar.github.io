@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Night Sky
-current_phase: 05
-current_phase_name: Night-Sky Scene
-status: verifying
-stopped_at: Completed 05-06-PLAN.md (phase 5 gate green; sign-off checkpoint auto-resolved with committed screenshots)
+current_phase: 05.1
+current_phase_name: Celestial Extras
+status: planning
+stopped_at: Phase 5 verification PASSED 5/5 (59c1db2); Phase 5.1 planning started
 last_updated: "2026-07-18T02:08:49.392Z"
 last_activity: 2026-07-17
 last_activity_desc: Phase 05 execution started
