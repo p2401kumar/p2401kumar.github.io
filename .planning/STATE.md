@@ -3,18 +3,18 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Night Sky
 current_phase: 05.1
-current_phase_name: Celestial Extras
-status: planning
-stopped_at: Phase 5 verification PASSED 5/5 (59c1db2); Phase 5.1 planning started
-last_updated: "2026-07-18T02:08:49.392Z"
-last_activity: 2026-07-17
-last_activity_desc: Phase 05 execution started
+current_phase_name: Celestial Extras, INSERTED
+status: phase_complete
+stopped_at: Phase 5.1 complete (05.1-01 executed — moon + meteors, full gate battery green)
+last_updated: "2026-07-18T04:00:55.922Z"
+last_activity: 2026-07-18
+last_activity_desc: Completed 05.1-01-PLAN.md (moon + meteors)
 progress:
-  total_phases: 4
-  completed_phases: 2
-  total_plans: 9
-  completed_plans: 9
-  percent: 50
+  total_phases: 5
+  completed_phases: 4
+  total_plans: 11
+  completed_plans: 11
+  percent: 80
 ---
 
 # Project State
@@ -24,14 +24,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-17)
 
 **Core value:** Within seconds of landing, a senior engineering leader should think "this person operates at our level" — credibility delivered through demonstrated craft (a live systems demo), not adjectives. v2.0 adds: the first seconds should also be *beautiful*.
-**Current focus:** Phase 05 — Night-Sky Scene
+**Current focus:** Phase 05.1 — Celestial Extras (complete); next: Phase 6 — Integration & Launch
 
 ## Current Position
 
-Phase: 05 (Night-Sky Scene) — EXECUTING
-Plan: 6 of 6
-Status: Phase complete — ready for verification
-Last activity: 2026-07-17 — Phase 05 execution started
+Phase: 05.1 (Celestial Extras, INSERTED) — COMPLETE
+Plan: 1 of 1
+Status: Phase complete — SKY-06 + SKY-07 delivered, full Phase-5 gate battery re-passed
+Last activity: 2026-07-18 — Completed 05.1-01-PLAN.md (moon + meteors)
 
 ## Performance Metrics
 
@@ -86,6 +86,7 @@ Last activity: 2026-07-17 — Phase 05 execution started
 | Phase 05 P04 | 12min | 2 tasks | 2 files |
 | Phase 05 P05 | 13min | 2 tasks | 2 files |
 | Phase 05 P06 | 66min | 3 tasks | 15 files |
+| Phase 05.1 P01 | 75min | 3 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -141,6 +142,7 @@ Recent decisions affecting current work:
 - [Phase 05]: 05-05: setFiringSuppressed(true) discards the in-flight beam as well as the pending timer — paused/static frames are structurally beam-free
 - [Phase ?]: 05-06: SKY-05 proven measure-first — scrim ceiling (0.38) cannot cover saturated additive sky pixels, so the scene gained a column brightness governor (MW x0.12, star cap 0.25, twinkle exclusion) + constellation margin remap + firefly margin containment; worst-case went 1.84 -> 8.24 vs --ink
 - [Phase ?]: 05-06: scrim lives on .deck::before (viewport-anchored) not .panel::before — abspos pseudos scroll away inside overflow:auto panels; classic mode gets the same gradient as a section background
+- [Phase 05.1]: 05.1-01: MASK_OFFSET_RATIO corrected 1.85->0.25 (Rule 1) — unique offset yielding the spec's locked thin 0.20R waning crescent; LIT_ALPHA stayed 0.45; moon + meteor shipped inside all Phase-5 floors (rAF 2/0/0, Lighthouse 98-100, contrast 9.27/8.07)
 
 ### Pending Todos
 
@@ -163,10 +165,10 @@ Items acknowledged and carried forward:
 
 ## Session Continuity
 
-Last session: 2026-07-18T02:08:35.667Z
-Stopped at: Completed 05-06-PLAN.md (phase 5 gate green; sign-off checkpoint auto-resolved with committed screenshots)
+Last session: 2026-07-18T03:59:41.079Z
+Stopped at: Completed 05.1-01-PLAN.md (Phase 5.1 complete: moon + meteors, gate battery green, no deploy)
 Resume file: None
 
 ## Operator Next Steps
 
-- Plan Phase 4 (Deck Mechanics) with `/gsd-plan-phase 4`
+- Plan Phase 6 (Integration & Launch) with `/gsd-plan-phase 6`

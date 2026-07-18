@@ -109,7 +109,9 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 
 **Research gate**: none new — pure extension of the Phase 5 engine (SPIKE.md technique, pause machine, Layer 0/2 split all validated); moon is drawn procedurally (gradient crescent), no image assets.
 **Plans**: 1/1 plans complete
+
 - [x] 05.1-01-PLAN.md — Crescent moon in Layer 0 (starfield.ts) + meteor streaks (meteors.ts) riding scene.ts's tick + full gate battery re-run (moon-dimness assertion, frame-cost delta, moon-region screenshots)
+
 **UI hint**: yes
 
 ### Phase 6: Integration & Launch
@@ -137,7 +139,7 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 | 3. Case Studies & Launch Polish | v1.0 | 4/4 | Complete | 2026-07-17 |
 | 4. Deck Mechanics | v2.0 | 3/3 | Complete   | 2026-07-17 |
 | 5. Night-Sky Scene | v2.0 | 6/6 | Complete   | 2026-07-18 |
-| 5.1 Celestial Extras (INSERTED) | v2.0 | 1/1 | Complete | 2026-07-18 |
+| 5.1 Celestial Extras (INSERTED) | v2.0 | 1/1 | Complete   | 2026-07-18 |
 | 6. Integration & Launch | v2.0 | 0/TBD | Not started | - |
 
 ---
