@@ -13,12 +13,13 @@
 //     inside the per-frame tick.
 //   - Layer 1 (camper silhouette + copper glow): pure DOM/CSS in
 //     NightSky.astro — zero involvement here.
-//   - Layer 2 (twinkle subset + fireflies): the ONLY per-frame canvas
-//     work in this module. ~half of the Mid/Bright twinkle-eligible
-//     metadata (≈5–8% of the total field, ~40 stars at the reference
-//     viewport) plus ≤15 fireflies. Nothing else runs per frame —
-//     link-firing arrives in 05-05 as a setTimeout-scheduled sparse
-//     event, never per-frame dice (05-RESEARCH.md Anti-Patterns).
+//   - Layer 2 (twinkle subset + fireflies + constellations): the ONLY
+//     per-frame canvas work in this module. ~half of the Mid/Bright
+//     twinkle-eligible metadata (≈5–8% of the total field, ~40 stars at
+//     the reference viewport), ≤15 fireflies, and the constellation
+//     draw/advance hook (05-05). Link-firing is a setTimeout-scheduled
+//     sparse event owned by constellations.ts (at most one beam, every
+//     6–10s), never per-frame dice (05-RESEARCH.md Anti-Patterns).
 //
 // Pitfall 3 guard (05-RESEARCH.md): this module never holds a reference
 // to starfield.ts's offscreen generation context — only the finished
@@ -244,7 +245,8 @@ function drawFrame(ts: number): void {
   }
 
   // --- Layer 2c: constellations (05-05) — advance the brighten/dim
-  // tween, then draw stars + links at their current alphas. ---
+  // tween + the single firing beam, then draw stars + links + beam at
+  // their current state. ---
   if (constellationsHandle) {
     constellationsHandle.advance(ts);
     constellationsHandle.draw(visibleCtx, w, h, ts);
@@ -303,6 +305,11 @@ function renderStaticFrame(): void {
  */
 function updateRunState(): void {
   const shouldRun = tabVisible && !fig01Active && !rm.matches;
+  // Link-firing (05-05) follows the loop exactly: suppressed whenever the
+  // scene is paused (tab hidden / fig-01 active) or under reduced motion —
+  // suppression also discards any in-flight beam, so no paused or static
+  // frame can ever contain one.
+  constellationsHandle?.setFiringSuppressed(!shouldRun);
   if (shouldRun) {
     startAnimationLoop();
   } else {
@@ -408,10 +415,12 @@ export function initNightSky(root: HTMLElement): () => void {
   // Anti-Patterns: reduced motion is stop, not dampen).
   const onMotionChange = (): void => {
     stopAnimationLoop();
+    // updateRunState re-applies both the loop gate and the firing
+    // suppression for the new preference (under reduced motion it keeps
+    // the loop stopped and suppresses firing).
+    updateRunState();
     if (rm.matches) {
       renderStaticFrame();
-    } else {
-      updateRunState();
     }
   };
   rm.addEventListener('change', onMotionChange);

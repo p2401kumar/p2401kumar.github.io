@@ -1,14 +1,18 @@
-// constellations.ts — the 4 career-chapter constellations (CONST-01/02):
-// star-node + sparse-link rendering and panel-reactive brighten/dim.
-// Consumes the typed data module (src/data/constellations.ts) as its
-// single source of truth — star coordinates, link graph, and the
-// panelToConstellation mapping are never re-derived here.
+// constellations.ts — the 4 career-chapter constellations (CONST-01/02/03):
+// star-node + sparse-link rendering, panel-reactive brighten/dim, and the
+// quiet link-firing beam. Consumes the typed data module
+// (src/data/constellations.ts) as its single source of truth — star
+// coordinates, link graph, and the panelToConstellation mapping are never
+// re-derived here.
 //
 // Module-boundary rule (05-CONTEXT.md, grep-enforced): this module NEVER
 // imports deck.ts or any fig01 module. The active-panel signal arrives via
 // the document-level 'nightsky:panel-change' CustomEvent subscribed by its
 // LITERAL event name (an independent listener — scene.ts's pause-gate
-// listener on the same event stays untouched).
+// listener on the same event stays untouched). The Fig. 01 beam MATH
+// pattern (point-at-distance sampler + head/gradient-tail 'lighter'
+// treatment) is REIMPLEMENTED locally below for straight star-to-star
+// segments — mirrored, never imported.
 //
 // Rendering discipline (05-RESEARCH.md / 05-UI-SPEC.md):
 //   - Base rendering is cheap: pixel positions + link geometry are
@@ -18,8 +22,12 @@
 //     Under prefers-reduced-motion the change is INSTANT: alphas snap and
 //     one repaint is requested (mirroring fig01/interactions.ts's
 //     createRedraw repaint-once-after-state-change shape).
-//   - All stars/links/halos use --star exclusively (via the sky token
-//     bridge) — never --milkyway, never --accent, zero hex here.
+//   - Link-firing is a sparse setTimeout-scheduled event (every 6–10s, at
+//     most ONE beam at a time, ambient sky only) — never per-frame dice
+//     (05-RESEARCH.md Anti-Patterns); fully suppressed while the scene is
+//     paused or under reduced motion.
+//   - All stars/links/halos/beams use --star exclusively (via the sky
+//     token bridge) — never --milkyway, never --accent, zero hex here.
 //   - Labels are DATA-ONLY this phase: no constellation label string is
 //     ever rendered as canvas text (05-UI-SPEC.md Copywriting Contract).
 
@@ -68,6 +76,26 @@ const HALO_SCALE = 1.5;
 /** Alpha below which halo drawing is skipped entirely. */
 const HALO_EPSILON = 0.01;
 
+/** Frame-delta clamp (ms) — same 50ms clamp scene.ts/fig01 use, so a
+ * background-tab gap never teleports the firing beam. */
+const MAX_ADVANCE_DELTA_MS = 50;
+
+// --- Link-firing tuning (05-UI-SPEC.md Spacing rows: the Fig. 01 beam
+// treatment scaled down ~⅓ for shorter, quieter constellation links —
+// head 1.5px vs 2.2, tail 40px vs 70, speed 0.18px/ms vs 0.22). ---
+const BEAM_HEAD_RADIUS = 1.5;
+const BEAM_TAIL_LEN = 40;
+const BEAM_SPEED_PX_PER_MS = 0.18;
+const BEAM_STROKE_WIDTH = 1.2;
+/** Firing cadence: every 6–10s (locked formula 6000 + random()*4000). */
+const FIRING_DELAY_BASE_MS = 6000;
+const FIRING_DELAY_JITTER_MS = 4000;
+/** Beam alpha treatment mirrored from fig01/render.ts drawBeams: the tail
+ * gradient fades from 0 up to its head-end alpha; the head dot sits
+ * brighter than the tail. */
+const BEAM_TAIL_ALPHA = 0.85;
+const BEAM_HEAD_ALPHA = 0.95;
+
 /** Straight-segment pixel geometry for one link (precomputed per size). */
 interface LinkGeom {
   x1: number;
@@ -94,6 +122,31 @@ interface ConstellationRuntime {
   linkGeoms: LinkGeom[];
 }
 
+/** The single in-flight firing beam (at most one exists at a time). */
+interface FiringBeam {
+  constellationIndex: number;
+  linkIndex: number;
+  /** Head distance travelled along the segment, CSS px. */
+  d: number;
+}
+
+/**
+ * Straight-line point-at-distance sampler — the local reimplementation of
+ * fig01/model.ts's `pAt` for a single star-to-star segment (no 3-segment
+ * elbow; constellation links are straight). Mirrored, never imported.
+ */
+export function pointAtDistance(
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number,
+  len: number,
+  d: number
+): [number, number] {
+  const t = len > 0 ? Math.max(0, Math.min(len, d)) / len : 0;
+  return [x1 + (x2 - x1) * t, y1 + (y2 - y1) * t];
+}
+
 function lerp(a: number, b: number, t: number): number {
   return a + (b - a) * t;
 }
@@ -117,12 +170,16 @@ export interface ConstellationInitOptions {
 /** The handle scene.ts drives from its single rAF tick. */
 export interface ConstellationHandle {
   /** Renders every constellation's links + halos + stars at their current
-   * alphas. */
+   * alphas, plus the in-flight firing beam (if any). */
   draw(ctx: CanvasRenderingContext2D, cssWidth: number, cssHeight: number, ts: number): void;
-  /** Eases current alphas toward their targets (~400ms ease-out). Called
-   * once per frame before draw(). */
+  /** Eases current alphas toward their targets (~400ms ease-out) and
+   * advances the firing beam. Called once per frame before draw(). */
   advance(ts: number): void;
-  /** Removes the panel-change + motion listeners. */
+  /** true = clear any pending firing timeout, discard the in-flight beam,
+   * and prevent new firings (paused / reduced motion); false = resume the
+   * setTimeout firing schedule. */
+  setFiringSuppressed(suppressed: boolean): void;
+  /** Removes the panel-change + motion listeners and the firing timer. */
   teardown(): void;
 }
 
@@ -135,7 +192,7 @@ export interface ConstellationHandle {
  * contact) sends all four to Ambient. At most one is ever Brightened.
  */
 export function initConstellations(options: ConstellationInitOptions): ConstellationHandle {
-  const { tokens, requestRepaint } = options;
+  const { tokens, getViewport, requestRepaint } = options;
   const star = tokens.star;
   const rm = matchMedia('(prefers-reduced-motion: reduce)');
 
@@ -176,6 +233,54 @@ export function initConstellations(options: ConstellationInitOptions): Constella
         return { x1, y1, x2, y2, len: Math.hypot(x2 - x1, y2 - y1) };
       });
     }
+  }
+
+  // --- Link-firing state (CONST-03): at most ONE beam, setTimeout-
+  // scheduled — never per-frame dice (05-RESEARCH.md Anti-Patterns).
+  // Starts suppressed; scene.ts's run-state gate enables firing only
+  // while the loop actually runs. ---
+  let firingSuppressed = true;
+  let fireTimer: ReturnType<typeof setTimeout> | null = null;
+  let activeBeam: FiringBeam | null = null;
+  let tornDown = false;
+
+  function clearFireTimer(): void {
+    if (fireTimer !== null) {
+      clearTimeout(fireTimer);
+      fireTimer = null;
+    }
+  }
+
+  function scheduleNextFiring(): void {
+    if (tornDown || firingSuppressed || rm.matches || fireTimer !== null) return;
+    fireTimer = setTimeout(fire, FIRING_DELAY_BASE_MS + Math.random() * FIRING_DELAY_JITTER_MS);
+  }
+
+  /** One scheduled firing: spawn the single beam on a random link of the
+   * AMBIENT (non-highlighted) sky, then schedule the next firing — the
+   * only place a new beam is ever born. */
+  function fire(): void {
+    fireTimer = null;
+    if (tornDown || firingSuppressed || rm.matches) return;
+    if (activeBeam === null) {
+      // The brightened constellation, if any, never fires.
+      const candidates: Array<{ constellationIndex: number; linkIndex: number }> = [];
+      runtimes.forEach((rt, constellationIndex) => {
+        if (rt.state === 'brightened') return;
+        rt.def.links.forEach((_link, linkIndex) => {
+          candidates.push({ constellationIndex, linkIndex });
+        });
+      });
+      if (candidates.length > 0) {
+        const pick = candidates[Math.floor(Math.random() * candidates.length)];
+        activeBeam = {
+          constellationIndex: pick.constellationIndex,
+          linkIndex: pick.linkIndex,
+          d: 0,
+        };
+      }
+    }
+    scheduleNextFiring();
   }
 
   // --- Panel-reactive brighten/dim (CONST-02). ---
@@ -227,7 +332,12 @@ export function initConstellations(options: ConstellationInitOptions): Constella
   };
   rm.addEventListener('change', onMotionChange);
 
+  let lastAdvanceTs: number | null = null;
+
   function advance(ts: number): void {
+    const dt = lastAdvanceTs === null ? 0 : Math.min(ts - lastAdvanceTs, MAX_ADVANCE_DELTA_MS);
+    lastAdvanceTs = ts;
+
     // Alpha tween: ~400ms ease-out toward each constellation's target.
     for (const rt of runtimes) {
       if (rt.tweenStart === null) continue;
@@ -245,6 +355,49 @@ export function initConstellations(options: ConstellationInitOptions): Constella
         };
       }
     }
+
+    // Firing beam: the head advances at constant px/ms along its segment;
+    // the beam is removed once the tail has fully exited the far star.
+    if (activeBeam !== null) {
+      const viewport = getViewport();
+      if (viewport) {
+        ensureLayout(viewport.width, viewport.height);
+        activeBeam.d += dt * BEAM_SPEED_PX_PER_MS;
+        const geom = runtimes[activeBeam.constellationIndex].linkGeoms[activeBeam.linkIndex];
+        if (!geom || activeBeam.d >= geom.len + BEAM_TAIL_LEN) {
+          activeBeam = null;
+        }
+      }
+    }
+  }
+
+  /** Draws the in-flight beam: gradient tail → brighter head dot with the
+   * 'lighter' additive composite — fig01/render.ts drawBeams's visual
+   * treatment mirrored for a straight segment, in --star. */
+  function drawBeam(ctx: CanvasRenderingContext2D): void {
+    if (activeBeam === null) return;
+    const geom = runtimes[activeBeam.constellationIndex].linkGeoms[activeBeam.linkIndex];
+    if (!geom) return;
+    const headD = Math.min(activeBeam.d, geom.len);
+    if (headD <= 0) return;
+    const tailD = Math.max(0, activeBeam.d - BEAM_TAIL_LEN);
+    const head = pointAtDistance(geom.x1, geom.y1, geom.x2, geom.y2, geom.len, headD);
+    const tail = pointAtDistance(geom.x1, geom.y1, geom.x2, geom.y2, geom.len, tailD);
+    ctx.globalCompositeOperation = 'lighter';
+    const gradient = ctx.createLinearGradient(tail[0], tail[1], head[0], head[1]);
+    gradient.addColorStop(0, rgba(star, 0));
+    gradient.addColorStop(1, rgba(star, BEAM_TAIL_ALPHA));
+    ctx.strokeStyle = gradient;
+    ctx.lineWidth = BEAM_STROKE_WIDTH;
+    ctx.beginPath();
+    ctx.moveTo(tail[0], tail[1]);
+    ctx.lineTo(head[0], head[1]);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(head[0], head[1], BEAM_HEAD_RADIUS, 0, TWO_PI);
+    ctx.fillStyle = rgba(star, BEAM_HEAD_ALPHA);
+    ctx.fill();
+    ctx.globalCompositeOperation = 'source-over';
   }
 
   function draw(
@@ -293,12 +446,31 @@ export function initConstellations(options: ConstellationInitOptions): Constella
         ctx.fill();
       }
     }
+    // The beam rides the same draw pass. It can never appear in a static
+    // frame: suppression (paused/reduced-motion) discards it first.
+    drawBeam(ctx);
+  }
+
+  function setFiringSuppressed(suppressed: boolean): void {
+    if (suppressed === firingSuppressed) return;
+    firingSuppressed = suppressed;
+    if (suppressed) {
+      // Pending firings are cancelled and the in-flight beam discarded, so
+      // a paused/static frame can never contain a beam.
+      clearFireTimer();
+      activeBeam = null;
+    } else {
+      scheduleNextFiring();
+    }
   }
 
   function teardown(): void {
+    tornDown = true;
+    clearFireTimer();
+    activeBeam = null;
     document.removeEventListener('nightsky:panel-change', onPanelChange);
     rm.removeEventListener('change', onMotionChange);
   }
 
-  return { draw, advance, teardown };
+  return { draw, advance, setFiringSuppressed, teardown };
 }
