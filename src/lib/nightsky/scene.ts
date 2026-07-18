@@ -40,6 +40,7 @@
 // positions) use plain CSS-pixel coordinates.
 
 import { initConstellations, type ConstellationHandle } from './constellations';
+import { initMeteors, type MeteorHandle } from './meteors';
 import { generateLayer0, type Layer0Result, type StarMeta } from './starfield';
 import { getSkyTokens, rgba, type SkyTokens } from './tokens';
 
@@ -171,6 +172,10 @@ let tokens: SkyTokens | null = null;
 /** 05-05's constellation subsystem handle — its advance/draw ride THIS
  * module's single rAF tick (drawFrame Layer 2c); it never owns a loop. */
 let constellationsHandle: ConstellationHandle | null = null;
+/** 05.1-01's meteor subsystem handle (SKY-06) — advance/draw ride the
+ * same single tick (drawFrame Layer 2d); spawn cadence is setTimeout-
+ * scheduled inside meteors.ts. It never owns a loop either. */
+let meteorsHandle: MeteorHandle | null = null;
 /** Monotonic generation counter — a resize that lands mid-generation
  * invalidates the in-flight result instead of adopting a stale size. */
 let generation = 0;
@@ -336,6 +341,14 @@ function drawFrame(ts: number): void {
     constellationsHandle.advance(ts);
     constellationsHandle.draw(visibleCtx, w, h, ts);
   }
+
+  // --- Layer 2d: meteor (05.1-01, SKY-06) — at most ONE, setTimeout-
+  // spawned inside meteors.ts; when idle this is a single null-check
+  // per call (zero extra draws — hard invariant 2). ---
+  if (meteorsHandle) {
+    meteorsHandle.advance(ts);
+    meteorsHandle.draw(visibleCtx, w, h);
+  }
 }
 
 /**
@@ -395,6 +408,10 @@ function updateRunState(): void {
   // suppression also discards any in-flight beam, so no paused or static
   // frame can ever contain one.
   constellationsHandle?.setFiringSuppressed(!shouldRun);
+  // Meteors (05.1-01) follow the identical gate: suppression clears the
+  // pending spawn timer AND discards the in-flight meteor, so paused /
+  // reduced-motion / static frames are structurally meteor-free.
+  meteorsHandle?.setSuppressed(!shouldRun);
   if (shouldRun) {
     startAnimationLoop();
   } else {
@@ -475,6 +492,14 @@ export function initNightSky(root: HTMLElement): () => void {
     requestRepaint: renderStaticFrame,
   });
 
+  // --- Meteor subsystem (05.1-01, SKY-06): initialized after the
+  // constellations, mirroring their wiring — starts suppressed; the
+  // updateRunState gate un-suppresses it only while the loop runs. ---
+  meteorsHandle = initMeteors({
+    tokens: skyTokens,
+    getViewport: () => (layer0 ? { width: layer0.cssWidth, height: layer0.cssHeight } : null),
+  });
+
   // --- Pause-signal listeners (SKY-04). The panel-change subscription is
   // by LITERAL event name — deck.ts is never imported (module-boundary
   // rule; deck.ts documents the detail shape { index, id, total }). This
@@ -533,6 +558,8 @@ export function initNightSky(root: HTMLElement): () => void {
     stopAnimationLoop();
     constellationsHandle?.teardown();
     constellationsHandle = null;
+    meteorsHandle?.teardown();
+    meteorsHandle = null;
     document.removeEventListener('visibilitychange', onVisibilityChange);
     document.removeEventListener('nightsky:panel-change', onPanelChange);
     rm.removeEventListener('change', onMotionChange);
