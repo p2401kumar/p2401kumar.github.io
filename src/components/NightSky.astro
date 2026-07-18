@@ -28,9 +28,16 @@
  * contract holds even if markup nesting ever changes — 05-RESEARCH.md
  * Pattern 5).
  *
- * No script is wired here yet — Layer 0 generation (starfield.ts) and the
- * rAF driver (scene.ts) are NOT part of this plan (05-03 ships the static
- * shell + Layer 0 *generator function* only; nothing calls it yet).
+ * The trailing bare script tag below (no attributes — same Astro TS/import
+ * bundling seam Figure01.astro uses, 02-RESEARCH.md Pattern 1) performs a
+ * single one-time generate-then-blit: size the canvas, call
+ * `generateLayer0()`, and `drawImage()` the finished bitmap once. This is
+ * NOT the animation engine — no per-frame animation loop, no resize listener,
+ * no pause/lifecycle wiring. Those (Layer 2 twinkle/fireflies/beams, the
+ * single rAF loop, debounced resize regen, the fig-01/visibility/
+ * reduced-motion pause gate) are scene.ts's job, arriving in 05-04. Per
+ * this plan's own prohibitions: "Layer 0 is generate-once + blit; the rAF
+ * driver arrives in 05-04" — the blit belongs here, the loop does not.
  */
 ---
 
@@ -57,6 +64,24 @@
     <div class="camper-glow"></div>
   </div>
 </div>
+
+<script>
+  import { generateLayer0 } from "../lib/nightsky/starfield";
+
+  const canvas = document.querySelector<HTMLCanvasElement>("#nightsky-canvas");
+  if (canvas) {
+    const cssWidth = window.innerWidth;
+    const cssHeight = window.innerHeight;
+    generateLayer0(cssWidth, cssHeight, (result) => {
+      canvas.width = result.canvas.width;
+      canvas.height = result.canvas.height;
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        ctx.drawImage(result.canvas, 0, 0);
+      }
+    });
+  }
+</script>
 
 <style>
   .nightsky-host {

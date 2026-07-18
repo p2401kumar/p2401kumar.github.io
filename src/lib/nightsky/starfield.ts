@@ -364,7 +364,11 @@ export function generateLayer0(cssWidth: number, cssHeight: number, onDone: (res
   canvas.width = Math.max(1, Math.round(cssWidth * dpr));
   canvas.height = Math.max(1, Math.round(cssHeight * dpr));
 
-  const layer0Ctx = canvas.getContext('2d');
+  // willReadFrequently: true — the dither pass below issues many
+  // getImageData/putImageData round-trips over this same context; hinting
+  // the browser up front avoids a runtime warning and lets it pick a
+  // readback-optimized backing store instead of re-guessing per call.
+  const layer0Ctx = canvas.getContext('2d', { willReadFrequently: true });
   if (!layer0Ctx) {
     // No 2D context available — fail silently (05-UI-SPEC.md's documented
     // no-apology fallback, matching fig01's own precedent): hand back an
