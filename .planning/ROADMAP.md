@@ -127,10 +127,11 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
   4. The home page holds Lighthouse ≥90 in all four categories with deck + scene active, on both mobile and desktop runs against the live URL, and the change is deployed
 
 **Research gate**: Full v1 Fig. 01 re-verification (Pitfall 11 — hidden-until-active canvas 0×0 init); case-study cold-load verified; sitemap/SEO intact; live Lighthouse ≥90 mobile + desktop; deploy via the existing GitHub Actions → Pages pipeline.
-**Plans**: 2 plans
+**Plans**: 1/2 plans executed
 
 Plans:
-- [ ] 06-01-PLAN.md — Integration verification (INTG-01/02/03 + local INTG-04 pre-flight): panel provenance, embedded Fig. 01 audit, routing/sitemap/leak, full regression battery, launch-readiness pack (all local, autonomous)
+
+- [x] 06-01-PLAN.md — Integration verification (INTG-01/02/03 + local INTG-04 pre-flight): panel provenance, embedded Fig. 01 audit, routing/sitemap/leak, full regression battery, launch-readiness pack (all local, autonomous)
 - [ ] 06-02-PLAN.md — Gated launch: blocking human go/no-go, then fast-forward push → Actions deploy → live verification + live Lighthouse (INTG-04 authoritative)
 
 **UI hint**: yes
@@ -145,7 +146,7 @@ Plans:
 | 4. Deck Mechanics | v2.0 | 3/3 | Complete   | 2026-07-17 |
 | 5. Night-Sky Scene | v2.0 | 6/6 | Complete   | 2026-07-18 |
 | 5.1 Celestial Extras (INSERTED) | v2.0 | 1/1 | Complete   | 2026-07-18 |
-| 6. Integration & Launch | v2.0 | 0/TBD | Not started | - |
+| 6. Integration & Launch | v2.0 | 1/2 | In Progress|  |
 
 ---
 *Phase numbering continues from 4 in the next milestone (never restarts).*

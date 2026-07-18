@@ -3,7 +3,7 @@
 **For:** the 06-02 deploy decision. Everything below was verified LOCALLY on 2026-07-18
 against the assembled tree. **Nothing has been pushed or deployed** — the live site is still
 v1 and stays v1 until you say go. The push IS the deploy (`deploy.yml` fires on push to main;
-main is currently **62 local commits ahead** of origin/main).
+main is currently **~64 local commits ahead** of origin/main, including this plan's evidence commits).
 
 ---
 
@@ -64,7 +64,7 @@ If you ever want to undo the launch after deploying:
 
 ```bash
 # Revert the deploy range (v1 remains fully in git history) and fast-forward push.
-# <first-v2-commit> = the first of the ~62 v2 commits (ad8b683 "docs: start milestone v2.0 Night Sky").
+# <first-v2-commit> = the first of the ~64 v2 commits (ad8b683 "docs: start milestone v2.0 Night Sky").
 git revert --no-edit <first-v2-commit>..HEAD
 git push origin main            # fast-forward only — NEVER --force
 ```
@@ -107,6 +107,6 @@ entirely (visibility + panel gates).
 
 **READY FOR THE 06-02 GO/NO-GO.** 18 of 19 gates green locally; the only open gate is live
 Lighthouse, which structurally requires the deploy. Saying **go** = fast-forward push of the
-62 local commits → GitHub Actions Pages deploy → live Lighthouse both presets → post-deploy
+~64 local commits → GitHub Actions Pages deploy → live Lighthouse both presets → post-deploy
 smoke (home, `/#fig-01`, one case study, 404) → the real-device checklist above at your leisure.
 Saying **no / not yet** costs nothing: everything stays local, the live site remains v1.

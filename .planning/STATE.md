@@ -2,19 +2,19 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Night Sky
-current_phase: 06
-current_phase_name: Integration & Launch
-status: planning
+current_phase: 05.1
+current_phase_name: Celestial Extras, INSERTED
+status: verifying
 stopped_at: Phase 5.1 verified PASSED 4/4 (f34b9cc); Phase 6 planning started (deploy gated on explicit user go)
-last_updated: "2026-07-18T04:00:55.922Z"
+last_updated: "2026-07-18T04:56:30.503Z"
 last_activity: 2026-07-18
 last_activity_desc: Completed 05.1-01-PLAN.md (moon + meteors)
 progress:
-  total_phases: 5
-  completed_phases: 4
-  total_plans: 11
+  total_phases: 4
+  completed_phases: 3
+  total_plans: 12
   completed_plans: 11
-  percent: 80
+  percent: 75
 ---
 
 # Project State
@@ -30,7 +30,7 @@ See: .planning/PROJECT.md (updated 2026-07-17)
 
 Phase: 05.1 (Celestial Extras, INSERTED) — COMPLETE
 Plan: 1 of 1
-Status: Phase complete — SKY-06 + SKY-07 delivered, full Phase-5 gate battery re-passed
+Status: Phase complete — ready for verification
 Last activity: 2026-07-18 — Completed 05.1-01-PLAN.md (moon + meteors)
 
 ## Performance Metrics
@@ -87,6 +87,7 @@ Last activity: 2026-07-18 — Completed 05.1-01-PLAN.md (moon + meteors)
 | Phase 05 P05 | 13min | 2 tasks | 2 files |
 | Phase 05 P06 | 66min | 3 tasks | 15 files |
 | Phase 05.1 P01 | 75min | 3 tasks | 10 files |
+| Phase 06 P01 | 24 min | 3 tasks | 12 files |
 
 ## Accumulated Context
 
@@ -143,6 +144,8 @@ Recent decisions affecting current work:
 - [Phase ?]: 05-06: SKY-05 proven measure-first — scrim ceiling (0.38) cannot cover saturated additive sky pixels, so the scene gained a column brightness governor (MW x0.12, star cap 0.25, twinkle exclusion) + constellation margin remap + firefly margin containment; worst-case went 1.84 -> 8.24 vs --ink
 - [Phase ?]: 05-06: scrim lives on .deck::before (viewport-anchored) not .panel::before — abspos pseudos scroll away inside overflow:auto panels; classic mode gets the same gradient as a section background
 - [Phase 05.1]: 05.1-01: MASK_OFFSET_RATIO corrected 1.85->0.25 (Rule 1) — unique offset yielding the spec's locked thin 0.20R waning crescent; LIT_ALPHA stayed 0.45; moon + meteor shipped inside all Phase-5 floors (rAF 2/0/0, Lighthouse 98-100, contrast 9.27/8.07)
+- [Phase 06]: 06-01: one-active-animation verified on the event-driven contract; cold /#fig-01 scene-animating edge + /#work->hero fallback recorded as fix-forward, not patched
+- [Phase 06]: 06-01: headless focus-event gap fixed via CDP focus emulation in audit tooling only — product code untouched
 
 ### Pending Todos
 
@@ -165,7 +168,7 @@ Items acknowledged and carried forward:
 
 ## Session Continuity
 
-Last session: 2026-07-18T03:59:41.079Z
+Last session: 2026-07-18T04:55:07.067Z
 Stopped at: Completed 05.1-01-PLAN.md (Phase 5.1 complete: moon + meteors, gate battery green, no deploy)
 Resume file: None
 
