@@ -87,13 +87,26 @@ function isClassicActive(): boolean {
 }
 
 /**
+ * Legacy/external anchor aliases resolved to manifest hashes (06-02 Fix A):
+ * v1's live page shipped `#work` (SystemsList.astro still renders
+ * `id="work"` inside the systems panel, so the anchor works natively in
+ * classic/no-JS mode), and the case-study "back to work →" crosslink
+ * targets `/#work`. Deck mode maps it to the systems panel instead of
+ * falling back to hero. A Map (not a plain object) so crafted hashes like
+ * `#toString` can never walk the prototype chain (T-04-01).
+ */
+const HASH_ALIASES = new Map<string, string>([['work', 'systems']]);
+
+/**
  * Resolves a URL hash to a panel index. Bounds-checked against the
  * build-time `panels[]` manifest — a crafted or nonexistent hash (T-04-01)
  * always falls back to index 0, never throws, and is never used as a raw
- * array index, a selector, or `innerHTML` input.
+ * array index, a selector, or `innerHTML` input. Known legacy aliases
+ * (HASH_ALIASES above) are translated before the manifest lookup.
  */
 export function resolveIndexFromHash(hash: string): number {
-  const key = decodeURIComponent(hash.replace(/^#/, ''));
+  const raw = decodeURIComponent(hash.replace(/^#/, ''));
+  const key = HASH_ALIASES.get(raw) ?? raw;
   const index = panels.findIndex((p) => p.hash === key);
   return index === -1 ? 0 : index;
 }
