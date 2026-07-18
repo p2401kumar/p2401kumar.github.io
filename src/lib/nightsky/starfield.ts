@@ -74,6 +74,57 @@ const MW_COARSE_DUST_COUNT = 260;
 const MW_REFERENCE_HEIGHT = 900;
 const MW_REFERENCE_WIDTH = 1440;
 
+// --- SKY-05 content-column brightness governor (05-06) -------------------
+// 05-UI-SPEC.md's load-bearing placement rule says the Milky Way's bright
+// core sits ENTIRELY outside the content column ("content sits over the
+// DARKER sky regions by design") — but the spike-locked band geometry
+// (top x:0.63 -> horizon x:0.87) necessarily crosses the column's upper
+// half, and 05-06's worst-case canvas-readback verification measured
+// saturated 'lighter'-accumulated dust pixels (up to #ffffff) plus
+// near-full-alpha Bright-band stars directly under real text lines —
+// unfixable by any scrim inside the locked <=0.38 opacity ceiling.
+// The governor restores the spec'd property at the source: inside the
+// text column (deck.css .panel > * max-width 880px centered, + cushion),
+// Milky Way dust/haze alpha is attenuated and baked star alpha is capped
+// so the worst composited pixel under text stays >= 4.5:1 vs --ink
+// through the scrim. Capped stars are also excluded from the twinkle
+// metadata (a twinkle wobble would re-brighten them past the cap).
+// Verified end-to-end by scripts/verify-contrast.mjs (SKY-05 evidence).
+/** Half-width (CSS px) of the governed band: 880/2 column + 24px cushion. */
+const COLUMN_HALF_WIDTH_PX = 464;
+/** Smoothstep ramp width (CSS px) outside the column edge — no visible seam. */
+const COLUMN_EDGE_RAMP_PX = 80;
+/** Milky Way dust/haze alpha multiplier fully inside the column. */
+const COLUMN_MW_ATTENUATION = 0.12;
+/** Baked star alpha ceiling fully inside the column. */
+const COLUMN_STAR_ALPHA_CAP = 0.25;
+
+/**
+ * Brightness attenuation factor at CSS-pixel x: COLUMN_MW_ATTENUATION fully
+ * inside the content column, 1 outside the ramp, smoothstepped between.
+ * The column tracks the viewport center (deck.css centers the 880px
+ * content column), so narrow viewports are governed edge-to-edge — exactly
+ * where text spans the full width.
+ */
+function columnAttenuation(x: number, cssWidth: number, ramp: number = COLUMN_EDGE_RAMP_PX): number {
+  const left = cssWidth / 2 - COLUMN_HALF_WIDTH_PX;
+  const right = cssWidth / 2 + COLUMN_HALF_WIDTH_PX;
+  if (x >= left && x <= right) return COLUMN_MW_ATTENUATION;
+  const d = x < left ? left - x : x - right;
+  if (d >= ramp) return 1;
+  const t = d / ramp;
+  const s = t * t * (3 - 2 * t); // smoothstep 0 (edge) -> 1 (ramp end)
+  return COLUMN_MW_ATTENUATION + (1 - COLUMN_MW_ATTENUATION) * s;
+}
+
+/** Star alpha ceiling at CSS-pixel x — COLUMN_STAR_ALPHA_CAP inside the
+ * column, 1 outside, following the same smoothstep ramp. */
+function starAlphaCapAt(x: number, cssWidth: number): number {
+  const att = columnAttenuation(x, cssWidth);
+  const t = (att - COLUMN_MW_ATTENUATION) / (1 - COLUMN_MW_ATTENUATION);
+  return COLUMN_STAR_ALPHA_CAP + (1 - COLUMN_STAR_ALPHA_CAP) * t;
+}
+
 /** A single generated star's metadata — the subset Layer 2 (05-04) needs
  * to redraw a twinkling star's alpha wobble on top of the Layer 0 blit.
  * Positions/radius are in CSS-pixel space (see module header). */
@@ -282,13 +333,17 @@ function drawDustDot(
   // Along-band intensity: brighter toward the horizon/right (t -> 1), per
   // the "core through the right margin" placement rule.
   const intensity = lerp(0.35, 1, t);
-  const alpha = alphaScale * intensity * lerp(0.4, 1, Math.random());
+  const dotX = cx + perpOffset;
+  // SKY-05 governor: dust entering the content column is attenuated so
+  // 'lighter' accumulation can never push a text backdrop past the
+  // WCAG worst-case floor (see columnAttenuation doc above).
+  const alpha = alphaScale * intensity * lerp(0.4, 1, Math.random()) * columnAttenuation(dotX, cssWidth);
   const radius = lerp(minR, maxR, Math.random());
   ctx.save();
   ctx.globalCompositeOperation = 'lighter';
   ctx.fillStyle = rgba(milkyway, alpha);
   ctx.beginPath();
-  ctx.arc(cx + perpOffset, cy, radius, 0, Math.PI * 2);
+  ctx.arc(dotX, cy, radius, 0, Math.PI * 2);
   ctx.fill();
   ctx.restore();
 }
@@ -314,7 +369,13 @@ function queueMilkyWay(queue: WorkUnit[], ctx: CanvasRenderingContext2D, cssWidt
         const cx = milkyWayCenterlineX(t, cssWidth) + (Math.random() * 2 - 1) * 26 * (cssWidth / MW_REFERENCE_WIDTH);
         const cy = t * horizonY + (Math.random() * 2 - 1) * 26 * heightScale;
         const radius = baseRadius * lerp(0.7, 1.3, Math.random());
-        const alpha = baseAlpha * lerp(0.6, 1.4, Math.random());
+        // SKY-05 governor — haze blobs are wide (radius up to ~166px), so
+        // the ramp is widened to the blob radius: a blob centered outside
+        // the column but bleeding into it is partially attenuated too.
+        const alpha =
+          baseAlpha *
+          lerp(0.6, 1.4, Math.random()) *
+          columnAttenuation(cx, cssWidth, Math.max(COLUMN_EDGE_RAMP_PX, radius));
         const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
         grad.addColorStop(0, rgba(milkyway, alpha));
         grad.addColorStop(1, rgba(milkyway, 0));
@@ -414,15 +475,22 @@ export function generateLayer0(cssWidth: number, cssHeight: number, onDone: (res
       const spec = pickBand();
       const biased = Math.random() ** MAGNITUDE_BIAS;
       const radius = lerp(spec.radius[0], spec.radius[1], biased);
-      const alpha = lerp(spec.alpha[0], spec.alpha[1], biased);
+      const rawAlpha = lerp(spec.alpha[0], spec.alpha[1], biased);
       const x = Math.random() * cssWidth;
       const y = Math.random() * cssHeight;
+      // SKY-05 governor: stars baked inside the content column are capped
+      // so no point source under text breaks the worst-case contrast
+      // floor; capped stars are ALSO excluded from twinkle metadata — a
+      // twinkle wobble (base + up to 0.25 amplitude) would re-brighten
+      // them past the cap on the live canvas.
+      const alphaCap = starAlphaCapAt(x, cssWidth);
+      const alpha = Math.min(rawAlpha, alphaCap);
       const color = jitterStarColor(tokens.star);
       layer0Ctx.beginPath();
       layer0Ctx.fillStyle = rgba(color, alpha);
       layer0Ctx.arc(x, y, radius, 0, Math.PI * 2);
       layer0Ctx.fill();
-      if (spec.twinkleEligible) {
+      if (spec.twinkleEligible && alphaCap >= 0.999) {
         twinkleStars.push({ x, y, radius, baseAlpha: alpha, color });
       }
     });

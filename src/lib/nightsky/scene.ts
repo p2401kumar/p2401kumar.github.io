@@ -61,7 +61,9 @@ const TWINKLE_SUBSET_FRACTION = 0.5;
 // --- Firefly tuning (05-UI-SPEC.md Spacing + "Ambient loop" tables:
 // count 9 of the ≤15 locked ceiling, radius 1.5–2.5px, bottom-25% ground
 // band, 4–8px/s gentle wander, alpha pulse 0.4–0.9 over 3–5s, --accent
-// copper tint — the ONLY Layer-2 use of the accent). ---
+// copper tint — the ONLY Layer-2 use of the accent. 05-06 (SKY-05):
+// horizontally confined to the margins outside the text column — see the
+// firefly-containment block below. ---
 const FIREFLY_COUNT = 9;
 const FIREFLY_RADIUS_MIN = 1.5;
 const FIREFLY_RADIUS_MAX = 2.5;
@@ -71,8 +73,55 @@ const FIREFLY_PULSE_MIN_MS = 3000;
 const FIREFLY_PULSE_MAX_MS = 5000;
 const FIREFLY_ALPHA_MIN = 0.4;
 const FIREFLY_ALPHA_MAX = 0.9;
-/** Ground band top edge as a fraction of viewport height (bottom 25%). */
+/** Ground band top edge (CSS px) — the bottom-25% ground band per
+ * 05-UI-SPEC.md's ambient-loop table. */
+function fireflyBandTop(cssHeight: number): number {
+  return cssHeight * FIREFLY_BAND_TOP;
+}
 const FIREFLY_BAND_TOP = 0.75;
+
+// --- SKY-05 firefly containment (05-06). Panels overflow and scroll
+// internally, so text can render at ANY viewport y — including the
+// low-opacity bottom taper of the scrim, where a peak-pulse (0.9 alpha)
+// copper firefly core under a text line measured as low as 3.4:1 vs
+// --ink in the worst-case canvas-readback verification. Fireflies are
+// therefore confined to the HORIZONTAL MARGINS outside the content
+// column (the same min(880px, width - 2*pad) centered formula as
+// deck.css) — the one place text can never be — wandering/reflecting
+// inside their own side's margin. When the margins are too narrow to
+// roam (narrow viewports where the column is effectively full-width),
+// the flock falls back to full-width wander with its alpha halved
+// (peak 0.45), which stays >= 4.5:1 vs --ink even at ZERO scrim. ---
+const FIREFLY_MARGIN_CUSHION = 8;
+const FIREFLY_MIN_MARGIN_WIDTH = 48;
+/** Alpha multiplier applied in the narrow-viewport fallback mode. */
+const FIREFLY_SAFE_ALPHA_SCALE = 0.5;
+
+interface FireflyRange {
+  x0: number;
+  x1: number;
+}
+
+/** Content-column edges — mirrors deck.css (.panel padding clamp(18px,
+ * 4vw, 32px) + .panel > * max-width 880px centered); mirrored, not
+ * shared, per the module-boundary doctrine. */
+function contentColumnEdges(cssWidth: number): { left: number; right: number } {
+  const pad = Math.min(32, Math.max(18, cssWidth * 0.04));
+  const half = Math.min(880, cssWidth - 2 * pad) / 2;
+  return { left: cssWidth / 2 - half, right: cssWidth / 2 + half };
+}
+
+/** The roamable margin ranges for the flock at this width, or an empty
+ * list when both margins are too narrow (fallback mode). */
+function fireflyRanges(cssWidth: number): FireflyRange[] {
+  const { left, right } = contentColumnEdges(cssWidth);
+  const ranges: FireflyRange[] = [];
+  const leftRange = { x0: FIREFLY_MARGIN_CUSHION, x1: left - FIREFLY_MARGIN_CUSHION };
+  const rightRange = { x0: right + FIREFLY_MARGIN_CUSHION, x1: cssWidth - FIREFLY_MARGIN_CUSHION };
+  if (leftRange.x1 - leftRange.x0 >= FIREFLY_MIN_MARGIN_WIDTH) ranges.push(leftRange);
+  if (rightRange.x1 - rightRange.x0 >= FIREFLY_MIN_MARGIN_WIDTH) ranges.push(rightRange);
+  return ranges;
+}
 /** Heading wander rate, radians/s — a gentle random walk of the heading
  * so drift never reads as a straight line (05-UI-SPEC.md). */
 const FIREFLY_TURN_RATE = 1.4;
@@ -102,6 +151,8 @@ interface Firefly {
   radius: number;
   pulsePeriodMs: number;
   pulsePhase: number;
+  /** Horizontal roam range (a margin band, or full width in fallback). */
+  range: FireflyRange;
 }
 
 // --- Module-scope engine state (single scene instance per page, same
@@ -113,6 +164,9 @@ let visibleCtx: CanvasRenderingContext2D | null = null;
 let layer0: Layer0Result | null = null;
 let twinkles: TwinkleStar[] = [];
 let fireflies: Firefly[] = [];
+/** 1 normally; FIREFLY_SAFE_ALPHA_SCALE in the narrow-viewport fallback
+ * where the flock roams full-width (SKY-05 containment above). */
+let fireflyAlphaScale = 1;
 let tokens: SkyTokens | null = null;
 /** 05-05's constellation subsystem handle — its advance/draw ride THIS
  * module's single rAF tick (drawFrame Layer 2c); it never owns a loop. */
@@ -158,34 +212,57 @@ function seedTwinkles(twinkleStars: StarMeta[]): void {
   }
 }
 
-/** (Re)seeds the firefly flock inside the bottom-25% ground band for the
- * given CSS-pixel viewport size. */
+/** (Re)seeds the firefly flock inside the bottom-25% ground band, confined
+ * to the margin roam ranges (SKY-05 containment), for the given CSS-pixel
+ * viewport size. */
 function seedFireflies(cssWidth: number, cssHeight: number): void {
-  const bandTop = cssHeight * FIREFLY_BAND_TOP;
+  const bandTop = fireflyBandTop(cssHeight);
+  const ranges = fireflyRanges(cssWidth);
+  // Narrow-viewport fallback: full-width roam at halved alpha (SKY-05 —
+  // stays >= 4.5:1 vs --ink even where the scrim tapers to zero).
+  fireflyAlphaScale = ranges.length ? 1 : FIREFLY_SAFE_ALPHA_SCALE;
+  const totalWidth = ranges.reduce((acc, r) => acc + (r.x1 - r.x0), 0);
   fireflies = [];
   for (let i = 0; i < FIREFLY_COUNT; i++) {
+    let range: FireflyRange;
+    if (!ranges.length) {
+      range = { x0: 0, x1: cssWidth };
+    } else {
+      // Weight side selection by margin width so a lone wide margin
+      // hosts proportionally more of the flock.
+      let pick = Math.random() * totalWidth;
+      range = ranges[0];
+      for (const r of ranges) {
+        pick -= r.x1 - r.x0;
+        if (pick <= 0) {
+          range = r;
+          break;
+        }
+      }
+    }
     fireflies.push({
-      x: Math.random() * cssWidth,
+      x: lerp(range.x0, range.x1, Math.random()),
       y: lerp(bandTop, cssHeight, Math.random()),
       heading: Math.random() * TWO_PI,
       speed: lerp(FIREFLY_SPEED_MIN, FIREFLY_SPEED_MAX, Math.random()),
       radius: lerp(FIREFLY_RADIUS_MIN, FIREFLY_RADIUS_MAX, Math.random()),
       pulsePeriodMs: lerp(FIREFLY_PULSE_MIN_MS, FIREFLY_PULSE_MAX_MS, Math.random()),
       pulsePhase: Math.random() * TWO_PI,
+      range,
     });
   }
 }
 
 /** Advances one firefly by `dtMs`: gentle heading random-walk + constant
  * slow speed, reflected back into the ground band at its edges. */
-function advanceFirefly(f: Firefly, dtMs: number, cssWidth: number, cssHeight: number): void {
+function advanceFirefly(f: Firefly, dtMs: number, cssHeight: number): void {
   const dtS = dtMs / 1000;
   f.heading += (Math.random() - 0.5) * 2 * FIREFLY_TURN_RATE * dtS;
   f.x += Math.cos(f.heading) * f.speed * dtS;
   f.y += Math.sin(f.heading) * f.speed * dtS;
-  const bandTop = cssHeight * FIREFLY_BAND_TOP;
-  if (f.x < 0 || f.x > cssWidth) {
-    f.x = Math.min(cssWidth, Math.max(0, f.x));
+  const bandTop = fireflyBandTop(cssHeight);
+  if (f.x < f.range.x0 || f.x > f.range.x1) {
+    f.x = Math.min(f.range.x1, Math.max(f.range.x0, f.x));
     f.heading = Math.PI - f.heading;
   }
   if (f.y < bandTop || f.y > cssHeight) {
@@ -227,9 +304,9 @@ function drawFrame(ts: number): void {
   // gradient halo, never shadowBlur — fig01's glow doctrine). ---
   const accent = tokens.accent;
   for (const f of fireflies) {
-    advanceFirefly(f, dt, w, h);
+    advanceFirefly(f, dt, h);
     const pulse = 0.5 + 0.5 * Math.sin((ts / f.pulsePeriodMs) * TWO_PI + f.pulsePhase);
-    const alpha = lerp(FIREFLY_ALPHA_MIN, FIREFLY_ALPHA_MAX, pulse);
+    const alpha = lerp(FIREFLY_ALPHA_MIN, FIREFLY_ALPHA_MAX, pulse) * fireflyAlphaScale;
     const haloR = f.radius * FIREFLY_HALO_SCALE;
     const halo = visibleCtx.createRadialGradient(f.x, f.y, 0, f.x, f.y, haloR);
     halo.addColorStop(0, rgba(accent, alpha * 0.35));

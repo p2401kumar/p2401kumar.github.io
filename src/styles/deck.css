@@ -53,6 +53,9 @@ html.deck-active .panel {
 html.deck-active .panel > * {
   width: 100%;
   max-width: 880px;
+  /* Content always paints above the SKY-05 scrim (section 7 below). */
+  position: relative;
+  z-index: 1;
 }
 
 /* 3. Active/inactive state — transform + opacity + pointer-events only. */
@@ -99,6 +102,59 @@ html.deck-active footer {
   bottom: 0;
   inset-inline: 0;
   z-index: 20;
+}
+
+/* 7. Content scrim (SKY-05, 05-UI-SPEC.md "Scrim implementation") — a
+   vertical linear-gradient of the page background color (CSS Relative
+   Color Syntax off --bg: no fifth token, zero hex) that lifts text
+   legibility over the night-sky scene while preserving the dark look.
+   Peak opacity 0.38 (inside 05-CONTEXT.md's <=40% ceiling); flat gradient
+   only — never a blur filter (PITFALLS.md Pitfall 7/8).
+
+   Placement note (documented deviation from the UI-SPEC's literal
+   `.panel::before`): panels are internal scroll containers
+   (overflow: auto above), and an absolutely-positioned pseudo-element
+   child of a scroll container scrolls away WITH the content — scrolled
+   text on tall panels (experience/skills) would lose its scrim. The
+   `.deck` container is the fixed, full-viewport box the panels live in,
+   so `.deck::before` carries the IDENTICAL gradient anchored to the
+   viewport composition (where the Milky Way geometry lives) regardless
+   of panel scroll state. Visually identical for non-scrolled panels;
+   correct for scrolled ones. z-index: 0 + tree order keeps it below
+   every .panel (each panel is transformed, i.e. its own stacking
+   context painted after this pseudo-element); pointer-events: none and
+   the decorative-only role mean it can never hide or block a panel.
+
+   Classic mode (html.classic-active, the "view classic" escape hatch)
+   renders the same text over the same live scene as in-flow sections,
+   so each .panel section carries the same gradient as a plain
+   background there (backgrounds paint below the section's own content
+   — no z-index dance needed). */
+html.deck-active .deck::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+html.deck-active .deck::before,
+html.classic-active .panel {
+  /* Stops tuned from the UI-SPEC's recommended 0.28@18% to 0.3@10% (an
+     explicitly Claude's-discretion knob, 05-CONTEXT.md): panel text
+     starts at padding-top 96px (~10% of a 900px viewport), so the scrim
+     must already be near strength there — worst-case verification
+     (scripts/verify-contrast.mjs) sampled sub-4.5 ratios at the first
+     heading row under the 18% ramp. Peak stays 0.38 (locked ceiling). */
+  background: linear-gradient(
+    180deg,
+    rgb(from var(--bg) r g b / 0) 0%,
+    rgb(from var(--bg) r g b / 0.3) 10%,
+    rgb(from var(--bg) r g b / 0.38) 45%,
+    rgb(from var(--bg) r g b / 0.38) 70%,
+    rgb(from var(--bg) r g b / 0.15) 92%,
+    rgb(from var(--bg) r g b / 0) 100%
+  );
 }
 
 /* Panel focus management (04-UI-SPEC.md "Focus management") — programmatic

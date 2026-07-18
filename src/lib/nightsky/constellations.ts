@@ -212,6 +212,38 @@ export function initConstellations(options: ConstellationInitOptions): Constella
 
   // --- Precomputed pixel layout (recomputed ONLY when the viewport size
   // changes — base rendering does no per-frame layout math). ---
+  //
+  // SKY-05 margin remap (05-06): the data module's x fractions describe the
+  // left (0–0.20) and right (0.80–1.0) margin bands of the REFERENCE
+  // 1440px viewport, but the text column is a FIXED 880px centered block
+  // (deck.css .panel > * max-width), so raw fractional placement pushes
+  // cluster stars (brightened alpha up to 1.0) and firing beams (0.95)
+  // INSIDE the text column at narrower widths (e.g. 1280/1200px) —
+  // measured worst-case ratios there break WCAG 1.4.3, and 05-UI-SPEC.md's
+  // placement rule ("no cluster's bounding box may extend into the
+  // content-safe column") is violated. ensureLayout therefore remaps each
+  // side's x fractions linearly into the ACTUAL margin band (same column
+  // formula as deck.css: min(880, width - 2*pad) centered, pad =
+  // clamp(18px, 4vw, 32px), with an 8px cushion that also covers the
+  // 1.5x-radius brightened halo). At the 1440px reference this shifts
+  // stars by <=15px vs the approved smoke-test geometry; at every width
+  // it keeps all constellation pixels out of the text column by
+  // construction.
+  const MARGIN_CUSHION = 8;
+  function marginRemapX(fraction: number, cssWidth: number): number {
+    const pad = Math.min(32, Math.max(18, cssWidth * 0.04));
+    const half = Math.min(880, cssWidth - 2 * pad) / 2;
+    const colLeft = cssWidth / 2 - half;
+    const colRight = cssWidth / 2 + half;
+    if (fraction <= 0.5) {
+      const m0 = MARGIN_CUSHION;
+      const m1 = Math.max(m0 + 24, colLeft - MARGIN_CUSHION);
+      return m0 + (fraction / 0.2) * (m1 - m0);
+    }
+    const m1 = cssWidth - MARGIN_CUSHION;
+    const m0 = Math.min(m1 - 24, colRight + MARGIN_CUSHION);
+    return m0 + ((fraction - 0.8) / 0.2) * (m1 - m0);
+  }
   let layoutWidth = -1;
   let layoutHeight = -1;
   function ensureLayout(cssWidth: number, cssHeight: number): void {
@@ -219,7 +251,7 @@ export function initConstellations(options: ConstellationInitOptions): Constella
     layoutWidth = cssWidth;
     layoutHeight = cssHeight;
     for (const rt of runtimes) {
-      rt.starX = rt.def.stars.map((s) => s.x * cssWidth);
+      rt.starX = rt.def.stars.map((s) => marginRemapX(s.x, cssWidth));
       rt.starY = rt.def.stars.map((s) => s.y * cssHeight);
       rt.starRadius = rt.def.stars.map((s) =>
         s.magnitude === 'bright' ? STAR_RADIUS_BRIGHT : STAR_RADIUS_MID
