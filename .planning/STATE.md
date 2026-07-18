@@ -4,17 +4,17 @@ milestone: v2.0
 milestone_name: Night Sky
 current_phase: 06
 current_phase_name: Integration & Launch
-status: awaiting_launch_approval
-stopped_at: 06-01 complete (all local gates green, Fig. 01 36/36); 06-02 deploy BLOCKED on explicit user go
-last_updated: "2026-07-18T04:56:30.503Z"
+status: milestone_execution_complete
+stopped_at: Phase 6 complete — v2.0 LIVE at p2401kumar.github.io (06-02 deployed, INTG-01..04 done)
+last_updated: "2026-07-18T08:18:03.701Z"
 last_activity: 2026-07-18
-last_activity_desc: Completed 05.1-01-PLAN.md (moon + meteors)
+last_activity_desc: Completed 06-02-PLAN.md — v2.0 launched (live Lighthouse 98+100x3 / 100x4)
 progress:
   total_phases: 4
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 12
-  completed_plans: 11
-  percent: 75
+  completed_plans: 12
+  percent: 100
 ---
 
 # Project State
@@ -24,14 +24,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-17)
 
 **Core value:** Within seconds of landing, a senior engineering leader should think "this person operates at our level" — credibility delivered through demonstrated craft (a live systems demo), not adjectives. v2.0 adds: the first seconds should also be *beautiful*.
-**Current focus:** Phase 05.1 — Celestial Extras (complete); next: Phase 6 — Integration & Launch
+**Current focus:** Milestone v2.0 execution COMPLETE — v2.0 Night Sky is LIVE at https://p2401kumar.github.io/
 
 ## Current Position
 
-Phase: 05.1 (Celestial Extras, INSERTED) — COMPLETE
-Plan: 1 of 1
-Status: Phase complete — ready for verification
-Last activity: 2026-07-18 — Completed 05.1-01-PLAN.md (moon + meteors)
+Phase: 6 (Integration & Launch) — COMPLETE
+Plan: 2 of 2
+Status: Milestone execution complete — Phase 6 complete, v2.0 deployed and live-verified
+Last activity: 2026-07-18 — Completed 06-02-PLAN.md (launch: fixes + battery + deploy + live Lighthouse 98/100/100/100 mobile, 100×4 desktop)
 
 ## Performance Metrics
 
@@ -88,6 +88,7 @@ Last activity: 2026-07-18 — Completed 05.1-01-PLAN.md (moon + meteors)
 | Phase 05 P06 | 66min | 3 tasks | 15 files |
 | Phase 05.1 P01 | 75min | 3 tasks | 10 files |
 | Phase 06 P01 | 24 min | 3 tasks | 12 files |
+| Phase 06 P02 | ~50 min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -146,6 +147,8 @@ Recent decisions affecting current work:
 - [Phase 05.1]: 05.1-01: MASK_OFFSET_RATIO corrected 1.85->0.25 (Rule 1) — unique offset yielding the spec's locked thin 0.20R waning crescent; LIT_ALPHA stayed 0.45; moon + meteor shipped inside all Phase-5 floors (rAF 2/0/0, Lighthouse 98-100, contrast 9.27/8.07)
 - [Phase 06]: 06-01: one-active-animation verified on the event-driven contract; cold /#fig-01 scene-animating edge + /#work->hero fallback recorded as fix-forward, not patched
 - [Phase 06]: 06-01: headless focus-event gap fixed via CDP focus emulation in audit tooling only — product code untouched
+- [Phase 06]: 06-02: Fix-then-launch — both 06-01 fix-forward items fixed and battery re-run green before the deploy, per the user's contingent approval (Fix 2 edges, then launch)
+- [Phase 06]: 06-02: Fix B pause seed reads DOM state (html.deck-active + active panel data-panel-id) at first Layer-0 adoption — timing-safe, zero deck imports
 
 ### Pending Todos
 
@@ -168,10 +171,11 @@ Items acknowledged and carried forward:
 
 ## Session Continuity
 
-Last session: 2026-07-18T04:55:07.067Z
-Stopped at: Completed 05.1-01-PLAN.md (Phase 5.1 complete: moon + meteors, gate battery green, no deploy)
+Last session: 2026-07-18T08:17:25.445Z
+Stopped at: Milestone execution complete — v2.0 Night Sky LIVE (Phase 6 complete, INTG-01..04 done)
 Resume file: None
 
 ## Operator Next Steps
 
-- Plan Phase 6 (Integration & Launch) with `/gsd-plan-phase 6`
+- Run the real-device touch checklist + 5-min idle-CPU check against the live site (06-01-LAUNCH-READINESS.md §5–6, at your leisure — rollback documented)
+- Complete the milestone with `/gsd-complete-milestone` (archive v2.0, retire old `/home` repo per the open post-launch task)

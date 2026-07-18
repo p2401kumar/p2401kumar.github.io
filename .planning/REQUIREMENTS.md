@@ -39,7 +39,7 @@ Requirements for this milestone. Each maps to roadmap phases (numbering continue
 - [x] **INTG-01**: All v1 content sections render as panels without forking their markup (thin `Panel.astro` slot wrapper; hide via transform, never `display:none`)
 - [x] **INTG-02**: Fig. 01 works fully as a panel — resize-on-activation handled, complete v1 verification checklist re-passes while embedded
 - [x] **INTG-03**: Case studies keep distinct, cold-loadable URLs linked from the systems panel; sitemap remains valid
-- [ ] **INTG-04**: Home page holds Lighthouse ≥ 90 in all four categories with deck + scene active (mobile and desktop runs, live URL)
+- [x] **INTG-04**: Home page holds Lighthouse ≥ 90 in all four categories with deck + scene active (mobile and desktop runs, live URL)
 
 ## Future Requirements
 
@@ -89,7 +89,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | INTG-01 | Phase 6 | Complete |
 | INTG-02 | Phase 6 | Complete |
 | INTG-03 | Phase 6 | Complete |
-| INTG-04 | Phase 6 | Pending |
+| INTG-04 | Phase 6 | Complete |
 
 **Coverage:**
 
