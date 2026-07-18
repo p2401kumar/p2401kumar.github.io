@@ -21,7 +21,7 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 ### v2.0 Night Sky (current)
 
 - [x] **Phase 4: Deck Mechanics** - No-scroll panel deck: full input parity (wheel/swipe/keys/dots), hash routing, focus management, progressive-enhancement fallback (completed 2026-07-17)
-- [ ] **Phase 5: Night-Sky Scene** - Persistent zero-light-pollution scene: pre-rendered starfield + Milky Way, camper silhouette, fireflies, panel-reactive career constellations
+- [x] **Phase 5: Night-Sky Scene** - Persistent zero-light-pollution scene: pre-rendered starfield + Milky Way, camper silhouette, fireflies, panel-reactive career constellations (completed 2026-07-18)
 - [ ] **Phase 5.1: Celestial Extras (INSERTED)** - Shooting stars + thin crescent moon, inside the established engine's floors
 - [ ] **Phase 6: Integration & Launch** - v1 content layered as panels, Fig. 01 re-verified embedded, case-study URLs intact, live Lighthouse ≥90
 
@@ -70,7 +70,7 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
   5. All text over the sky passes WCAG 1.4.3 contrast at worst-case brightness points via a scrim that preserves the dark aesthetic
 
 **Research gate**: Milky Way visual spike FIRST (~2-3h, LOW-confidence technique — evaluate zero-dep scatter+gradient before adding any noise dependency); idle-CPU <10% sustained over 5 min; contrast ≥4.5:1 measured at worst-case brightness points (not averages); Lighthouse ≥90 immediately after scene layered in.
-**Plans**: 5/6 plans executed
+**Plans**: 6/6 plans complete
 
 **Wave 1** *(parallel — zero file overlap)*
 
@@ -91,7 +91,7 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 
 **Wave 5** *(blocked on 05-05)*
 
-- [ ] 05-06-PLAN.md — Scrim + worst-case contrast verifier (SKY-05) + full gate battery + human scene sign-off
+- [x] 05-06-PLAN.md — Scrim + worst-case contrast verifier (SKY-05) + full gate battery + human scene sign-off
 
 **UI hint**: yes
 
@@ -135,7 +135,7 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 | 2. Fig. 01 — Signature Interactive Figure | v1.0 | 5/5 | Complete | 2026-07-17 |
 | 3. Case Studies & Launch Polish | v1.0 | 4/4 | Complete | 2026-07-17 |
 | 4. Deck Mechanics | v2.0 | 3/3 | Complete   | 2026-07-17 |
-| 5. Night-Sky Scene | v2.0 | 5/6 | In Progress|  |
+| 5. Night-Sky Scene | v2.0 | 6/6 | Complete   | 2026-07-18 |
 | 5.1 Celestial Extras (INSERTED) | v2.0 | 0/TBD | Not started | - |
 | 6. Integration & Launch | v2.0 | 0/TBD | Not started | - |
 

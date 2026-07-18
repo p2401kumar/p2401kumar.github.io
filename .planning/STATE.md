@@ -4,17 +4,17 @@ milestone: v2.0
 milestone_name: Night Sky
 current_phase: 05
 current_phase_name: Night-Sky Scene
-status: executing
-stopped_at: Completed 05-03-PLAN.md
-last_updated: "2026-07-18T00:58:51.229Z"
+status: verifying
+stopped_at: Completed 05-06-PLAN.md (phase 5 gate green; sign-off checkpoint auto-resolved with committed screenshots)
+last_updated: "2026-07-18T02:08:49.392Z"
 last_activity: 2026-07-17
 last_activity_desc: Phase 05 execution started
 progress:
   total_phases: 4
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 9
-  completed_plans: 8
-  percent: 25
+  completed_plans: 9
+  percent: 50
 ---
 
 # Project State
@@ -30,7 +30,7 @@ See: .planning/PROJECT.md (updated 2026-07-17)
 
 Phase: 05 (Night-Sky Scene) — EXECUTING
 Plan: 6 of 6
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-07-17 — Phase 05 execution started
 
 ## Performance Metrics
@@ -85,6 +85,7 @@ Last activity: 2026-07-17 — Phase 05 execution started
 | Phase 05 P03 | 25min | 2 tasks | 5 files |
 | Phase 05 P04 | 12min | 2 tasks | 2 files |
 | Phase 05 P05 | 13min | 2 tasks | 2 files |
+| Phase 05 P06 | 66min | 3 tasks | 15 files |
 
 ## Accumulated Context
 
@@ -138,6 +139,8 @@ Recent decisions affecting current work:
 - [Phase 05]: 05-05: constellation star alphas carry a magnitude split within each locked UI-SPEC range (bright anchors top, mid connectors lower) for internal cluster hierarchy in every state
 - [Phase 05]: 05-05: link-firing candidates = all non-Brightened constellations (Dimmed included); beam geometry recomputed from the per-size cache each advance so resize never strands a beam
 - [Phase 05]: 05-05: setFiringSuppressed(true) discards the in-flight beam as well as the pending timer — paused/static frames are structurally beam-free
+- [Phase ?]: 05-06: SKY-05 proven measure-first — scrim ceiling (0.38) cannot cover saturated additive sky pixels, so the scene gained a column brightness governor (MW x0.12, star cap 0.25, twinkle exclusion) + constellation margin remap + firefly margin containment; worst-case went 1.84 -> 8.24 vs --ink
+- [Phase ?]: 05-06: scrim lives on .deck::before (viewport-anchored) not .panel::before — abspos pseudos scroll away inside overflow:auto panels; classic mode gets the same gradient as a section background
 
 ### Pending Todos
 
@@ -160,8 +163,8 @@ Items acknowledged and carried forward:
 
 ## Session Continuity
 
-Last session: 2026-07-18T00:58:01.865Z
-Stopped at: Completed 05-03-PLAN.md
+Last session: 2026-07-18T02:08:35.667Z
+Stopped at: Completed 05-06-PLAN.md (phase 5 gate green; sign-off checkpoint auto-resolved with committed screenshots)
 Resume file: None
 
 ## Operator Next Steps
