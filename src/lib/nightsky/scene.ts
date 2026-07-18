@@ -187,6 +187,35 @@ let generation = 0;
 const rm = matchMedia('(prefers-reduced-motion: reduce)');
 let tabVisible = !document.hidden;
 let fig01Active = false;
+/** One-shot guard for the init-time DOM seed of fig01Active (06-02 Fix B) —
+ * set true by the first adoptLayer0; resize re-adoptions never re-seed, so
+ * post-init state stays owned by the panel-change event contract. */
+let fig01Seeded = false;
+
+/**
+ * 06-02 Fix B — cold-deep-link pause seed (SKY-04 edge): `nightsky:panel-
+ * change` only fires from deck.ts's goTo() NAVIGATION, never from initDeck's
+ * synchronous hash resolution, so a cold `/#fig-01` load left the scene
+ * animating behind the figure until the first navigation. Seed fig01Active
+ * once, at first Layer-0 adoption, by reading the deck's OWN DOM state — a
+ * literal-attribute read, never a deck.ts import (module-boundary rule):
+ *   - `html.deck-active` must be present (on a classic-pref boot, initDeck
+ *     still applies panel data-state before branching to classic — reading
+ *     data-state alone would newly pause the scene in classic mode, where
+ *     today it animates; classic/no-deck must stay `false`, same as before);
+ *   - the active panel's data-panel-id must be 'fig-01'.
+ * TIMING: this runs inside adoptLayer0, whose only caller is generateLayer0's
+ * completion callback — always idle-scheduled (requestIdle chunked queue),
+ * strictly after every load-time module script (deck.ts's synchronous init
+ * included) has finished. No listener-attach-order proof needed.
+ */
+function seedFig01ActiveFromDom(): void {
+  if (fig01Seeded) return;
+  fig01Seeded = true;
+  fig01Active =
+    document.documentElement.classList.contains('deck-active') &&
+    document.querySelector('.panel[data-state="active"]')?.getAttribute('data-panel-id') === 'fig-01';
+}
 
 function lerp(a: number, b: number, t: number): number {
   return a + (b - a) * t;
@@ -439,6 +468,7 @@ function adoptLayer0(result: Layer0Result): void {
   seedTwinkles(result.twinkleStars);
   seedFireflies(result.cssWidth, result.cssHeight);
   renderStaticFrame();
+  seedFig01ActiveFromDom(); // 06-02 Fix B — one-shot, before the loop can start
   updateRunState();
 }
 
@@ -551,6 +581,8 @@ export function initNightSky(root: HTMLElement): () => void {
   // reduced motion adoptLayer0's completion path paints the static frame
   // and updateRunState refuses to start the loop (rm.matches gates it).
   tabVisible = !document.hidden;
+  fig01Seeded = false; // re-arm the one-shot Fix B seed for this init
+  fig01Active = false;
   regenerateLayer0();
 
   return function teardown(): void {
