@@ -22,8 +22,8 @@ Requirements for this milestone. Each maps to roadmap phases (numbering continue
 
 - [x] **SKY-01**: Persistent zero-light-pollution scene — dense pre-rendered starfield + vivid Milky Way band (offscreen-rendered once, blitted) behind every panel
 - [x] **SKY-02**: Camper-car camp silhouette at the horizon with a single warm copper glow (hand-authored static SVG, outside the animation loop)
-- [ ] **SKY-03**: Sparse drifting fireflies + twinkling star subset are the only per-frame canvas work; idle CPU < 10% sustained over 5 minutes
-- [ ] **SKY-04**: Scene pauses when the tab is hidden and while Fig. 01's panel is active (one-active-animation rule); `prefers-reduced-motion` renders one static frame with no animation loop
+- [x] **SKY-03**: Sparse drifting fireflies + twinkling star subset are the only per-frame canvas work; idle CPU < 10% sustained over 5 minutes
+- [x] **SKY-04**: Scene pauses when the tab is hidden and while Fig. 01's panel is active (one-active-animation rule); `prefers-reduced-motion` renders one static frame with no animation loop
 - [ ] **SKY-05**: All text over the sky passes WCAG 1.4.3 contrast at worst-case brightness points via a scrim that preserves the dark aesthetic
 - [ ] **SKY-06**: Occasional shooting stars streak the upper sky — one at a time, ~20–45s cadence, fading trail — absent under reduced-motion and while the scene is paused *(Phase 5.1, INSERTED)*
 - [ ] **SKY-07**: A thin crescent moon (static Layer 0, tokens-only, procedural — no image assets) sits low and dim, clear of the Milky Way band, preserving the zero-light-pollution premise *(Phase 5.1, INSERTED)*
@@ -78,8 +78,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DECK-08 | Phase 4 | Complete |
 | SKY-01 | Phase 5 | Complete |
 | SKY-02 | Phase 5 | Complete |
-| SKY-03 | Phase 5 | Pending |
-| SKY-04 | Phase 5 | Pending |
+| SKY-03 | Phase 5 | Complete |
+| SKY-04 | Phase 5 | Complete |
 | SKY-05 | Phase 5 | Pending |
 | CONST-01 | Phase 5 | Complete |
 | CONST-02 | Phase 5 | Pending |
