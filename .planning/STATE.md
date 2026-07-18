@@ -5,16 +5,16 @@ milestone_name: Night Sky
 current_phase: 05
 current_phase_name: Night-Sky Scene
 status: executing
-stopped_at: Completed 05-02-PLAN.md
-last_updated: "2026-07-17T23:56:56.951Z"
+stopped_at: Completed 05-03-PLAN.md
+last_updated: "2026-07-18T00:25:33.296Z"
 last_activity: 2026-07-17
 last_activity_desc: Phase 05 execution started
 progress:
-  total_phases: 3
+  total_phases: 4
   completed_phases: 1
   total_plans: 9
-  completed_plans: 5
-  percent: 33
+  completed_plans: 6
+  percent: 25
 ---
 
 # Project State
@@ -29,7 +29,7 @@ See: .planning/PROJECT.md (updated 2026-07-17)
 ## Current Position
 
 Phase: 05 (Night-Sky Scene) — EXECUTING
-Plan: 3 of 6
+Plan: 4 of 6
 Status: Ready to execute
 Last activity: 2026-07-17 — Phase 05 execution started
 
@@ -82,6 +82,7 @@ Last activity: 2026-07-17 — Phase 05 execution started
 | Phase 04 P03 | 70min | 2 tasks | 4 files |
 | Phase 05 P01 | 14min | 1 tasks | 4 files |
 | Phase 05 P02 | 10min | 2 tasks | 3 files |
+| Phase 05 P03 | 25min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -127,6 +128,8 @@ Recent decisions affecting current work:
 - [Phase 05]: All 4 provisional sky-token hex values from 05-UI-SPEC.md confirmed unchanged: --sky-zenith #05070a, --sky-horizon #141a2c, --milkyway #cfd9f2, --star #eef2fa
 - [Phase 05-02]: education-patents constellation source annotation reuses only patents.ts strings (not USC/IIT Dhanbad) since experience.ts/systems.ts/patents.ts are the only honesty-gate-permitted files
 - [Phase 05-02]: StarMagnitude uses a 2-value mid|bright convention rather than the 4-band ambient field scale, since constellation stars always render larger/brighter than the ambient field regardless of band
+- [Phase 05]: NightSky.astro scene host uses z-index:-1 (not 0) so it stays behind static content in both deck-active and the DECK-07 no-JS fallback mode — CSS painting order places position:fixed z-index:0/auto elements above non-positioned in-flow siblings within the same stacking context; only a negative z-index guarantees background-layer behavior in every mode while still sitting below .deck's z-index:1 whenever deck-active is present
+- [Phase 05]: Wired a one-time generate+blit bootstrap for Layer 0 in this plan rather than deferring all script wiring to 05-04 — The plan's own prohibition text states Layer 0 is generate-once + blit; the rAF driver arrives in 05-04 - the blit itself belongs in 05-03, only the continuous per-frame loop is deferred; verified via headless-Chrome screenshots at DPR1/DPR2
 
 ### Pending Todos
 
@@ -149,8 +152,8 @@ Items acknowledged and carried forward:
 
 ## Session Continuity
 
-Last session: 2026-07-17T23:56:56.923Z
-Stopped at: Completed 05-02-PLAN.md
+Last session: 2026-07-18T00:25:33.285Z
+Stopped at: Completed 05-03-PLAN.md
 Resume file: None
 
 ## Operator Next Steps

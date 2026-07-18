@@ -70,7 +70,7 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
   5. All text over the sky passes WCAG 1.4.3 contrast at worst-case brightness points via a scrim that preserves the dark aesthetic
 
 **Research gate**: Milky Way visual spike FIRST (~2-3h, LOW-confidence technique — evaluate zero-dep scatter+gradient before adding any noise dependency); idle-CPU <10% sustained over 5 min; contrast ≥4.5:1 measured at worst-case brightness points (not averages); Lighthouse ≥90 immediately after scene layered in.
-**Plans**: 2/6 plans executed
+**Plans**: 3/6 plans executed
 
 **Wave 1** *(parallel — zero file overlap)*
 
@@ -79,7 +79,7 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 
 **Wave 2** *(blocked on 05-01 + 05-02)*
 
-- [ ] 05-03-PLAN.md — Scene shell + Layer 0: sky tokens, nightsky/tokens.ts, NightSky.astro (canvas host + camper SVG + glow, behind .deck), starfield.ts offscreen generation
+- [x] 05-03-PLAN.md — Scene shell + Layer 0: sky tokens, nightsky/tokens.ts, NightSky.astro (canvas host + camper SVG + glow, behind .deck), starfield.ts offscreen generation
 
 **Wave 3** *(blocked on 05-03)*
 
@@ -135,7 +135,7 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 | 2. Fig. 01 — Signature Interactive Figure | v1.0 | 5/5 | Complete | 2026-07-17 |
 | 3. Case Studies & Launch Polish | v1.0 | 4/4 | Complete | 2026-07-17 |
 | 4. Deck Mechanics | v2.0 | 3/3 | Complete   | 2026-07-17 |
-| 5. Night-Sky Scene | v2.0 | 2/6 | In Progress|  |
+| 5. Night-Sky Scene | v2.0 | 3/6 | In Progress|  |
 | 5.1 Celestial Extras (INSERTED) | v2.0 | 0/TBD | Not started | - |
 | 6. Integration & Launch | v2.0 | 0/TBD | Not started | - |
 
