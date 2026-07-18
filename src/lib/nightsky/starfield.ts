@@ -125,6 +125,91 @@ function starAlphaCapAt(x: number, cssWidth: number): number {
   return COLUMN_STAR_ALPHA_CAP + (1 - COLUMN_STAR_ALPHA_CAP) * t;
 }
 
+// --- SKY-07 crescent moon (05.1-01) --------------------------------------
+// A thin, dim, procedural waning crescent baked ONCE into Layer 0 as the
+// final work unit (after the Milky Way composite) — present in every blit
+// including the reduced-motion static frame, at zero per-frame cost.
+// Tokens-only: lit crescent = --star at LIT_ALPHA, earthshine disk =
+// --sky-horizon at EARTHSHINE_ALPHA; no image assets, no new token.
+// Placed in the LEFT margin (the Milky Way core owns the right margin),
+// entirely outside the SKY-05 governed column + its 80px ramp at both
+// check widths (05.1-UI-SPEC margin-clearance: ~100px spare at 1440,
+// ~45px spare at 1280) — so columnAttenuation/starAlphaCapAt are NEVER
+// applied to the moon; its fixed LIT_ALPHA is its entire brightness
+// governance (hard ceiling 0.55, verified by verify-contrast.mjs --moon).
+const MOON_RADIUS_COEFF = 0.018;
+const MOON_RADIUS_FLOOR = 12;
+const MOON_RADIUS_CAP = 22;
+const MOON_X_MARGIN_FRACTION = 0.3;
+const MOON_Y_FRACTION = 0.68;
+const MASK_RADIUS_RATIO = 1.05;
+/** Mask-circle center offset from the moon center, in units of R, along
+ * +x. NOTE — deviates from the 05.1-UI-SPEC table's literal 1.85: with the
+ * locked MASK_RADIUS_RATIO 1.05, lit-sliver width at the equator is
+ * `R + offset − maskR`, so offset 1.85R yields a NEAR-FULL disk (mask left
+ * edge at +0.80R — a 0.20R dark bite on the right), contradicting the same
+ * spec section's locked visual outcome ("thin left-edge crescent ~0.20×R
+ * at its widest, left-facing C, the conventional waning-crescent read")
+ * and SKY-07 itself ("thin waning crescent" — a full moon IS light
+ * pollution per 05.1-CONTEXT). offset 0.25R is the unique value giving
+ * the described 0.20R sliver: 1 + 0.25 − 1.05 = 0.20. */
+const MASK_OFFSET_RATIO = 0.25;
+const LIT_ALPHA = 0.45; // tuning range 0.40–0.50; HARD ceiling 0.55
+const EARTHSHINE_ALPHA = 0.08;
+
+/** Left edge (CSS px) of the deck.css 880px content column — mirrors
+ * scene.ts's contentColumnEdges (.panel padding clamp(18px, 4vw, 32px) +
+ * .panel > * max-width 880px centered); mirrored, NOT imported, per the
+ * module-boundary doctrine. The SKY-05 governor's fixed
+ * COLUMN_HALF_WIDTH_PX is deliberately NOT reused here — the moon uses
+ * the deck.css pad formula, same as every other margin-placed element. */
+function moonColumnLeft(cssWidth: number): number {
+  const pad = Math.min(32, Math.max(18, cssWidth * 0.04));
+  const half = Math.min(880, cssWidth - 2 * pad) / 2;
+  return cssWidth / 2 - half;
+}
+
+/** Draws the waning crescent moon: earthshine disk + clipped even-odd
+ * lit crescent. Background-safe — source-over only, never destination-out
+ * on the shared layer0Ctx (no transparent hole is ever punched in the
+ * opaque sky wash). */
+function drawMoon(
+  ctx: CanvasRenderingContext2D,
+  cssWidth: number,
+  cssHeight: number,
+  star: RgbTriple,
+  skyHorizon: RgbTriple
+): void {
+  const R = Math.min(
+    MOON_RADIUS_CAP,
+    Math.max(MOON_RADIUS_FLOOR, MOON_RADIUS_COEFF * Math.min(cssWidth, cssHeight))
+  );
+  const moonX = MOON_X_MARGIN_FRACTION * moonColumnLeft(cssWidth);
+  const moonY = MOON_Y_FRACTION * cssHeight;
+
+  // 1. Earthshine disk — the faint dark-limb glow.
+  ctx.beginPath();
+  ctx.fillStyle = rgba(skyHorizon, EARTHSHINE_ALPHA);
+  ctx.arc(moonX, moonY, R, 0, Math.PI * 2);
+  ctx.fill();
+
+  // 2. Lit waning crescent via clip + even-odd fill: inside the lit-disk
+  // clip, the even-odd rule fills rectangle-minus-mask — the thin
+  // left-edge sliver (~0.20×R at its widest). The mask offset toward +x
+  // carves the sliver on the LEFT, the conventional waning-crescent read.
+  // No rotation — axis-aligned per the spec's reference geometry.
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(moonX, moonY, R, 0, Math.PI * 2);
+  ctx.clip();
+  ctx.beginPath();
+  ctx.rect(moonX - R, moonY - R, 2 * R, 2 * R);
+  ctx.arc(moonX + MASK_OFFSET_RATIO * R, moonY, MASK_RADIUS_RATIO * R, 0, Math.PI * 2);
+  ctx.fillStyle = rgba(star, LIT_ALPHA);
+  ctx.fill('evenodd');
+  ctx.restore();
+}
+
 /** A single generated star's metadata — the subset Layer 2 (05-04) needs
  * to redraw a twinkling star's alpha wobble on top of the Layer 0 blit.
  * Positions/radius are in CSS-pixel space (see module header). */
@@ -498,6 +583,11 @@ export function generateLayer0(cssWidth: number, cssHeight: number, onDone: (res
 
   // --- Milky Way band (SPIKE.md Contract for 05-03) ---
   queueMilkyWay(queue, layer0Ctx, cssWidth, cssHeight, tokens.milkyway);
+
+  // --- Crescent moon (SKY-07, 05.1-01) — the FINAL Layer-0 work unit,
+  // composited after the Milky Way (disjoint margins, order fixed here
+  // for clarity per the 05.1-UI-SPEC draw-order note). ---
+  queue.push(() => drawMoon(layer0Ctx, cssWidth, cssHeight, tokens.star, tokens.skyHorizon));
 
   drainQueue(queue, () => {
     onDone({ canvas, cssWidth, cssHeight, dpr, twinkleStars });

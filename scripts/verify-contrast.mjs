@@ -36,6 +36,18 @@
 //   into the console. It defines window.__sampleContrast() which returns
 //   the same per-region worst-case report for the CURRENT panel.
 //
+//   node scripts/verify-contrast.mjs --moon [--url http://localhost:4321/]
+//                                    [--width 1440] [--height 900]
+//     SKY-07 moon-dimness assertion (05.1-01, FLAG 1): launches headless
+//     Chrome at the given viewport, waits for the scene to paint, then
+//     reads the live canvas via getImageData over (a) the moon's bounding
+//     box [moonX-1.1R, moonY-1.1R, 2.2R, 2.2R] (geometry recomputed
+//     in-page with the SAME formulas as starfield.ts, from
+//     window.innerWidth/innerHeight) and (b) the Milky-Way-core box
+//     [x:0.80-0.98, y:0.30-0.60 of the viewport]. Computes the MAX
+//     relative luminance in each (moonPeak, mwPeak) and asserts
+//     moonPeak < mwPeak strictly. Exits non-zero on failure.
+//
 // WCAG references implemented verbatim (do not hand-roll variants):
 //   relative luminance  https://www.w3.org/WAI/GL/wiki/Relative_luminance
 //   contrast ratio      WCAG 2.2 SC 1.4.3 (L1 + 0.05) / (L2 + 0.05)
@@ -90,6 +102,21 @@ export function worstCaseContrastInRegion(imageData, textLuminance) {
     }
   }
   return { worst, worstPixel };
+}
+
+/**
+ * Peak (maximum) relative luminance across every pixel of an
+ * ImageData-like ({ data }) region — the SKY-07 moon-dimness comparator
+ * (05.1-01): moon-bbox peak must stay STRICTLY below the MW-core-box peak.
+ */
+export function peakLuminanceInRegion(imageData) {
+  const { data } = imageData;
+  let peak = 0;
+  for (let i = 0; i < data.length; i += 4) {
+    const l = relativeLuminance(data[i], data[i + 1], data[i + 2]);
+    if (l > peak) peak = l;
+  }
+  return peak;
 }
 
 // ---------------------------------------------------------------------------
@@ -228,6 +255,35 @@ function selftest() {
   const peak = Math.max(...SCRIM_STOPS.map(([, a]) => a));
   if (peak > 0.38) throw new Error(`FIXTURE FAIL: scrim peak ${peak} exceeds the 0.38 ceiling`);
   console.log(`  ok  scrim peak ${peak} <= 0.38 ceiling`);
+
+  // 8. Moon fixture (SKY-07 / 05.1-01): peakLuminanceInRegion comparison
+  //    logic over a synthetic ImageData pair — a "moon box" whose brightest
+  //    pixel is a 0.45-alpha --star-class crescent pixel over dark sky
+  //    (~rgb(112,116,124)) vs an "MW core box" containing one saturated
+  //    'lighter'-accumulated pixel (255,255,255). moonPeak must be
+  //    STRICTLY below mwPeak, and the scanner must ignore dark filler.
+  const moonBoxFixture = {
+    width: 2,
+    height: 1,
+    data: new Uint8ClampedArray([14, 17, 22, 255, 112, 116, 124, 255]),
+  };
+  const mwBoxFixture = {
+    width: 2,
+    height: 1,
+    data: new Uint8ClampedArray([40, 46, 58, 255, 255, 255, 255, 255]),
+  };
+  const moonPeakFx = peakLuminanceInRegion(moonBoxFixture);
+  const mwPeakFx = peakLuminanceInRegion(mwBoxFixture);
+  approx(mwPeakFx, 1, 1e-9, "peakLuminanceInRegion(mw fixture) — saturated white");
+  if (!(moonPeakFx > 0.1 && moonPeakFx < 0.3)) {
+    throw new Error(`FIXTURE FAIL: moon fixture peak ${moonPeakFx} outside the expected dim band`);
+  }
+  if (!(moonPeakFx < mwPeakFx)) {
+    throw new Error("FIXTURE FAIL: moon fixture peak must be strictly below the MW fixture peak");
+  }
+  console.log(
+    `  ok  moon fixture: moonPeak ${moonPeakFx.toFixed(4)} < mwPeak ${mwPeakFx.toFixed(4)}`
+  );
 
   console.log("SELFTEST PASS");
 }
@@ -567,6 +623,143 @@ async function connectCdp(port) {
   return new Cdp(ws);
 }
 
+// ---------------------------------------------------------------------------
+// --moon mode (SKY-07 / 05.1-01 FLAG 1): moon-bbox peak luminance must stay
+// STRICTLY below the Milky-Way-core-box peak, per viewport. The sampler is
+// serialized into the page like samplePageOnce — it must only reference
+// browser globals + the helpers injected alongside it, and it recomputes
+// the moon geometry with the SAME formulas as starfield.ts drawMoon
+// (mirrored here; any drift is caught by the assertion itself).
+// ---------------------------------------------------------------------------
+
+function sampleMoonOnce() {
+  const canvas = document.querySelector("#nightsky-canvas");
+  if (!canvas) return { error: "no #nightsky-canvas" };
+  const ctx = canvas.getContext("2d", { willReadFrequently: true });
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  const dprX = canvas.width / w;
+  const dprY = canvas.height / h;
+
+  // Moon geometry — identical formulas to starfield.ts (constants:
+  // MOON_RADIUS_COEFF 0.018, floor 12, cap 22; MOON_X_MARGIN_FRACTION 0.30
+  // of the deck.css column-left edge; MOON_Y_FRACTION 0.68).
+  const pad = Math.min(32, Math.max(18, w * 0.04));
+  const half = Math.min(880, w - 2 * pad) / 2;
+  const columnLeft = w / 2 - half;
+  const R = Math.min(22, Math.max(12, 0.018 * Math.min(w, h)));
+  const moonX = 0.3 * columnLeft;
+  const moonY = 0.68 * h;
+
+  const peakOf = (x0, y0, x1, y1) => {
+    const dx0 = Math.max(0, Math.round(x0 * dprX));
+    const dy0 = Math.max(0, Math.round(y0 * dprY));
+    const dw = Math.max(1, Math.min(canvas.width - dx0, Math.round((x1 - x0) * dprX)));
+    const dh = Math.max(1, Math.min(canvas.height - dy0, Math.round((y1 - y0) * dprY)));
+    const region = ctx.getImageData(dx0, dy0, dw, dh);
+    let peak = 0;
+    let px = null;
+    for (let i = 0; i < region.data.length; i += 4) {
+      const l = relativeLuminance(region.data[i], region.data[i + 1], region.data[i + 2]);
+      if (l > peak) {
+        peak = l;
+        px = [region.data[i], region.data[i + 1], region.data[i + 2]];
+      }
+    }
+    return { peak, px };
+  };
+
+  // Moon bounding box: [moonX-1.1R, moonY-1.1R, 2.2R, 2.2R] CSS px.
+  const moonBox = { x0: moonX - 1.1 * R, y0: moonY - 1.1 * R, x1: moonX + 1.1 * R, y1: moonY + 1.1 * R };
+  // Milky-Way core box: x 0.80-0.98, y 0.30-0.60 of the viewport.
+  const mwBox = { x0: 0.8 * w, y0: 0.3 * h, x1: 0.98 * w, y1: 0.6 * h };
+
+  const moon = peakOf(moonBox.x0, moonBox.y0, moonBox.x1, moonBox.y1);
+  const mw = peakOf(mwBox.x0, mwBox.y0, mwBox.x1, mwBox.y1);
+
+  return {
+    viewport: { w, h },
+    dpr: dprX,
+    geometry: { moonX: +moonX.toFixed(2), moonY: +moonY.toFixed(2), R: +R.toFixed(2), columnLeft: +columnLeft.toFixed(2) },
+    moonBox,
+    mwBox,
+    moonPeak: moon.peak,
+    moonPeakPixel: moon.px,
+    mwPeak: mw.peak,
+    mwPeakPixel: mw.px,
+  };
+}
+
+async function moonMain(args) {
+  const url = argValue(args, "--url") || "http://localhost:4321/";
+  const width = parseInt(argValue(args, "--width") || "1440", 10);
+  const height = parseInt(argValue(args, "--height") || "900", 10);
+
+  const { proc, port, profile } = await launchChrome(width, height);
+  let snap;
+  try {
+    const cdp = await connectCdp(port);
+    await cdp.send("Page.enable");
+    await cdp.send("Page.navigate", { url });
+    // Wait for load + scene readiness (Layer 0 is idle-scheduled; the moon
+    // is the FINAL work unit, so a painted-center probe alone could race
+    // it — poll until the moon-box itself contains non-background pixels
+    // OR the settle timeout passes after first paint).
+    let ready = false;
+    for (let i = 0; i < 120; i++) {
+      await sleep(250);
+      try {
+        ready = await cdp.evaluate(`(() => {
+          const c = document.querySelector('#nightsky-canvas');
+          if (!c || !c.width) return false;
+          const ctx = c.getContext('2d');
+          const d = ctx.getImageData(Math.floor(c.width/2), Math.floor(c.height/4), 1, 1).data;
+          return d[3] > 0; // scene has painted (sky wash is opaque)
+        })()`);
+        if (ready) break;
+      } catch {
+        /* page still loading */
+      }
+    }
+    if (!ready) throw new Error("scene never painted (Layer 0 not adopted within 30s)");
+    // Settle: let the chunked Layer-0 queue (incl. the final moon unit)
+    // fully drain before sampling.
+    await sleep(2500);
+
+    await cdp.evaluate(
+      relativeLuminance.toString() + "\n" + sampleMoonOnce.toString() + '\n"installed";'
+    );
+    snap = await cdp.evaluate("sampleMoonOnce()");
+    if (snap.error) throw new Error(snap.error);
+  } finally {
+    proc.kill();
+    await sleep(300);
+    try {
+      rmSync(profile, { recursive: true, force: true });
+    } catch {
+      /* best-effort tmp cleanup */
+    }
+  }
+
+  const pass = snap.moonPeak < snap.mwPeak;
+  console.log(
+    JSON.stringify(
+      { mode: "moon", url, requested: { width, height }, ...snap, assertion: "moonPeak < mwPeak", pass },
+      null,
+      2
+    )
+  );
+  if (!pass) {
+    console.error(
+      `MOON DIMNESS FAIL at ${width}x${height}: moonPeak ${snap.moonPeak} >= mwPeak ${snap.mwPeak}`
+    );
+    process.exit(1);
+  }
+  console.error(
+    `moon dimness PASS at ${width}x${height}: moonPeak ${snap.moonPeak.toFixed(4)} < mwPeak ${snap.mwPeak.toFixed(4)}`
+  );
+}
+
 const PANELS = ["hero", "fig-01", "systems", "experience", "patents", "skills", "contact"];
 
 async function cdpMain(args) {
@@ -690,11 +883,13 @@ try {
     selftest();
   } else if (args.includes("--cdp")) {
     await cdpMain(args);
+  } else if (args.includes("--moon")) {
+    await moonMain(args);
   } else if (args.includes("--print-browser-snippet")) {
     console.log(buildInjectedSource());
   } else if (import.meta.url === `file://${process.argv[1]}` || process.argv[1]?.endsWith("verify-contrast.mjs")) {
     console.log(
-      "usage: node scripts/verify-contrast.mjs --selftest | --cdp [--url U] [--samples N] | --print-browser-snippet"
+      "usage: node scripts/verify-contrast.mjs --selftest | --cdp [--url U] [--samples N] | --moon [--width W --height H] | --print-browser-snippet"
     );
   }
 } catch (err) {
