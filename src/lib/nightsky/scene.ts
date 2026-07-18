@@ -38,6 +38,7 @@
 // (including the Layer-0 blit destination rect and the star metadata
 // positions) use plain CSS-pixel coordinates.
 
+import { initConstellations, type ConstellationHandle } from './constellations';
 import { generateLayer0, type Layer0Result, type StarMeta } from './starfield';
 import { getSkyTokens, rgba, type SkyTokens } from './tokens';
 
@@ -112,6 +113,9 @@ let layer0: Layer0Result | null = null;
 let twinkles: TwinkleStar[] = [];
 let fireflies: Firefly[] = [];
 let tokens: SkyTokens | null = null;
+/** 05-05's constellation subsystem handle — its advance/draw ride THIS
+ * module's single rAF tick (drawFrame Layer 2c); it never owns a loop. */
+let constellationsHandle: ConstellationHandle | null = null;
 /** Monotonic generation counter — a resize that lands mid-generation
  * invalidates the in-flight result instead of adopting a stale size. */
 let generation = 0;
@@ -191,9 +195,10 @@ function advanceFirefly(f: Firefly, dtMs: number, cssWidth: number, cssHeight: n
 
 /**
  * One animated frame: blit Layer 0 FIRST, then Layer-2 work ONLY —
- * the twinkle subset and the firefly flock. Nothing else may ever be
- * added to the per-frame path except 05-05's constellation rendering
- * (which slots between the blit and the fireflies).
+ * the twinkle subset, the firefly flock, and the constellation hook
+ * (05-05: alpha tween + draw, riding this same tick — the constellation
+ * module never owns its own loop). Nothing else may ever be added to
+ * the per-frame path.
  */
 function drawFrame(ts: number): void {
   if (!visibleCtx || !layer0 || !tokens) return;
@@ -237,6 +242,13 @@ function drawFrame(ts: number): void {
     visibleCtx.arc(f.x, f.y, f.radius, 0, TWO_PI);
     visibleCtx.fill();
   }
+
+  // --- Layer 2c: constellations (05-05) — advance the brighten/dim
+  // tween, then draw stars + links at their current alphas. ---
+  if (constellationsHandle) {
+    constellationsHandle.advance(ts);
+    constellationsHandle.draw(visibleCtx, w, h, ts);
+  }
 }
 
 /**
@@ -269,12 +281,18 @@ function stopAnimationLoop(): void {
  * at its fixed base alpha, so the blit alone IS "all stars at base
  * alpha"; Layer 1 (camper + glow) is DOM/CSS in NightSky.astro. Twinkle
  * and fireflies are fully OFF here — removed, not dampened
- * (05-UI-SPEC.md reduced-motion table, WCAG C39).
+ * (05-UI-SPEC.md reduced-motion table, WCAG C39). Constellations DO
+ * appear, drawn at their instant current state (brighten/dim is
+ * essential wayfinding and still occurs under reduced motion, collapsed
+ * to a 0ms change — 05-05).
  */
 function renderStaticFrame(): void {
   if (!visibleCtx || !layer0) return;
   visibleCtx.clearRect(0, 0, layer0.cssWidth, layer0.cssHeight);
   visibleCtx.drawImage(layer0.canvas, 0, 0, layer0.cssWidth, layer0.cssHeight);
+  if (constellationsHandle) {
+    constellationsHandle.draw(visibleCtx, layer0.cssWidth, layer0.cssHeight, performance.now());
+  }
 }
 
 /**
@@ -350,7 +368,20 @@ export function initNightSky(root: HTMLElement): () => void {
   }
   visibleCanvas = canvas;
   visibleCtx = ctx;
-  tokens = getSkyTokens();
+  const skyTokens = getSkyTokens();
+  tokens = skyTokens;
+
+  // --- Constellation subsystem (05-05): initialized BEFORE this module's
+  // own listeners so its reduced-motion snap runs ahead of the scene's
+  // static repaint on an OS motion-preference flip. It registers its OWN
+  // independent 'nightsky:panel-change' listener for brighten/dim — the
+  // pause-gate listener below stays untouched. requestRepaint feeds the
+  // reduced-motion instant brighten/dim path one static frame. ---
+  constellationsHandle = initConstellations({
+    tokens: skyTokens,
+    getViewport: () => (layer0 ? { width: layer0.cssWidth, height: layer0.cssHeight } : null),
+    requestRepaint: renderStaticFrame,
+  });
 
   // --- Pause-signal listeners (SKY-04). The panel-change subscription is
   // by LITERAL event name — deck.ts is never imported (module-boundary
@@ -406,6 +437,8 @@ export function initNightSky(root: HTMLElement): () => void {
   return function teardown(): void {
     generation++; // invalidate any in-flight generation
     stopAnimationLoop();
+    constellationsHandle?.teardown();
+    constellationsHandle = null;
     document.removeEventListener('visibilitychange', onVisibilityChange);
     document.removeEventListener('nightsky:panel-change', onPanelChange);
     rm.removeEventListener('change', onMotionChange);
