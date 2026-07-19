@@ -272,7 +272,10 @@ function rgbLightness({ r, g, b }: RgbTriple): number {
   return (max + min) / 2;
 }
 
-function hslToRgb(h: number, s: number, l: number): RgbTriple {
+/** Standard HSL -> sRGB conversion. Exported since 09-01 so scene.ts's
+ * scintillation chromatic nudge (AMB-04) reuses this exact conversion
+ * rather than re-deriving it. */
+export function hslToRgb(h: number, s: number, l: number): RgbTriple {
   if (s === 0) {
     const v = Math.round(l * 255);
     return { r: v, g: v, b: v };

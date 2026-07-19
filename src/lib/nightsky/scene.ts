@@ -42,18 +42,42 @@
 import { initClouds, type CloudsHandle } from './clouds';
 import { initConstellations, type ConstellationHandle } from './constellations';
 import { initMeteors, type MeteorHandle } from './meteors';
-import { generateLayer0, type Layer0Result, type StarMeta } from './starfield';
-import { getSkyTokens, rgba, type SkyTokens } from './tokens';
+import { generateLayer0, hslToRgb, type Layer0Result, type StarMeta } from './starfield';
+import { getSkyTokens, rgba, type RgbTriple, type SkyTokens } from './tokens';
 
 const TWO_PI = Math.PI * 2;
 
 // --- Twinkle tuning (05-UI-SPEC.md "Ambient loop": ~40 stars, period
-// 2–4s random per star, amplitude ±0.15–0.25 around base alpha — never a
-// hard flicker; unsynchronized phases per 05-RESEARCH.md Pattern 2). ---
+// 2–4s random per star, unsynchronized phases per 05-RESEARCH.md
+// Pattern 2 — never a hard flicker). 09-01 (AMB-04): upgraded to a
+// 2-oscillator atmospheric-scintillation sum — the primary (slow)
+// amplitude is trimmed from 0.15–0.25 to 0.12–0.18 to make room for the
+// new fast flutter term (0.04–0.07 at 400–700ms), keeping the combined
+// peak envelope (~0.16–0.25) statistically inside today's total range:
+// more textured, not brighter or busier (09-UI-SPEC.md Scintillation). ---
 const TWINKLE_PERIOD_MIN_MS = 2000;
 const TWINKLE_PERIOD_MAX_MS = 4000;
-const TWINKLE_AMPLITUDE_MIN = 0.15;
-const TWINKLE_AMPLITUDE_MAX = 0.25;
+const TWINKLE_AMPLITUDE_MIN = 0.12;
+const TWINKLE_AMPLITUDE_MAX = 0.18;
+/** Secondary oscillator — the sub-second atmospheric flutter (AMB-04). */
+const TWINKLE_SEC_PERIOD_MIN_MS = 400;
+const TWINKLE_SEC_PERIOD_MAX_MS = 700;
+const TWINKLE_SEC_AMPLITUDE_MIN = 0.04;
+const TWINKLE_SEC_AMPLITUDE_MAX = 0.07;
+/** Chromatic nudge (AMB-04): ±8% absolute HSL-S delta on the 3 brightest
+ * pool entries ONLY, modulated at the SAME period/phase as each star's
+ * primary oscillator so color and brightness pulse together — real
+ * chromatic dispersion, never an independent color cycle. Saturation is
+ * clamped to jitterStarColor's own 0.3 cap, so the nudge stays a nudge,
+ * never a saturated color flash. */
+const CHROMATIC_S_DELTA = 0.08;
+/** Saturation ceiling for the chromatic nudge — mirrors starfield.ts's
+ * jitterStarColor cap (0.3), the existing "subtle tint, never strong
+ * color" bound. */
+const CHROMATIC_S_MAX = 0.3;
+/** 09-03's mobile-ladder tier-3 seam: dropping the chromatic nudge keeps
+ * the 2-oscillator amplitude wobble but holds color neutral. Default on. */
+let chromaticNudgeEnabled = true;
 /** Fraction of the Mid/Bright twinkle-eligible metadata actually animated.
  * Mid+Bright bands are ~13% of the total field (starfield.ts BANDS), so
  * halving lands at ~6.5% of all stars — inside the locked 5–8% window,
@@ -143,6 +167,14 @@ interface TwinkleStar extends StarMeta {
   periodMs: number;
   phase: number;
   amplitude: number;
+  /** Secondary (fast flutter) oscillator — AMB-04. */
+  secPeriodMs: number;
+  secPhase: number;
+  secAmplitude: number;
+  /** Present ONLY on the 3 largest-radius pool entries (deterministic per
+   * generation, never reselected per frame): the star's own base HSL, the
+   * anchor the ±8% saturation nudge swings around. */
+  chromatic?: { baseH: number; baseS: number; baseL: number };
 }
 
 interface Firefly {
@@ -231,6 +263,27 @@ function clamp01(v: number): number {
   return Math.min(1, Math.max(0, v));
 }
 
+/** Standard sRGB -> HSL (local helper for the chromatic nudge, AMB-04):
+ * derives a chromatic star's base HSL anchor from its own already-
+ * jittered color. The inverse conversion is starfield.ts's exported
+ * hslToRgb — reused verbatim, never re-derived (09-01-PLAN). */
+function rgbToHsl({ r, g, b }: RgbTriple): { h: number; s: number; l: number } {
+  const rn = r / 255;
+  const gn = g / 255;
+  const bn = b / 255;
+  const max = Math.max(rn, gn, bn);
+  const min = Math.min(rn, gn, bn);
+  const l = (max + min) / 2;
+  if (max === min) return { h: 0, s: 0, l };
+  const d = max - min;
+  const s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+  let h: number;
+  if (max === rn) h = (gn - bn) / d + (gn < bn ? 6 : 0);
+  else if (max === gn) h = (bn - rn) / d + 2;
+  else h = (rn - gn) / d + 4;
+  return { h: h * 60, s, l };
+}
+
 /** Draws the Mid/Bright twinkle subset from the Layer-0 star metadata:
  * per-star `alpha = baseAlpha + amplitude * sin(ts/period + phase)`
  * composited over the star's own baked-in disk (one sin + one arc per
@@ -256,8 +309,31 @@ function seedTwinkles(twinkleStars: StarMeta[]): void {
       periodMs: lerp(TWINKLE_PERIOD_MIN_MS, TWINKLE_PERIOD_MAX_MS, Math.random()),
       phase: Math.random() * TWO_PI,
       amplitude: lerp(TWINKLE_AMPLITUDE_MIN, TWINKLE_AMPLITUDE_MAX, Math.random()),
+      secPeriodMs: lerp(TWINKLE_SEC_PERIOD_MIN_MS, TWINKLE_SEC_PERIOD_MAX_MS, Math.random()),
+      secPhase: Math.random() * TWO_PI,
+      secAmplitude: lerp(TWINKLE_SEC_AMPLITUDE_MIN, TWINKLE_SEC_AMPLITUDE_MAX, Math.random()),
     });
   }
+  // Chromatic nudge selection (AMB-04): the 3 largest-radius entries,
+  // picked ONCE per generation — deterministic for this pool, never
+  // reselected per frame (avoids a "which star is doing it" flicker).
+  // If a star is effectively neutral (S near 0), it borrows a hue from
+  // starfield's existing jitterStarColor cool/warm pair (210° / 35°),
+  // alternated across the 3 so the trio never pulses one temperature.
+  const byRadiusDesc = twinkles
+    .map((_, i) => i)
+    .sort((a, b) => twinkles[b].radius - twinkles[a].radius)
+    .slice(0, 3);
+  byRadiusDesc.forEach((idx, k) => {
+    const star = twinkles[idx];
+    const { h, s, l } = rgbToHsl(star.color);
+    const neutral = s < 0.02;
+    star.chromatic = {
+      baseH: neutral ? (k % 2 === 0 ? 210 : 35) : h,
+      baseS: s,
+      baseL: l,
+    };
+  });
 }
 
 /** (Re)seeds the firefly flock inside the bottom-25% ground band, confined
@@ -349,11 +425,28 @@ function drawFrame(ts: number): void {
     cloudsHandle.draw(visibleCtx, w, h);
   }
 
-  // --- Layer 2a: twinkle subset (unsynchronized sine alpha wobble). ---
+  // --- Layer 2a: twinkle subset — 2-oscillator atmospheric scintillation
+  // (09-01, AMB-04): slow wobble + fast flutter summed per star, plus the
+  // bounded chromatic saturation nudge on the 3 brightest only. Same
+  // count, same margin containment, no new draw calls or arcs. ---
   for (const s of twinkles) {
-    const alpha = clamp01(s.baseAlpha + s.amplitude * Math.sin(ts / s.periodMs + s.phase));
+    const alpha = clamp01(
+      s.baseAlpha +
+        s.amplitude * Math.sin(ts / s.periodMs + s.phase) +
+        s.secAmplitude * Math.sin(ts / s.secPeriodMs + s.secPhase)
+    );
+    let color = s.color;
+    if (chromaticNudgeEnabled && s.chromatic) {
+      // SAME period/phase as the primary oscillator — color and
+      // brightness pulse together (chromatic dispersion, not a cycle).
+      const sat = Math.min(
+        CHROMATIC_S_MAX,
+        Math.max(0, s.chromatic.baseS + CHROMATIC_S_DELTA * Math.sin(ts / s.periodMs + s.phase))
+      );
+      color = hslToRgb(s.chromatic.baseH, sat, s.chromatic.baseL);
+    }
     visibleCtx.beginPath();
-    visibleCtx.fillStyle = rgba(s.color, alpha);
+    visibleCtx.fillStyle = rgba(color, alpha);
     visibleCtx.arc(s.x, s.y, s.radius, 0, TWO_PI);
     visibleCtx.fill();
   }
