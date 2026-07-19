@@ -1,0 +1,52 @@
+[soak] 08-03 GLS-04 real-page soak — 60s per run, 1440x900 DPR1, headless=new (software raster)
+[soak] url: http://localhost:4321/
+[soak] viewport 1440x900 @dpr1
+[soak] warm-up: 15s unmeasured settle
+
+[soak] baseline: real page, reduced-transparency (glass off)
+[soak] reduced-transparency matches: true | live glass surfaces: 0 [] | active panel bf: none | header bf: none
+[soak] done: CPU 6.80% | task 4.082s / wall 60.0s | script 1.827s | layout 0.000s | longtasks 0 | fps 60.0 | tree CPU 30.00%
+
+[soak] glass: real page, no-preference (glass live)
+[soak] reduced-transparency matches: false | live glass surfaces: 4 [header, #hero, button.deck-index-toggle, footer] | active panel bf: blur(12px) saturate(1.5) brightness(0.9) | header bf: blur(10px) saturate(1.4) brightness(0.92)
+[soak] done: CPU 6.10% | task 3.662s / wall 60.0s | script 1.591s | layout 0.000s | longtasks 0 | fps 60.0 | tree CPU 36.67%
+
+| run                                                   | glass surfaces | wall (s) | TaskDur Δ (s) | CPU % | ScriptDur Δ (s) | LayoutDur Δ (s) | long tasks | fps  | tree CPU % |
+| baseline: real page, reduced-transparency (glass off) | 0              | 60.0     | 4.082         | 6.80  | 1.827           | 0.000           | 0          | 60.0 | 30.00      |
+| glass: real page, no-preference (glass live)          | 4              | 60.0     | 3.662         | 6.10  | 1.591           | 0.000           | 0          | 60.0 | 36.67      |
+
+MARGINAL (glass - baseline): -0.70 percentage points (Spike-2 projection: +0.47pp)
+TOTAL with glass:            6.10% (floor: total < 10%)
+tree-CPU cross-check:        marginal +6.68p (whole Chrome process tree incl. compositor/viz: 30.00% -> 36.67%)
+
+{
+  "runs": [
+    {
+      "label": "baseline: real page, reduced-transparency (glass off)",
+      "glassSurfaces": 0,
+      "reducedMatches": true,
+      "wallS": 60.008024999988265,
+      "taskS": 4.081874,
+      "cpuPct": 6.802213537274053,
+      "scriptS": 1.82737,
+      "layoutS": 0.00044,
+      "longTasks": 0,
+      "fps": 60.00864051101006,
+      "treeCpuPct": 29.995327609165763
+    },
+    {
+      "label": "glass: real page, no-preference (glass live)",
+      "glassSurfaces": 4,
+      "reducedMatches": false,
+      "wallS": 60.01207799999975,
+      "taskS": 3.6618210000000007,
+      "cpuPct": 6.101806706310047,
+      "scriptS": 1.591145,
+      "layoutS": 0.00040899999999999986,
+      "longTasks": 0,
+      "fps": 60.004587743154225,
+      "treeCpuPct": 36.67352600592347
+    }
+  ],
+  "marginalPct": -0.7004068309640061
+}
