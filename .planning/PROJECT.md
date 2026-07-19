@@ -8,23 +8,15 @@ A personal portfolio site for Prateek Kumar (SDE 2 at Microsoft; previously AWS 
 
 Within seconds of landing, a senior engineering leader should think "this person operates at our level" — credibility delivered through demonstrated craft (a live systems demo), not adjectives.
 
-## Current State (v2.0 shipped 2026-07-18)
+## Current State (v3.0 shipped 2026-07-19)
 
-**Live at https://p2401kumar.github.io** — the v2.0 "Night Sky" experience: a zero-light-pollution night scene (pre-rendered starfield + Milky Way, camper silhouette with copper glow, crescent moon, fireflies, occasional meteors) behind a no-scroll panel deck cycling all seven CV sections, with career-chapter constellations that brighten per panel. Fig. 01 lives as a panel with its full v1 checklist re-verified embedded (36/36). Live Lighthouse: mobile 98/100/100/100, desktop 100×4. Case studies remain scene-free editorial pages; "view classic" + no-JS fallback restore the v1 scrolling layout. Tags `v1.0` and `v2.0`; 2021 site preserved as `legacy-2021`.
+**Live at https://p2401kumar.github.io** — the v3.0 "Real Sky" experience: a real NOIRLab Milky Way astrophotograph (composited/graded at build time, 81KB AVIF, banding-proven, CC BY 4.0 credited) behind frosted-glass content chrome (13 `--glass-*` tokens, two tiers, screenshot-verified contrast) and a living ambient scene — drifting clouds, panel-change parallax, breathing aurora, atmospheric scintillation — while the authored overlay (career constellations, meteors, drawn crescent moon) survives on the real sky. **Live Lighthouse: 100×8 (all four categories, both presets)**, LCP 1.5s mobile, idle CPU 6.39% with everything running. Case studies stay scene-free; view-classic + no-JS fall back to the v1-style page. Tags `v1.0`, `v2.0`, `v3.0`; 2021 site on `legacy-2021`.
 
-Milestone stats: 4 phases (4, 5, 5.1 inserted, 6), 12 plans, all 22 v2.0 requirements complete and verified (archives: `milestones/v2.0-*`). Codebase: Astro 7.0.7 static; `src/lib/fig01/` + `src/lib/nightsky/` canvas engines (one rAF loop each, event-contract coupling only); zero new dependencies added in v2.0. Deploys on push to `main` via GitHub Actions.
+Milestone stats: 4 phases (7-10), 12 plans, all 18 v3.0 requirements complete and verified (archives: `milestones/v3.0-*`). Two empirical spikes de-risked the milestone before build (banding; glass-over-animating-canvas CPU — the re-scope trigger that never fired). Codebase: Astro 7.0.7 static; `src/lib/fig01/` + `src/lib/nightsky/` engines (one rAF each, event-name coupling only, pause machine covers all ambient); **zero new dependencies across v2 AND v3**. Deploys on push to `main` via GitHub Actions.
 
-## Current Milestone: v3.0 Real Sky
+## Current Milestone: none (between milestones)
 
-**Goal (user, 2026-07-18):** "Improve the background. glassy look, real sky. use images by combining real images. add real life animations. bring realism to life." — The night scene graduates from procedural drawing to a composited real-astrophotography sky with a full frosted-glass content system floating over it, and ambient realism animations that make the scene feel alive without breaking a single floor.
-
-**Locked direction (user Q&A, 2026-07-18):**
-- **Sky source:** real photo base + authored overlay — a real Milky Way panorama (NASA/ESO-class astrophotography, composited from real images) becomes the sky; the career constellations, meteors, and crescent moon remain a drawn layer on top (the personal star map survives on a real sky)
-- **Glass:** FULL glass system — content panels, header/footer, and jump index all become frosted-glass surfaces (backdrop blur, translucency, hairline light edges) over the photo
-- **Real-life animations (all four):** drifting clouds/haze layers · parallax depth between sky/horizon/foreground on panel change · faint breathing aurora shimmer · atmospheric star scintillation (replaces the simple alpha twinkle)
-- **Floors:** ALL v2 floors carry forward (Lighthouse ≥90 ×4 both presets, reduced-motion full-stop, contrast ≥4.5:1 worst-case, honesty gate, idle CPU <10%) + a small photo-credit line (e.g. "Sky: ESO/S. Brunier, CC BY 4.0") in the footer/colophon — attribution as an extension of the honesty discipline
-
-**Known tensions research must resolve:** ambient-animation budget (4 systems + fireflies + beams + meteors vs <10% idle CPU — the one-active-animation doctrine evolves into a bounded-ambient-set + pause machine), backdrop-filter cost over large imagery, dark-photo banding on 8-bit displays, LCP with a full-viewport photo, DPR strategy for photos (crispness on 4K vs weight), reduced-transparency preference handling for glass.
+v3.0 closed 2026-07-19. Backlog candidates live in Future candidates below and REQUIREMENTS.md Future Requirements. Open post-launch items: retire/redirect the old `/home` repo (tracked since v1); user-run real-device touch checklist incl. v3 additions (glass on iOS Safari, photo on cellular, parallax feel, idle warmth) — documented in `milestones/v3.0-phases/10-integration-launch/10-01-LAUNCH-READINESS.md` §6, rollback path §5.
 
 Open post-launch items from v2.0 (unchanged): retire/redirect the old `/home` repo; user-run real-device touch checklist + 5-min idle-CPU check (documented in `milestones/v2.0-phases/06-integration-launch/06-01-LAUNCH-READINESS.md` §5–6).
 
@@ -44,13 +36,15 @@ Open post-launch items from v2.0 (unchanged): retire/redirect the old `/home` re
 - ✓ CV as overlay: no-scroll deck (wheel/swipe/keys/jump index), hash routing + back/forward, Fig. 01 as a panel, classic + no-JS fallbacks — v2.0
 - ✓ Floors carried forward: live Lighthouse ≥90 ×4 both presets, reduced-motion static frame, keyboard operable, honesty gate, worst-case contrast ≥4.5:1 — v2.0
 
+- ✓ Real composited sky: NOIRLab `noirlab2430b` build-time composite (crop/grade/vignette/seam), AVIF 10-bit + WebP, banding-proven, CC BY 4.0 credit line — v3.0
+- ✓ Authored overlay survives on the photo: constellations + panel brightening, meteors, drawn crescent moon (photo moon rejected on physics) — v3.0
+- ✓ Full glass system: panels (2 tiers) + header/footer + jump index, 13 tokens, screenshot-sampled contrast verifier, @supports/reduced-transparency/print ladders — v3.0
+- ✓ Living sky: clouds (column-attenuated), physically-honest parallax, left-margin aurora (luminance-capped), scintillation — all in one rAF + pause machine, 6.39% idle, mobile shed ladder — v3.0
+- ✓ Floors at launch: LIVE Lighthouse 100×8, reduced-motion byte-identical still, contrast ≥4.5:1 every surface both viewports, honesty gate + attribution — v3.0
+
 ### Active
 
-- [ ] Real composited sky: full-viewport real-astrophotography Milky Way panorama (combined real images), AVIF/WebP optimized, no banding, credit line rendered
-- [ ] Authored overlay survives: career constellations, meteors, crescent moon drawn over the photo sky; panel-reactive brightening intact
-- [ ] Full glass system: panels, header/footer, jump index as frosted-glass surfaces (backdrop blur + translucency + hairline light edges) passing contrast floors
-- [ ] Real-life animations: drifting clouds/haze, parallax depth on panel change, faint aurora shimmer, atmospheric star scintillation — all inside the idle-CPU and reduced-motion floors
-- [ ] Floors: Lighthouse ≥90 ×4 live both presets, reduced-motion full-stop, contrast ≥4.5:1 worst-case, honesty gate + photo attribution
+*(none — between milestones)*
 
 **Future candidates (not this milestone):**
 - Notes/writing section (NOTE-01) — only once a content pipeline exists
@@ -106,6 +100,11 @@ Open post-launch items from v2.0 (unchanged): retire/redirect the old `/home` re
 | Zero-dep procedural sky (spike-validated scatter+gradient, no noise lib, no NASA imagery) | Spike passed the banding bar first try; 0 bytes vs 400KB+ image; DPR-perfect; authored constellations need procedural stars | ✓ Good (v2.0 — Milky Way + moon + meteors, 0 new deps) |
 | One rAF per engine, event-name-only coupling (`nightsky:panel-change`), scene pauses when hidden/fig01-active | One-active-animation doctrine scaled from v1; grep-enforced module boundary kept both engines independent | ✓ Good (v2.0 — idle 5.6% CPU @60fps; TBT 0–170ms) |
 | Deploy gated on explicit user go despite autonomous mode (fix-2-edges-then-launch chosen) | Replacing the live professional site is outward-facing; user gated the v1 equivalent personally | ✓ Good (v2.0 — launched with both fixes verified live 11/11) |
+| v3.0 real photo as static `<img>`, never canvas (LCP + no-JS floors decide architecture) | Canvas-drawn photo would break LCP discoverability AND the DECK-07 no-JS floor | ✓ Good (v3.0 — live LCP 1.5s mobile, photo present no-JS) |
+| Spike-first for both v3 unknowns (banding; glass-CPU re-scope trigger) before any build | v2's Milky-Way-spike pattern; banding/CPU baked in late = costliest discoveries | ✓ Good (v3.0 — both passed; re-scope never fired; +0.47pp measured) |
+| Contrast verifier re-architected to screenshot sampling BEFORE glass values locked | Analytic compositing cannot model a blur kernel; silent unverified floors unacceptable | ✓ Good (v3.0 — caught 2 pre-existing failures on first run) |
+| Physically-honest parallax (ground moves, sky at infinity doesn't; canvas never CSS-transformed) | Real physics + dissolves margin-math/re-blur/contrast-geometry traps simultaneously | ✓ Good (v3.0 — parallax ships, zero canvas transforms) |
+| v3 launch: "Launch now" chosen at the gate (20/21 green, no user-facing defects) | Same explicit-go doctrine; pack led with before/after heroes for a 60-second call | ✓ Good (v3.0 — live Lighthouse 100×8, 13/13 smoke) |
 
 ## Evolution
 
@@ -125,4 +124,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-07-18 after v2.0 milestone completion (shipped + live-verified)*
+*Last updated: 2026-07-19 after v3.0 milestone completion (shipped + live-verified, Lighthouse 100×8)*
