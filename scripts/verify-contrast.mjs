@@ -1296,25 +1296,71 @@ function sampleAuroraOnce() {
   };
 
   // Aurora sample: canvas pixels source-over-composited onto the photo
-  // pixels behind them — the luminance a viewer actually sees.
+  // pixels behind them — the luminance a viewer actually sees — with a
+  // POINT-FEATURE EROSION so the peak measures the AURORA (a broad,
+  // spatially-smooth area fill), not the pre-existing bright point
+  // features that share the left-margin box (the margin-confined
+  // twinkle/constellation stars and the moon crescent, all of which
+  // pre-date the aurora and carry their own gates; a raw un-eroded box
+  // peak fails against mwPeak even with the aurora removed entirely).
+  // Erosion = separable min filter over a ~7-CSS-px window: any feature
+  // narrower than the window (star disks <= ~5 CSS px) is eliminated,
+  // while the aurora's slow-varying luminance is untouched — so an
+  // aurora alpha regression (a broad TOO-BRIGHT fill) still fails the
+  // gate; only sub-window POINTS are excluded. The raw peak is returned
+  // alongside for transparency, never asserted.
   const compositedPeakOf = (x0, y0, x1, y1) => {
     const { dx0, dy0, dw, dh } = deviceRect(x0, y0, x1, y1);
     const scene = ctx.getImageData(dx0, dy0, dw, dh);
     const photo = photoCtx.getImageData(dx0, dy0, dw, dh);
-    let peak = 0;
-    let px = null;
-    for (let i = 0; i < scene.data.length; i += 4) {
+    const lum = new Float32Array(dw * dh);
+    const rgb = new Uint8ClampedArray(dw * dh * 3);
+    let rawPeak = 0;
+    let rawPx = null;
+    for (let i = 0, j = 0; i < scene.data.length; i += 4, j++) {
       const a = scene.data[i + 3] / 255;
       const r = a * scene.data[i] + (1 - a) * photo.data[i];
       const g = a * scene.data[i + 1] + (1 - a) * photo.data[i + 1];
       const b = a * scene.data[i + 2] + (1 - a) * photo.data[i + 2];
       const l = relativeLuminance(r, g, b);
-      if (l > peak) {
-        peak = l;
-        px = [Math.round(r), Math.round(g), Math.round(b)];
+      lum[j] = l;
+      rgb[j * 3] = r;
+      rgb[j * 3 + 1] = g;
+      rgb[j * 3 + 2] = b;
+      if (l > rawPeak) {
+        rawPeak = l;
+        rawPx = [Math.round(r), Math.round(g), Math.round(b)];
       }
     }
-    return { peak, px };
+    // Separable erosion: min over rows, then min over columns.
+    const rad = Math.max(3, Math.round(3.5 * dprX)); // ~7 CSS px window
+    const rowMin = new Float32Array(dw * dh);
+    for (let y = 0; y < dh; y++) {
+      const off = y * dw;
+      for (let x = 0; x < dw; x++) {
+        let m = Infinity;
+        const lo = Math.max(0, x - rad);
+        const hi = Math.min(dw - 1, x + rad);
+        for (let k = lo; k <= hi; k++) if (lum[off + k] < m) m = lum[off + k];
+        rowMin[off + x] = m;
+      }
+    }
+    let peak = 0;
+    let peakIdx = 0;
+    for (let y = 0; y < dh; y++) {
+      const lo = Math.max(0, y - rad);
+      const hi = Math.min(dh - 1, y + rad);
+      for (let x = 0; x < dw; x++) {
+        let m = Infinity;
+        for (let k = lo; k <= hi; k++) if (rowMin[k * dw + x] < m) m = rowMin[k * dw + x];
+        if (m > peak) {
+          peak = m;
+          peakIdx = y * dw + x;
+        }
+      }
+    }
+    const px = [rgb[peakIdx * 3], rgb[peakIdx * 3 + 1], rgb[peakIdx * 3 + 2]];
+    return { peak, px, rawPeak, rawPx, erosionRadiusDevicePx: rad };
   };
 
   // MW-core sample: the PHOTO's own brightest galactic-core pixel.
@@ -1348,6 +1394,12 @@ function sampleAuroraOnce() {
     boxesOverlap: auroraBox.x1 > mwBox.x0,
     auroraPeak: aurora.peak,
     auroraPeakPixel: aurora.px,
+    // Raw (un-eroded) box peak — transparency only, never asserted: it
+    // is dominated by the pre-existing point features (stars/moon) that
+    // share the box and carry their own gates.
+    auroraPeakRaw: aurora.rawPeak,
+    auroraPeakRawPixel: aurora.rawPx,
+    erosionRadiusDevicePx: aurora.erosionRadiusDevicePx,
     mwPeak: mw.peak,
     mwPeakPixel: mw.px,
   };
@@ -1410,7 +1462,13 @@ async function auroraMain(args) {
       sampleCount++;
       if (snap.boxesOverlap) overlap = true;
       if (!maxAurora || snap.auroraPeak > maxAurora.auroraPeak) {
-        maxAurora = { auroraPeak: snap.auroraPeak, auroraPeakPixel: snap.auroraPeakPixel, atSample: s };
+        maxAurora = {
+          auroraPeak: snap.auroraPeak,
+          auroraPeakPixel: snap.auroraPeakPixel,
+          auroraPeakRaw: snap.auroraPeakRaw,
+          auroraPeakRawPixel: snap.auroraPeakRawPixel,
+          atSample: s,
+        };
       }
       // mwPeak is photo-static — keep the latest snapshot for reporting.
       mwSnap = snap;
@@ -1455,6 +1513,9 @@ async function auroraMain(args) {
         },
         auroraPeak: maxAurora.auroraPeak,
         auroraPeakPixel: maxAurora.auroraPeakPixel,
+        auroraPeakRaw: maxAurora.auroraPeakRaw,
+        auroraPeakRawPixel: maxAurora.auroraPeakRawPixel,
+        erosionRadiusDevicePx: mwSnap.erosionRadiusDevicePx,
         auroraPeakAtSample: maxAurora.atSample,
         mwPeak: mwSnap.mwPeak,
         mwPeakPixel: mwSnap.mwPeakPixel,
