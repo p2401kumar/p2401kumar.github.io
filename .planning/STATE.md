@@ -5,15 +5,15 @@ milestone_name: Real Sky
 current_phase: 8
 current_phase_name: Glass System
 status: executing_phase
-stopped_at: 08-01 complete (GLS-03 verifier re-architecture + pre-glass baseline) — next execute 08-02 (glass application + gate)
-last_updated: "2026-07-19T14:43:35.138Z"
+stopped_at: 08-02 complete (glass tokens + application + gate PASS) — next execute 08-03 (CPU re-proof + Lighthouse)
+last_updated: "2026-07-19T16:20:00.000Z"
 last_activity: 2026-07-19
-last_activity_desc: "08-01 executed: --cdp-screenshot gate + agreement selftest + pre-glass baseline (2 pre-existing shortfalls recorded)"
+last_activity_desc: "08-02 executed: 13 glass tokens + glass application + screenshot gate PASS both viewports (commits 943baea/a8191db/2e1d213)"
 progress:
   total_phases: 4
   completed_phases: 1
   total_plans: 7
-  completed_plans: 5
+  completed_plans: 7
   percent: 25
 ---
 
@@ -28,10 +28,10 @@ See: .planning/PROJECT.md (updated 2026-07-18)
 
 ## Current Position
 
-Phase: 8 (Glass System) — in progress (1/3 plans complete)
-Plan: 08-01 COMPLETE — next 08-02 (glass application + gate)
-Status: GLS-03 delivered — --cdp-screenshot is THE Phase-8 contrast gate (DPR1, panels + header/footer/jump-index, sweep-armed); agreement selftest committed (solid Δ0.0005, glass divergence 6.68); pre-glass baseline recorded at true 1280×800/1440×900. Two pre-existing shortfalls on record for 08-02: experience 3.636 over camper glow @1280×800, header <b> 4.335 @1440×900.
-Last activity: 2026-07-19 — 08-01 executed: verifier re-architecture + baseline (commits 882ea09/99fca0b/cbc34da)
+Phase: 8 (Glass System) — in progress (2/3 plans complete)
+Plan: 08-02 COMPLETE — next 08-03 (real-page CPU re-proof + Lighthouse re-run)
+Status: GLS-01 + GLS-02 delivered, GLS-03 arbitration satisfied — 13 --glass-* tokens live; glass on active panels (tier-1/tier-2 per UI-SPEC starting assignment, ZERO escalations needed), header/footer (body.has-sky-scoped), jump-index pill+list; @supports/reduced-transparency/print ladders proven via CDP emulation. Screenshot gate exit 0 at BOTH true viewports; both 08-01 pre-existing failures cleared (experience 3.636→12.115 @1280, header 4.335→6.234 @1440). Two real bugs found+fixed en route: lightningcss stripping the backdrop-filter pair from dist (build.cssTarget pinned) and DeckIndex trapped under the footer glass by .deck's stacking context (relocated outside .deck).
+Last activity: 2026-07-19 — 08-02 executed: glass tokens + application + gate (commits 943baea/a8191db/2e1d213)
 
 ## Performance Metrics
 
@@ -101,6 +101,7 @@ Last activity: 2026-07-19 — 08-01 executed: verifier re-architecture + baselin
 | Phase 7 P3 | 120min | 4 tasks | 16 files |
 | Phase 07 P04 | 35min | 3 tasks | 13 files |
 | Phase 08 P01 | 25min | 3 tasks | 4 files |
+| Phase 08 P02 | 85min | 2 tasks | 12 files |
 
 ## Accumulated Context
 
@@ -180,6 +181,11 @@ Recent decisions affecting current work:
 - [Phase 08]: 08-01: contrast gate is DPR1-only screenshot mode (--cdp-screenshot); analytic --cdp downgraded to fast dev-loop tool
 - [Phase 08]: 08-01: screenshot baseline at true CSS-px viewports supersedes the 4.58/12.22 analytic family — legacy --window-size viewports were mislabeled (1440,900 -> 1424x805 effective); at identical true viewports the modes agree within 0.46
 - [Phase 08]: 08-01: two pre-existing shortfalls recorded, NOT fixed (zero product CSS this plan): experience li over pulsing camper glow 3.636 @1280x800 (analytic mode architecturally blind to Layer-1 DOM siblings), header <b> 4.335 @1440x900 (first-ever chrome measurement) — 08-02's gate owns the fix decisions
+- [Phase 08]: 08-02: tier assignment shipped exactly as the UI-SPEC starting classification — gate passed both viewports first run, zero escalations; tier-2 fill alone cleared experience-over-camper-glow (no glow alpha reduction), chrome brightness(0.92) alone cleared the header (no chrome→tier-2 move)
+- [Phase 08]: 08-02: glass fills use background-color longhand (not the background shorthand) so the classic-mode SKY-05 scrim gradient survives — UI-SPEC scrim lock honored in both modes
+- [Phase 08]: 08-02: vite build.cssTarget pinned (chrome110/edge110/firefox115/safari15.4/ios15.4) — Vite 8's lightningcss minifier otherwise collapses -webkit-/standard backdrop-filter pairs to a single last-wins property in shipped CSS
+- [Phase 08]: 08-02: print strip carries !important (sole use in codebase) — Astro attribute-scoped glass rules out-specify any plain @media print rule
+- [Phase 08]: 08-02: DeckIndex relocated OUTSIDE .deck (PanelDeck.astro) + deck.ts hooks document-scoped — .deck's fixed z-1 stacking context trapped the z-21 pill/hint/links beneath the z-20 footer, whose new glass blurred them into its backdrop (gate architecturally blind to glyph smearing; caught by visual evidence)
 
 ### Pending Todos
 
@@ -212,13 +218,13 @@ Items acknowledged and carried forward:
 
 ## Session Continuity
 
-Last session: 2026-07-19T14:43:20.630Z
-Stopped at: Completed 08-01-PLAN.md (GLS-03 verifier + pre-glass baseline)
+Last session: 2026-07-19T16:20:00.000Z
+Stopped at: Completed 08-02-PLAN.md (glass tokens + application + gate)
 Resume file: None
 
 ## Operator Next Steps
 
 - Phase 7 is closed — review the visual sign-off evidence at your leisure (`.planning/phases/07-real-sky-foundation/07-04-visual-signoff.md` + `integration-evidence/07-04-*.png`); async veto stays open until the Phase 10 deploy (re-run build-sky.mjs / adjust object-position to revise)
-- Execute 08-02 (glass application + gate) — judged against the new screenshot baseline (`08-01-baseline-contrast.md`); it must also resolve the two recorded pre-existing shortfalls (experience-over-camper-glow @1280×800, header identity line @1440×900)
+- Execute 08-03 (GLS-04: 60s real-page CPU idle soak + Lighthouse both presets ≥90 with glass live) — glass evidence for review at `.planning/phases/08-glass-system/glass-evidence/` and the gate record at `08-02-glass-gate.md`
 - Before the Phase 10 ship: manually browser-verify the NOIRLab license page (noirlab.edu/public/copyright/) — the IMG-04 "before ship" clause (STATE blocker)
 - (Carried from v2.0 close) retire/redirect the old `p2401kumar.github.io/home` repo; run the live-site real-device touch + 5-min idle-CPU check at your leisure (06-01-LAUNCH-READINESS.md §5–6)
