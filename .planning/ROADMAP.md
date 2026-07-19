@@ -114,7 +114,10 @@ Full details: [milestones/v2.0-ROADMAP.md](milestones/v2.0-ROADMAP.md) · Phase 
   - **Budget re-proof**: per-system frame-cost profiling; the full ambient set + glass must re-prove idle <10% CPU. Validate the mobile ladder in order (drop far cloud layer → throttle aurora → drop color nudge; NEVER drop parallax).
   - **Reduced-motion**: always full-stop — one static frame, no exceptions.
 
-**Plans**: TBD
+**Plans**: 3 plans
+- [ ] 09-01-PLAN.md — Clouds + scintillation + parallax (tick-native systems: idle-queue extraction, clouds sprite module + column governor, 2-oscillator scintillation, camper/cloud parallax nudge)
+- [ ] 09-02-PLAN.md — Aurora + luminance gate (--aurora token, noise-curtain aurora over-moon/before-clouds, verify-contrast --aurora mode asserting auroraPeak < mwPeak both viewports)
+- [ ] 09-03-PLAN.md — Doctrine battery + close-out (mobile shed ladder, full ambient soak <10%, contrast/aurora/banding/Lighthouse/pause/reduced-motion battery, requirements + roadmap close-out)
 **UI hint**: yes
 
 ### Phase 10: Integration & Launch
