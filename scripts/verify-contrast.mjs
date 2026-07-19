@@ -97,6 +97,18 @@
 //     each (moonPeak, mwPeak) and asserts moonPeak < mwPeak strictly.
 //     Exits non-zero on failure.
 //
+//   node scripts/verify-contrast.mjs --aurora [--url http://localhost:4321/]
+//                                    [--width 1440] [--height 900]
+//                                    [--samples 24] [--interval 900]
+//     09-02 (AMB-03) aurora luminance-ceiling assertion: sibling of --moon
+//     (self-contained sampler; the locked moon path is untouched). Samples
+//     the aurora bounding box's composited peak (canvas over photo) and
+//     the photo's MW-core peak, taking the MAX aurora peak across a
+//     sampling window >= one full ~20s breathing period (samples*interval
+//     >= 21000ms enforced) so the envelope peak is provably observed.
+//     Asserts max(auroraPeak) < mwPeak strictly; run at BOTH reference
+//     viewports with explicit dimensions. Exits non-zero on failure.
+//
 // WCAG references implemented verbatim (do not hand-roll variants):
 //   relative luminance  https://www.w3.org/WAI/GL/wiki/Relative_luminance
 //   contrast ratio      WCAG 2.2 SC 1.4.3 (L1 + 0.05) / (L2 + 0.05)
@@ -1237,6 +1249,233 @@ async function moonMain(args) {
   );
 }
 
+// ---------------------------------------------------------------------------
+// --aurora mode (09-02, AMB-03): the aurora bounding box's composited peak
+// luminance must stay STRICTLY below the photo's Milky-Way-core peak, per
+// viewport. Sibling of --moon — sampleAuroraOnce is SELF-CONTAINED (its own
+// inline deviceRect/compositedPeakOf/photoPeakOf mirroring sampleMoonOnce)
+// so the locked moon path is untouched. The breathing peak (alpha envelope
+// 0.07-0.17, ~20s period, in-code ceiling 0.20) is provably observed by
+// auroraMain's MAX-over-a-full-cycle sampling: any window >= the period
+// contains the envelope peak, so the running maximum across N samples with
+// N*I >= ~21s reflects the brightest breathing moment.
+// ---------------------------------------------------------------------------
+
+function sampleAuroraOnce() {
+  const canvas = document.querySelector("#nightsky-canvas");
+  if (!canvas) return { error: "no #nightsky-canvas" };
+  const ctx = canvas.getContext("2d", { willReadFrequently: true });
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  const dprX = canvas.width / w;
+  const dprY = canvas.height / h;
+
+  // Photo comparator (bottom layer) — the aurora is drawn on the canvas
+  // over the transparent Layer-0 region, so its visible luminance is the
+  // canvas pixel source-over-composited onto the photo behind it.
+  const photoCtx = makePhotoCanvas(canvas.width, canvas.height);
+  if (!photoCtx) return { error: "no decoded .sky-photo img (photo comparator unavailable)" };
+
+  // Aurora bounding box — aurora.ts's documented geometry mirrored here:
+  // x from 8 to (columnLeft - 8) via the same deck.css pad/half column
+  // formula; y from 0.49H (the highest breathing top extent) to 0.85H
+  // (the fixed horizon base).
+  const pad = Math.min(32, Math.max(18, w * 0.04));
+  const half = Math.min(880, w - 2 * pad) / 2;
+  const columnLeft = w / 2 - half;
+  const auroraBox = { x0: 8, y0: 0.49 * h, x1: columnLeft - 8, y1: 0.85 * h };
+  // The SAME Milky-Way-core comparator box the moon gate uses.
+  const mwBox = { x0: 0.8 * w, y0: 0.3 * h, x1: 0.98 * w, y1: 0.6 * h };
+
+  const deviceRect = (x0, y0, x1, y1) => {
+    const dx0 = Math.max(0, Math.round(x0 * dprX));
+    const dy0 = Math.max(0, Math.round(y0 * dprY));
+    const dw = Math.max(1, Math.min(canvas.width - dx0, Math.round((x1 - x0) * dprX)));
+    const dh = Math.max(1, Math.min(canvas.height - dy0, Math.round((y1 - y0) * dprY)));
+    return { dx0, dy0, dw, dh };
+  };
+
+  // Aurora sample: canvas pixels source-over-composited onto the photo
+  // pixels behind them — the luminance a viewer actually sees.
+  const compositedPeakOf = (x0, y0, x1, y1) => {
+    const { dx0, dy0, dw, dh } = deviceRect(x0, y0, x1, y1);
+    const scene = ctx.getImageData(dx0, dy0, dw, dh);
+    const photo = photoCtx.getImageData(dx0, dy0, dw, dh);
+    let peak = 0;
+    let px = null;
+    for (let i = 0; i < scene.data.length; i += 4) {
+      const a = scene.data[i + 3] / 255;
+      const r = a * scene.data[i] + (1 - a) * photo.data[i];
+      const g = a * scene.data[i + 1] + (1 - a) * photo.data[i + 1];
+      const b = a * scene.data[i + 2] + (1 - a) * photo.data[i + 2];
+      const l = relativeLuminance(r, g, b);
+      if (l > peak) {
+        peak = l;
+        px = [Math.round(r), Math.round(g), Math.round(b)];
+      }
+    }
+    return { peak, px };
+  };
+
+  // MW-core sample: the PHOTO's own brightest galactic-core pixel.
+  const photoPeakOf = (x0, y0, x1, y1) => {
+    const { dx0, dy0, dw, dh } = deviceRect(x0, y0, x1, y1);
+    const region = photoCtx.getImageData(dx0, dy0, dw, dh);
+    let peak = 0;
+    let px = null;
+    for (let i = 0; i < region.data.length; i += 4) {
+      const l = relativeLuminance(region.data[i], region.data[i + 1], region.data[i + 2]);
+      if (l > peak) {
+        peak = l;
+        px = [region.data[i], region.data[i + 1], region.data[i + 2]];
+      }
+    }
+    return { peak, px };
+  };
+
+  const aurora = compositedPeakOf(auroraBox.x0, auroraBox.y0, auroraBox.x1, auroraBox.y1);
+  const mw = photoPeakOf(mwBox.x0, mwBox.y0, mwBox.x1, mwBox.y1);
+
+  return {
+    viewport: { w, h },
+    dpr: dprX,
+    geometry: { columnLeft: +columnLeft.toFixed(2) },
+    auroraBox,
+    mwBox,
+    // Left-margin box vs right-margin comparator: disjoint by
+    // construction — asserted Node-side so the ceiling check can never
+    // silently become a self-referential near-tie.
+    boxesOverlap: auroraBox.x1 > mwBox.x0,
+    auroraPeak: aurora.peak,
+    auroraPeakPixel: aurora.px,
+    mwPeak: mw.peak,
+    mwPeakPixel: mw.px,
+  };
+}
+
+async function auroraMain(args) {
+  const url = argValue(args, "--url") || "http://localhost:4321/";
+  const width = parseInt(argValue(args, "--width") || "1440", 10);
+  const height = parseInt(argValue(args, "--height") || "900", 10);
+  // Full-cycle max sampling: N*I must cover >= one ~20s breathing period
+  // (with margin) so the running max provably contains the envelope peak.
+  const samples = parseInt(argValue(args, "--samples") || "24", 10);
+  const interval = parseInt(argValue(args, "--interval") || "900", 10);
+  if (samples * interval < 21000) {
+    console.error(
+      `--aurora sampling window ${samples}x${interval}ms = ${samples * interval}ms < 21000ms — ` +
+        `must cover at least one full ~20s breathing period to observe the envelope peak`
+    );
+    process.exit(1);
+  }
+
+  const { proc, port, profile } = await launchChrome(width, height);
+  let maxAurora = null;
+  let mwSnap = null;
+  let overlap = false;
+  let sampleCount = 0;
+  try {
+    const cdp = await connectCdp(port);
+    await cdp.send("Page.enable");
+    await cdp.send("Page.navigate", { url });
+    // Same readiness contract as --moon: decoded photo + lit moon pixel
+    // (the final Layer-0 work unit).
+    let ready = false;
+    for (let i = 0; i < 120; i++) {
+      await sleep(250);
+      try {
+        ready = await cdp.evaluate(READY_PROBE);
+        if (ready) break;
+      } catch {
+        /* page still loading */
+      }
+    }
+    if (!ready) throw new Error("scene never painted (Layer 0 not adopted within 30s)");
+    await sleep(1000);
+
+    await cdp.evaluate(
+      relativeLuminance.toString() +
+        "\n" +
+        coverSourceRect.toString() +
+        "\n" +
+        makePhotoCanvas.toString() +
+        "\n" +
+        sampleAuroraOnce.toString() +
+        '\n"installed";'
+    );
+
+    for (let s = 0; s < samples; s++) {
+      const snap = await cdp.evaluate("sampleAuroraOnce()");
+      if (snap.error) throw new Error(snap.error);
+      sampleCount++;
+      if (snap.boxesOverlap) overlap = true;
+      if (!maxAurora || snap.auroraPeak > maxAurora.auroraPeak) {
+        maxAurora = { auroraPeak: snap.auroraPeak, auroraPeakPixel: snap.auroraPeakPixel, atSample: s };
+      }
+      // mwPeak is photo-static — keep the latest snapshot for reporting.
+      mwSnap = snap;
+      await sleep(interval);
+    }
+  } finally {
+    proc.kill();
+    await sleep(300);
+    try {
+      rmSync(profile, { recursive: true, force: true });
+    } catch {
+      /* best-effort tmp cleanup */
+    }
+  }
+
+  if (overlap) {
+    console.error(
+      `AURORA GATE FAIL at ${width}x${height}: aurora box overlaps the MW comparator box — ` +
+        `the ceiling check would be self-referential`
+    );
+    process.exit(1);
+  }
+
+  const pass = maxAurora.auroraPeak < mwSnap.mwPeak;
+  console.log(
+    JSON.stringify(
+      {
+        mode: "aurora",
+        url,
+        requested: { width, height },
+        viewport: mwSnap.viewport,
+        dpr: mwSnap.dpr,
+        geometry: mwSnap.geometry,
+        auroraBox: mwSnap.auroraBox,
+        mwBox: mwSnap.mwBox,
+        boxesOverlap: overlap,
+        sampling: {
+          samples: sampleCount,
+          intervalMs: interval,
+          windowMs: sampleCount * interval,
+          note: "max composited aurora peak across >= one full ~20s breathing cycle",
+        },
+        auroraPeak: maxAurora.auroraPeak,
+        auroraPeakPixel: maxAurora.auroraPeakPixel,
+        auroraPeakAtSample: maxAurora.atSample,
+        mwPeak: mwSnap.mwPeak,
+        mwPeakPixel: mwSnap.mwPeakPixel,
+        assertion: "max(auroraPeak) < mwPeak",
+        pass,
+      },
+      null,
+      2
+    )
+  );
+  if (!pass) {
+    console.error(
+      `AURORA CEILING FAIL at ${width}x${height}: max auroraPeak ${maxAurora.auroraPeak} >= mwPeak ${mwSnap.mwPeak}`
+    );
+    process.exit(1);
+  }
+  console.error(
+    `aurora ceiling PASS at ${width}x${height}: max auroraPeak ${maxAurora.auroraPeak.toFixed(4)} < mwPeak ${mwSnap.mwPeak.toFixed(4)} (${sampleCount} samples / ${((sampleCount * interval) / 1000).toFixed(1)}s window)`
+  );
+}
+
 const PANELS = ["hero", "fig-01", "systems", "experience", "patents", "skills", "contact"];
 
 async function cdpMain(args) {
@@ -1727,11 +1966,13 @@ try {
     await cdpMain(args);
   } else if (args.includes("--moon")) {
     await moonMain(args);
+  } else if (args.includes("--aurora")) {
+    await auroraMain(args);
   } else if (args.includes("--print-browser-snippet")) {
     console.log(buildInjectedSource());
   } else if (import.meta.url === `file://${process.argv[1]}` || process.argv[1]?.endsWith("verify-contrast.mjs")) {
     console.log(
-      "usage: node scripts/verify-contrast.mjs --selftest | --agreement-selftest | --cdp-screenshot [--url U --width W --height H] | --cdp [--url U] [--samples N] | --moon [--width W --height H] | --print-browser-snippet"
+      "usage: node scripts/verify-contrast.mjs --selftest | --agreement-selftest | --cdp-screenshot [--url U --width W --height H] | --cdp [--url U] [--samples N] | --moon [--width W --height H] | --aurora [--width W --height H] [--samples N --interval MS] | --print-browser-snippet"
     );
   }
 } catch (err) {
