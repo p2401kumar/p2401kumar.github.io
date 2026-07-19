@@ -19,7 +19,7 @@ Each maps to roadmap phases (numbering continues from Phase 7). Prior-milestone 
 
 - [ ] **GLS-01**: Full glass chrome — content panels, header/footer, and jump index render as frosted-glass surfaces (translucent fill + backdrop blur + saturation + 1px light edge, token-expressed as `--glass-*`), tiering permitted within the grammar for text-dense panels if the contrast floor demands it
 - [ ] **GLS-02**: Glass degrades cleanly: `@supports` ladder to the opaque `--panel` baseline, `prefers-reduced-transparency` renders solid surfaces (additive enhancement pattern), print styles sane
-- [ ] **GLS-03**: The contrast verifier is re-architected to sample real post-composite screenshots (analytic compositing cannot model blur) BEFORE glass values lock; every panel × both viewports holds ≥4.5:1 worst-case over the photo
+- [x] **GLS-03**: The contrast verifier is re-architected to sample real post-composite screenshots (analytic compositing cannot model blur) BEFORE glass values lock; every panel × both viewports holds ≥4.5:1 worst-case over the photo
 - [ ] **GLS-04**: Glass + scene idle CPU stays under the 10% total floor — the glass-over-animating-canvas spike measures the marginal re-blur cost first and the mitigation ladder (throttle-under-glass, density, blur cap) is applied as measured
 
 ### Living Sky (ambient animations)
@@ -72,7 +72,7 @@ Each requirement maps to the phase that **completes** it. FLR-01's LCP checkpoin
 | IMG-05 | Phase 7 | Complete |
 | GLS-01 | Phase 8 | Pending |
 | GLS-02 | Phase 8 | Pending |
-| GLS-03 | Phase 8 | Pending |
+| GLS-03 | Phase 8 | Complete |
 | GLS-04 | Phase 8 | Pending |
 | AMB-01 | Phase 9 | Pending |
 | AMB-02 | Phase 9 | Pending |
