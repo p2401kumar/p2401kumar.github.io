@@ -56,6 +56,34 @@
 //   into the console. It defines window.__sampleContrast() which returns
 //   the same per-region worst-case report for the CURRENT panel.
 //
+//   node scripts/verify-contrast.mjs --agreement-selftest
+//     08-01 (GLS-03) mode-agreement proof: launches headless Chrome at
+//     DPR1 against scripts/fixtures/glass-agreement-fixture.html (a static
+//     solid page satisfying the exact live DOM contract), runs BOTH the
+//     analytic sampler (window.__sampleContrast) and the new screenshot
+//     sampler (Page.captureScreenshot -> sharp raw decode) over the SAME
+//     text rect, and asserts they agree within +/-0.05 — pre-blur, over a
+//     solid backdrop, the two modes MUST agree. Then switches the fixture
+//     to its glass variant (thin bright stripes + backdrop-filter blur)
+//     and RECORDS (never asserts) the divergence between the modes: the
+//     analytic mode cannot represent a spatial blur (a blurred pixel is a
+//     weighted neighborhood average, not a function of one pixel), which
+//     is the entire justification for screenshot mode. The screenshot
+//     number is authoritative wherever the two disagree.
+//
+//   node scripts/verify-contrast.mjs --cdp-screenshot [--url U]
+//                                    [--width 1440] [--height 900]
+//     THE Phase-8 contrast GATE (08-01 Task 2; the analytic --cdp above is
+//     retained as the fast dev-loop tool, this mode is what gates glass):
+//     samples REAL post-composite screenshots via CDP Page.captureScreenshot
+//     decoded Node-side with sharp — the only honest pixel source once a
+//     backdrop-filter blur kernel exists. Covers all 7 panels PLUS
+//     <header>, <footer>, and #deck-index (surfaces never gated before
+//     Phase 8), sweeps tall panels across internal-scroll offsets, and
+//     exits non-zero if any over-sky text region's worst-case ratio falls
+//     below its WCAG threshold (4.5 normal / 3 large). DPR1-ONLY — see the
+//     Emulation.setDeviceMetricsOverride note below.
+//
 //   node scripts/verify-contrast.mjs --moon [--url http://localhost:4321/]
 //                                    [--width 1440] [--height 900]
 //     SKY-07 moon-dimness assertion (05.1-01, FLAG 1; photo-aware since
@@ -79,7 +107,12 @@ import { readFileSync, mkdtempSync, rmSync } from "node:fs";
 import { spawn } from "node:child_process";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
+// sharp resolves from node_modules — ALREADY present transitively via
+// astro:assets' image pipeline (win32-x64 prebuilt binary lives at
+// node_modules/@img/sharp-win32-x64). The "no new dependencies" floor is
+// preserved: package.json is NOT touched (Task 1 verify asserts it).
+import sharp from "sharp";
 
 // ---------------------------------------------------------------------------
 // WCAG 2.2 SC 1.4.3 formulas (shared verbatim between node selftest and the
@@ -626,9 +659,9 @@ function samplePageOnce(cfg) {
   };
 }
 
-function buildInjectedSource() {
+function buildInjectedSource(cfgOverrides) {
   const { ink, bg, body } = readTokens();
-  const cfg = { ink, bg, body, scrimStops: SCRIM_STOPS };
+  const cfg = { ink, bg, body, scrimStops: SCRIM_STOPS, ...(cfgOverrides || {}) };
   return (
     relativeLuminance.toString() +
     "\n" +
@@ -716,6 +749,11 @@ async function launchChrome(width, height) {
       "--no-first-run",
       "--no-default-browser-check",
       "--hide-scrollbars",
+      // 08-01: pin the output color profile so Page.captureScreenshot's
+      // PNG bytes are raw sRGB — an unmanaged/display profile would shift
+      // captured RGB values and break the analytic<->screenshot agreement
+      // selftest. No effect on getImageData-based modes.
+      "--force-color-profile=srgb",
       `--window-size=${width},${height}`,
       "about:blank",
     ],
@@ -789,6 +827,240 @@ async function connectCdp(port) {
     ws.addEventListener("error", reject, { once: true });
   });
   return new Cdp(ws);
+}
+
+// ---------------------------------------------------------------------------
+// 08-01 (GLS-03) screenshot pixel source — Node-side capture + decode.
+//
+// DPR1-ONLY GATE DOCTRINE: the screenshot path forces deviceScaleFactor 1
+// via Emulation.setDeviceMetricsOverride BEFORE Page.navigate. Two reasons:
+//   1. A 1:1 CSS-px <-> screenshot-px mapping means every in-page rect
+//      coordinate indexes the decoded frame directly (no DPR scaling that
+//      could drift); captureAndDecode's size self-check enforces it hard.
+//   2. The known Windows DSF-2 Page.captureScreenshot hang
+//      (05.1-01-SUMMARY.md:77-78 — "hangs indefinitely whenever
+//      deviceScaleFactor 2 is active") means device-scale-factor 2 is used
+//      ONLY for optional CLI visual evidence (--force-device-scale-factor
+//      captures by hand), NEVER for the gate.
+// ---------------------------------------------------------------------------
+
+/** Force the DPR1 viewport contract (call BEFORE Page.navigate). */
+async function forceDpr1(cdp, width, height) {
+  await cdp.send("Emulation.setDeviceMetricsOverride", {
+    width,
+    height,
+    deviceScaleFactor: 1,
+    mobile: false,
+  });
+}
+
+/**
+ * CDP Page.captureScreenshot -> sharp raw decode. Returns an ImageData-like
+ * { data, width, height, channels } (RGBA, channels always 4 via
+ * ensureAlpha) compatible with worstCaseContrastInRegion()'s iteration.
+ * Hard self-check: the decoded frame MUST equal the requested CSS-px
+ * viewport exactly — a mismatch means DPR drifted and every downstream
+ * rect coordinate would sample the wrong pixels.
+ */
+async function captureAndDecode(cdp, width, height) {
+  const { data: base64 } = await cdp.send("Page.captureScreenshot", {
+    format: "png",
+    fromSurface: true,
+  });
+  const buf = Buffer.from(base64, "base64");
+  const { data, info } = await sharp(buf)
+    .raw()
+    .ensureAlpha()
+    .toBuffer({ resolveWithObject: true });
+  if (info.width !== width || info.height !== height) {
+    throw new Error(
+      `screenshot size ${info.width}x${info.height} != requested viewport ` +
+        `${width}x${height} — DPR/coordinate-space assumption violated ` +
+        `(forceDpr1 must run before Page.navigate)`
+    );
+  }
+  return { data, width: info.width, height: info.height, channels: info.channels };
+}
+
+/**
+ * Stride-math copy of one rect out of the full decoded frame into a fresh
+ * Uint8ClampedArray — shape-compatible with the EXISTING
+ * worstCaseContrastInRegion() ({ data, width, height }), which is reused
+ * VERBATIM on the result. Clamps to frame bounds; returns null when the
+ * clamped rect is empty. Handles both Buffer (.copy) and plain typed-array
+ * (.subarray/.set) sources.
+ */
+function extractSubImage(full, x0, y0, x1, y1) {
+  const cx0 = Math.max(0, Math.floor(x0));
+  const cy0 = Math.max(0, Math.floor(y0));
+  const cx1 = Math.min(full.width, Math.ceil(x1));
+  const cy1 = Math.min(full.height, Math.ceil(y1));
+  const w = cx1 - cx0;
+  const h = cy1 - cy0;
+  if (w <= 0 || h <= 0) return null;
+  const out = new Uint8ClampedArray(w * h * 4);
+  const stride = full.width * 4;
+  for (let row = 0; row < h; row++) {
+    const srcStart = (cy0 + row) * stride + cx0 * 4;
+    const dstStart = row * w * 4;
+    if (typeof full.data.copy === "function") {
+      full.data.copy(out, dstStart, srcStart, srcStart + w * 4); // Buffer
+    } else {
+      out.set(full.data.subarray(srcStart, srcStart + w * 4), dstStart);
+    }
+  }
+  return { data: out, width: w, height: h };
+}
+
+// Glyph occlusion control: a screenshot contains the RENDERED text pixels,
+// which would self-compare against the text luminance at ratio ~1 and
+// poison every worst-case scan. Before each capture the glyphs are hidden
+// with color:transparent (layout/backdrop-filter/background rendering are
+// all unaffected — backdrop-filter samples the BACKDROP, not the element's
+// own content), so the captured rect holds exactly the background the
+// glyphs sit on. Rect discovery always runs BEFORE hiding (it reads the
+// real computed color for ownColor).
+const HIDE_TEXT_EXPR = `(() => {
+  let s = document.getElementById("__vc-hide-text");
+  if (!s) {
+    s = document.createElement("style");
+    s.id = "__vc-hide-text";
+    s.textContent = "* { color: transparent !important; text-shadow: none !important; }";
+    document.head.appendChild(s);
+  }
+  return new Promise((r) =>
+    requestAnimationFrame(() => requestAnimationFrame(() => r(true)))
+  );
+})()`;
+
+const SHOW_TEXT_EXPR = `(() => {
+  const s = document.getElementById("__vc-hide-text");
+  if (s) s.remove();
+  return true;
+})()`;
+
+// ---------------------------------------------------------------------------
+// --agreement-selftest (08-01 Task 1): the analytic and screenshot pixel
+// pipelines must agree within +/-0.05 on a solid pre-blur fixture; on the
+// glass (blur) fixture variant their divergence is RECORDED, not asserted —
+// the screenshot number is authoritative there by design.
+// ---------------------------------------------------------------------------
+
+const AGREEMENT_TOLERANCE = 0.05;
+const FIXTURE_PATH = join(ROOT, "scripts/fixtures/glass-agreement-fixture.html");
+const AGREEMENT_W = 1000;
+const AGREEMENT_H = 700;
+
+async function agreementSelftestMain() {
+  const { ink } = readTokens();
+  const inkL = relativeLuminance(ink.r, ink.g, ink.b);
+  const url = pathToFileURL(FIXTURE_PATH).href;
+
+  const { proc, port, profile } = await launchChrome(AGREEMENT_W, AGREEMENT_H);
+  let solidPass = false;
+  try {
+    const cdp = await connectCdp(port);
+    await cdp.send("Page.enable");
+    await forceDpr1(cdp, AGREEMENT_W, AGREEMENT_H);
+    await cdp.send("Page.navigate", { url });
+
+    let ready = false;
+    for (let i = 0; i < 60; i++) {
+      await sleep(150);
+      try {
+        ready = await cdp.evaluate("window.__fixtureReady === true");
+        if (ready) break;
+      } catch {
+        /* still loading */
+      }
+    }
+    if (!ready) throw new Error("fixture never became ready (canvas fill / img decode)");
+
+    // Analytic sampler, injected with ZERO scrim stops: the fixture has no
+    // scrim DOM element, so the analytic model must model no scrim. The
+    // production scrim model is separately locked by --selftest's deck.css
+    // sync fixture — what THIS test proves is the pixel pipeline (rect ->
+    // pixels -> WCAG math) agreement between the two modes.
+    await cdp.evaluate(buildInjectedSource({ scrimStops: [[0, 0], [1, 0]] }));
+
+    // Both samplers over the SAME text rect, in both fixture states.
+    const runBothModes = async (label) => {
+      const snap = await cdp.evaluate("window.__sampleContrast()");
+      if (snap.error) throw new Error(snap.error);
+      const region = snap.results.find((r) => r.overSky && r.rect);
+      if (!region) throw new Error(`${label}: no over-sky text region found in fixture`);
+      const analyticWorst = region.worstVsInk;
+
+      await cdp.evaluate(HIDE_TEXT_EXPR);
+      const frame = await captureAndDecode(cdp, AGREEMENT_W, AGREEMENT_H);
+      await cdp.evaluate(SHOW_TEXT_EXPR);
+
+      const sub = extractSubImage(
+        frame,
+        region.rect.x,
+        region.rect.y,
+        region.rect.x + region.rect.w,
+        region.rect.y + region.rect.h
+      );
+      if (!sub) throw new Error(`${label}: fixture text rect empty after clamping`);
+      const { worst: screenshotWorst } = worstCaseContrastInRegion(sub, inkL);
+      return { analyticWorst, screenshotWorst, rect: region.rect, text: region.text };
+    };
+
+    console.log("verify-contrast --agreement-selftest (analytic vs screenshot pixel pipelines)");
+
+    // 1. SOLID fixture state: pre-blur over a solid backdrop — MUST agree.
+    const solid = await runBothModes("solid");
+    const solidDelta = Math.abs(solid.analyticWorst - solid.screenshotWorst);
+    console.log(
+      `  solid fixture  rect=${JSON.stringify(solid.rect)} "${solid.text}"\n` +
+        `    analytic   worstVsInk = ${solid.analyticWorst.toFixed(4)}\n` +
+        `    screenshot worstVsInk = ${solid.screenshotWorst.toFixed(4)}\n` +
+        `    |delta| = ${solidDelta.toFixed(4)} (tolerance ${AGREEMENT_TOLERANCE})`
+    );
+    solidPass = solidDelta <= AGREEMENT_TOLERANCE;
+
+    // 2. GLASS fixture state: recorded observation, never asserted. The
+    //    modes are EXPECTED to diverge beyond the tolerance here — the
+    //    analytic sampler reads raw stripe pixels through a flat-alpha
+    //    model; the screenshot reads the browser's real blur(12px)
+    //    composite. Divergence here is the justification for screenshot
+    //    mode; the screenshot number is authoritative.
+    const glassMode = await cdp.evaluate("window.__fixtureGlassMode()");
+    if (glassMode !== "glass-mode") throw new Error("fixture glass mode failed to engage");
+    await cdp.evaluate(
+      "new Promise(r => requestAnimationFrame(() => requestAnimationFrame(() => r(true))))"
+    );
+    const glass = await runBothModes("glass");
+    const glassDelta = Math.abs(glass.analyticWorst - glass.screenshotWorst);
+    console.log(
+      `  glass fixture (RECORDED, not asserted — screenshot is authoritative):\n` +
+        `    analytic   worstVsInk = ${glass.analyticWorst.toFixed(4)} (raw stripe pixels, blur invisible to the model)\n` +
+        `    screenshot worstVsInk = ${glass.screenshotWorst.toFixed(4)} (real blurred composite)\n` +
+        `    |delta| = ${glassDelta.toFixed(4)}` +
+        (glassDelta > AGREEMENT_TOLERANCE
+          ? " — modes diverge under blur, as expected (screenshot mode is why this phase exists)"
+          : " — WARNING: expected divergence beyond tolerance did not appear; check the fixture's stripe geometry")
+    );
+  } finally {
+    proc.kill();
+    await sleep(300);
+    try {
+      rmSync(profile, { recursive: true, force: true });
+    } catch {
+      /* best-effort tmp cleanup */
+    }
+  }
+
+  if (!solidPass) {
+    console.error(
+      `AGREEMENT SELFTEST FAIL: analytic and screenshot modes disagree beyond ` +
+        `+/-${AGREEMENT_TOLERANCE} on the SOLID pre-blur fixture — one of the pixel ` +
+        `pipelines is lying; do not trust either gate until this passes.`
+    );
+    process.exit(1);
+  }
+  console.log("AGREEMENT SELFTEST PASS (solid fixture within tolerance)");
 }
 
 // ---------------------------------------------------------------------------
@@ -1073,6 +1345,11 @@ async function cdpMain(args) {
   console.log(JSON.stringify(report, null, 2));
 }
 
+// Reserved flag (08-01 Task 1) — the full gate mode lands in Task 2.
+async function cdpScreenshotMain() {
+  throw new Error("--cdp-screenshot is reserved but not yet implemented (08-01 Task 2)");
+}
+
 // ---------------------------------------------------------------------------
 // Entry
 // ---------------------------------------------------------------------------
@@ -1086,6 +1363,10 @@ const args = process.argv.slice(2);
 try {
   if (args.includes("--selftest")) {
     selftest();
+  } else if (args.includes("--agreement-selftest")) {
+    await agreementSelftestMain();
+  } else if (args.includes("--cdp-screenshot")) {
+    await cdpScreenshotMain(args);
   } else if (args.includes("--cdp")) {
     await cdpMain(args);
   } else if (args.includes("--moon")) {
@@ -1094,7 +1375,7 @@ try {
     console.log(buildInjectedSource());
   } else if (import.meta.url === `file://${process.argv[1]}` || process.argv[1]?.endsWith("verify-contrast.mjs")) {
     console.log(
-      "usage: node scripts/verify-contrast.mjs --selftest | --cdp [--url U] [--samples N] | --moon [--width W --height H] | --print-browser-snippet"
+      "usage: node scripts/verify-contrast.mjs --selftest | --agreement-selftest | --cdp-screenshot [--url U --width W --height H] | --cdp [--url U] [--samples N] | --moon [--width W --height H] | --print-browser-snippet"
     );
   }
 } catch (err) {

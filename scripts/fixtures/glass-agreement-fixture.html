@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>glass agreement fixture — verify-contrast.mjs --agreement-selftest</title>
+<!--
+  scripts/fixtures/glass-agreement-fixture.html — 08-01 (GLS-03) agreement
+  selftest fixture. A STATIC solid-color page that satisfies the EXACT live
+  DOM contract of index.astro's scene so BOTH samplers (the analytic
+  window.__sampleContrast() and the new CDP-screenshot sampler) run against
+  it with zero code branching (08-RESEARCH.md Open Question 1):
+
+    #nightsky-canvas            — filled a known solid color by the inline
+                                  script below (opaque alpha, so the analytic
+                                  composite is exactly that color)
+    .sky-photo img              — a 1x1 solid-color PNG data URI (same RGB as
+                                  the canvas fill), decoded instantly; keeps
+                                  makePhotoCanvas() satisfied
+    .panel[data-state="active"] — known single-line text of a known color
+                                  over that solid backdrop
+
+  SOLID MODE (default render): pre-blur, zero scrim DOM — the two modes MUST
+  agree within +/-0.05 (the selftest asserts this, exit non-zero otherwise).
+
+  GLASS MODE (window.__fixtureGlassMode(), called by the selftest as a
+  RECORDED observation, never asserted): the canvas is repainted with thin
+  bright stripes narrower than the blur kernel and the panel gains a
+  translucent fill + backdrop-filter: blur(12px). The analytic mode reads
+  the RAW stripe pixels (it cannot represent a spatial blur — a blurred
+  pixel is a weighted neighborhood average); the screenshot mode reads the
+  browser's real blurred composite. The two are EXPECTED to diverge beyond
+  0.05 here — that divergence is the entire justification for screenshot
+  mode, and the screenshot number is authoritative.
+
+  NOTE: the backdrop-filter below is FIXTURE-ONLY test apparatus — it is not
+  product glass CSS (08-01 ships zero glass CSS; product glass lands in
+  08-02 gated by the mode this fixture proves out).
+
+  TOKEN PROVENANCE: hex literals mirror src/styles/tokens.css (--bg #0f1216,
+  --ink #e8ebef) — the zero-hex doctrine governs shipped site CSS, not
+  build-time test fixtures (verify-banding.mjs precedent). The text color
+  MUST stay equal to --ink so the analytic report's worstVsInk and
+  worstVsOwnColor coincide for the fixture text. The solid backdrop
+  rgb(40,46,58) reuses --selftest's "MW box" dark fixture pixel.
+-->
+<style>
+  /* Background on BODY ONLY (html carries none): body's background then
+     propagates to the document canvas and paints BELOW the fixed
+     z-index:-1 scene host — the exact live contract NightSky.astro
+     documents. Setting a background on html too would make body paint its
+     own box ABOVE the negative-z-index host and hide the scene (measured:
+     the screenshot sampler caught exactly that during fixture bring-up). */
+  html, body { margin: 0; height: 100%; overflow: hidden; }
+  body { background: #0f1216; }
+  .nightsky-host { position: fixed; inset: 0; z-index: -1; }
+  .sky-photo, .sky-photo picture, .sky-photo img {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+  }
+  .sky-photo img { object-fit: cover; object-position: 50% 50%; }
+  #nightsky-canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+  .panel {
+    position: fixed; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  /* Single-line known text: generic monospace (no webfont dependency),
+     weight/size chosen so isLarge=false -> threshold 4.5 (normal text). */
+  .panel p {
+    margin: 0;
+    font: 500 20px/1.3 monospace;
+    color: #e8ebef; /* == tokens.css --ink (see provenance note above) */
+  }
+  /* Glass-mode styles applied by __fixtureGlassMode() via this class —
+     FIXTURE-ONLY apparatus, not product CSS. */
+  .panel.glass {
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+</style>
+</head>
+<body>
+  <div class="nightsky-host" aria-hidden="true">
+    <div class="sky-photo">
+      <picture>
+        <!-- 1x1 solid rgb(40,46,58) PNG, generated with the same sharp build
+             the verifier decodes with -->
+        <img
+          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAPoAAAD6AG1e1JrAAAADElEQVQImWPQ0LMCAAESAJG6Y5DpAAAAAElFTkSuQmCC"
+          alt=""
+        />
+      </picture>
+    </div>
+    <canvas id="nightsky-canvas"></canvas>
+  </div>
+
+  <div class="panel" data-state="active" data-panel-id="fixture" id="fixture">
+    <p>AGREEMENT FIXTURE 4.5:1 TEXT RUN</p>
+  </div>
+
+  <script>
+    // Known solid backdrop — same RGB as the 1x1 photo data URI above.
+    var SOLID = { r: 40, g: 46, b: 58 };
+
+    var canvas = document.getElementById("nightsky-canvas");
+    var ctx;
+
+    function sizeAndFillSolid() {
+      // Backing store == CSS px (the fixture is DPR1-only, enforced by the
+      // selftest's Emulation.setDeviceMetricsOverride deviceScaleFactor:1).
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      ctx = canvas.getContext("2d");
+      ctx.fillStyle = "rgb(" + SOLID.r + "," + SOLID.g + "," + SOLID.b + ")";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
+    // GLASS MODE: thin bright vertical stripes (2px wide every 12px —
+    // narrower than the 12px blur kernel, so the real blurred backdrop is a
+    // washed-out average nowhere near the raw stripe brightness) + the
+    // translucent panel fill + backdrop-filter via the .glass class.
+    window.__fixtureGlassMode = function () {
+      ctx.fillStyle = "rgb(8,10,14)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "rgb(210,220,240)";
+      for (var x = 0; x < canvas.width; x += 12) {
+        ctx.fillRect(x, 0, 2, canvas.height);
+      }
+      document.querySelector(".panel").classList.add("glass");
+      return "glass-mode";
+    };
+
+    window.__fixtureReady = false;
+    function markReady() {
+      sizeAndFillSolid();
+      window.__fixtureReady = true;
+    }
+    var img = document.querySelector(".sky-photo img");
+    if (img.complete && img.naturalWidth) markReady();
+    else img.addEventListener("load", markReady, { once: true });
+  </script>
+</body>
+</html>
