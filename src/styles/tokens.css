@@ -47,6 +47,12 @@
   --sky-horizon:#141a2c;
   --milkyway:#cfd9f2;
   --star:#eef2fa;
+  /* --aurora: the one sanctioned exception to the 200-230° hue family
+     (09-UI-SPEC.md Color section) — a desaturated, high-lightness
+     teal-white standing in for real aurora oxygen-emission green, kept
+     in the same low-saturation/high-lightness register as --milkyway so
+     it reads as a palette sibling, not a new hue family. */
+  --aurora:#bfe8df;
 
   /* Glass system (Milestone v3.0 Phase 8) — shared by panels, header/footer,
      jump index. Two elevation levels (chrome, panel) x two panel tiers

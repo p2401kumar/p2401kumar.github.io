@@ -22,6 +22,10 @@ export interface SkyTokens {
   skyHorizon: RgbTriple;
   milkyway: RgbTriple;
   star: RgbTriple;
+  /** 09-02 (AMB-03): the one sanctioned added light source — the aurora
+   * curtain fill. The sole new token this phase (09-UI-SPEC.md Token
+   * Manifest); its hex lives in tokens.css only. */
+  aurora: RgbTriple;
   /** Reused, not a 5th sky-specific token — camper glow + fireflies only. */
   accent: RgbTriple;
 }
@@ -41,6 +45,7 @@ export function getSkyTokens(): SkyTokens {
     skyHorizon: readToken(styles, '--sky-horizon'),
     milkyway: readToken(styles, '--milkyway'),
     star: readToken(styles, '--star'),
+    aurora: readToken(styles, '--aurora'),
     accent: readToken(styles, '--accent'),
   };
   return cached;
