@@ -1,0 +1,16 @@
+== single-rAF ==
+scene.ts: 2 (want 2)
+clouds+aurora+parallax: 0 (want 0)
+idle-queue rAF: 0 (want 0)
+idle-queue setTimeout: 3 (want 1 — the verbatim Safari shim, 09-01 precedent)
+meteors+starfield: 0 (want 0)
+fig01/render.ts: 2 (want 2)
+== deck imports in scene modules ==
+deck imports: 0 (want 0)
+== zero-hex ==
+scene-module hex: 0 (want 0)
+--aurora in tokens.css lines: 2
+== source-over only ==
+lighter: 0 (want 0)
+== floors ==
+0

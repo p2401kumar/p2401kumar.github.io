@@ -1,0 +1,7 @@
+.planning/phases/09-living-sky/battery/banding-crop-cloud-band-1440.png (280x189 png)
+  top-dark-sky   runsAboveZero=1 zeroGaps=0 bins=7/7 range=[29,35] -> PASS
+  seam-ramp      runsAboveZero=1 zeroGaps=0 bins=8/8 range=[23,30] -> PASS
+.planning/phases/09-living-sky/battery/banding-crop-aurora-band-1440.png (280x324 png)
+  top-dark-sky   runsAboveZero=1 zeroGaps=0 bins=11/11 range=[31,41] -> PASS
+  seam-ramp      runsAboveZero=1 zeroGaps=0 bins=9/9 range=[23,31] -> PASS
+all files pass the banding gate.

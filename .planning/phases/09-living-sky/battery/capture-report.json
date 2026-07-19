@@ -1,0 +1,158 @@
+{
+  "url": "http://localhost:4321/",
+  "sections": {
+    "transform-rest-1440": {
+      "pass": true,
+      "canvas": "none",
+      "host": "none",
+      "camper": "none"
+    },
+    "reduced-motion-still": {
+      "pass": true,
+      "rmIdentical": true,
+      "bytes": 273878,
+      "rmMatches": true,
+      "auroraMargin": {
+        "max": 172,
+        "mean": 12.94,
+        "cover2": 0.5063,
+        "cover4": 0.5011
+      },
+      "cloudMargin": {
+        "max": 16,
+        "mean": 7.49,
+        "cover2": 0.8346,
+        "cover4": 0.7196
+      },
+      "cloudColumn": {
+        "max": 5,
+        "mean": 0.75,
+        "cover2": 0.1918,
+        "cover4": 0.0895
+      }
+    },
+    "banding-crops-written": {
+      "pass": true,
+      "crops": [
+        "cloud-band",
+        "aurora-band"
+      ]
+    },
+    "pause-hidden": {
+      "pass": true,
+      "hid1": {
+        "len": 193430,
+        "hash": 4042016867
+      },
+      "hid2": {
+        "len": 193430,
+        "hash": 4042016867
+      }
+    },
+    "pause-fig01": {
+      "pass": true,
+      "figActive": true,
+      "fig1": {
+        "len": 189670,
+        "hash": 3893881356
+      },
+      "fig2": {
+        "len": 189670,
+        "hash": 3893881356
+      }
+    },
+    "transform-mid-nudge-1440": {
+      "pass": true,
+      "canvas": "none",
+      "host": "none",
+      "camper": "matrix(1, 0, 0, 1, -11.089, 0)"
+    },
+    "transform-rest-1280": {
+      "pass": true,
+      "canvas": "none",
+      "host": "none",
+      "camper": "none"
+    },
+    "transform-mid-nudge-1280": {
+      "pass": true,
+      "canvas": "none",
+      "host": "none",
+      "camper": "matrix(1, 0, 0, 1, -17.9983, 0)"
+    },
+    "shed-far-present-tier0": {
+      "pass": true,
+      "s0": {
+        "max": 146,
+        "mean": 1.66,
+        "cover2": 0.2129,
+        "cover4": 0.1234
+      },
+      "deviceMemory": 32
+    },
+    "shed-tier1-dm4": {
+      "pass": true,
+      "tier0FarCover2": 0.2129,
+      "far": {
+        "max": 146,
+        "mean": 0.89,
+        "cover2": 0.0291,
+        "cover4": 0.0258
+      },
+      "near": {
+        "max": 16,
+        "mean": 7.3,
+        "cover2": 0.8234,
+        "cover4": 0.7185
+      },
+      "aurora": {
+        "max": 172,
+        "mean": 12.94,
+        "cover2": 0.5063,
+        "cover4": 0.5011
+      },
+      "dm": 4
+    },
+    "shed-tier3-dm2": {
+      "pass": true,
+      "tier0FarCover2": 0.2129,
+      "far": {
+        "max": 146,
+        "mean": 0.89,
+        "cover2": 0.0291,
+        "cover4": 0.0258
+      },
+      "near": {
+        "max": 16,
+        "mean": 7.3,
+        "cover2": 0.8234,
+        "cover4": 0.7185
+      },
+      "dm": 2
+    },
+    "shed-mobile-375w": {
+      "pass": true,
+      "dm": 32,
+      "near": {
+        "max": 152,
+        "mean": 1.61,
+        "cover2": 0.3701,
+        "cover4": 0.1488
+      },
+      "auroraStrip": {
+        "max": 154,
+        "mean": 2.9,
+        "cover2": 0.0309,
+        "cover4": 0.0269
+      },
+      "canvas": "none",
+      "host": "none"
+    },
+    "parallax-intact-375w": {
+      "pass": true,
+      "canvas": "none",
+      "host": "none",
+      "camper": "matrix(1, 0, 0, 1, -10.9071, 0)"
+    }
+  },
+  "failures": []
+}

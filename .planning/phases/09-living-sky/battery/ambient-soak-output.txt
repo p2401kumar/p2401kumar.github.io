@@ -1,0 +1,56 @@
+[soak] 09-03 AMB-05 ambient soak — 60s per run, 1440x900 DPR1, headless=new (software raster), glass LIVE both runs
+[soak] url: http://localhost:4321/
+[soak] viewport 1440x900 @dpr1 | ambient handles live
+[soak] warm-up: 15s unmeasured settle
+
+[soak] baseline: real page, reduced-motion (ambient off, glass live)
+[soak] reduced-motion matches: true | live glass surfaces: 4 | aurora-band maxAlpha: 172 | cloud-band maxAlpha: 236
+[soak] done: CPU 1.23% | task 0.737s / wall 60.0s | script 0.077s | layout 0.000s | longtasks 0 | fps 60.0 | tree CPU 5.27%
+
+[soak] ambient: real page, no-preference (ambient + glass live)
+[soak] reduced-motion matches: false | live glass surfaces: 4 | aurora-band maxAlpha: 172 | cloud-band maxAlpha: 144
+[soak] done: CPU 5.49% | task 3.296s / wall 60.0s | script 1.621s | layout 0.000s | longtasks 0 | fps 60.0 | tree CPU 35.32%
+
+| run                                                           | glass surfaces | wall (s) | TaskDur Δ (s) | CPU % | ScriptDur Δ (s) | LayoutDur Δ (s) | long tasks | fps  | tree CPU % |
+| baseline: real page, reduced-motion (ambient off, glass live) | 4              | 60.0     | 0.737         | 1.23  | 0.077           | 0.000           | 0          | 60.0 | 5.27       |
+| ambient: real page, no-preference (ambient + glass live)      | 4              | 60.0     | 3.296         | 5.49  | 1.621           | 0.000           | 0          | 60.0 | 35.32      |
+
+MARGINAL (ambient - baseline): +4.26 percentage points (projection: +0.3 to +0.7pp)
+TOTAL with ambient + glass:    5.49% (floor: total < 10%)
+tree-CPU cross-check:          marginal +30.05p (whole Chrome process tree incl. compositor/viz: 5.27% -> 35.32%)
+
+{
+  "runs": [
+    {
+      "label": "baseline: real page, reduced-motion (ambient off, glass live)",
+      "glassSurfaces": 4,
+      "rmMatches": true,
+      "auroraBandMaxAlpha": 172,
+      "cloudBandMaxAlpha": 236,
+      "wallS": 60.017869999981485,
+      "taskS": 0.7365809999999999,
+      "cpuPct": 1.2272694782407758,
+      "scriptS": 0.077152,
+      "layoutS": 0.000378,
+      "longTasks": 0,
+      "fps": 59.998797024971246,
+      "treeCpuPct": 5.274216988736432
+    },
+    {
+      "label": "ambient: real page, no-preference (ambient + glass live)",
+      "glassSurfaces": 4,
+      "rmMatches": false,
+      "auroraBandMaxAlpha": 172,
+      "cloudBandMaxAlpha": 144,
+      "wallS": 60.01057499999297,
+      "taskS": 3.295719,
+      "cpuPct": 5.491897053145027,
+      "scriptS": 1.621494,
+      "layoutS": 0.00026700000000000004,
+      "longTasks": 0,
+      "fps": 60.00609059320664,
+      "treeCpuPct": 35.32341927266966
+    }
+  ],
+  "marginalPct": 4.264627574904251
+}

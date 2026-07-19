@@ -1,0 +1,46 @@
+{
+  "mode": "moon",
+  "url": "http://localhost:4321/",
+  "requested": {
+    "width": 1280,
+    "height": 800
+  },
+  "viewport": {
+    "w": 1264,
+    "h": 705
+  },
+  "dpr": 1,
+  "geometry": {
+    "moonX": 57.6,
+    "moonY": 479.4,
+    "R": 12.69,
+    "columnLeft": 192
+  },
+  "moonBox": {
+    "x0": 43.64099999999999,
+    "y0": 465.44100000000003,
+    "x1": 71.559,
+    "y1": 493.35900000000004
+  },
+  "mwBox": {
+    "x0": 1011.2,
+    "y0": 211.5,
+    "x1": 1238.72,
+    "y1": 423
+  },
+  "moonPeak": 0.2579666880153012,
+  "moonPeakPixel": [
+    131,
+    140,
+    150
+  ],
+  "mwPeak": 0.46952092106516025,
+  "mwPeakPixel": [
+    178,
+    182,
+    197
+  ],
+  "assertion": "moonPeak < mwPeak",
+  "pass": true
+}
+moon dimness PASS at 1280x800: moonPeak 0.2580 < mwPeak 0.4695

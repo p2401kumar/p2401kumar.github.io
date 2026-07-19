@@ -1,0 +1,22 @@
+[
+  {
+    "label": "mobile",
+    "performance": 99,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "LCP": "1.9 s",
+    "TBT": "0 ms",
+    "CLS": "0.003"
+  },
+  {
+    "label": "desktop",
+    "performance": 100,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "LCP": "0.5 s",
+    "TBT": "0 ms",
+    "CLS": "0"
+  }
+]

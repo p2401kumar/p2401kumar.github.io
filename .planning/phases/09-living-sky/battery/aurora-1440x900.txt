@@ -1,0 +1,58 @@
+{
+  "mode": "aurora",
+  "url": "http://localhost:4321/",
+  "requested": {
+    "width": 1440,
+    "height": 900
+  },
+  "viewport": {
+    "w": 1424,
+    "h": 805
+  },
+  "dpr": 1,
+  "geometry": {
+    "columnLeft": 272
+  },
+  "auroraBox": {
+    "x0": 8,
+    "y0": 394.45,
+    "x1": 264,
+    "y1": 684.25
+  },
+  "mwBox": {
+    "x0": 1139.2,
+    "y0": 241.5,
+    "x1": 1395.52,
+    "y1": 483
+  },
+  "boxesOverlap": false,
+  "sampling": {
+    "samples": 24,
+    "intervalMs": 900,
+    "windowMs": 21600,
+    "note": "max composited aurora peak across >= one full ~20s breathing cycle"
+  },
+  "auroraPeak": 0.10352709144353867,
+  "auroraPeakPixel": [
+    142,
+    160,
+    181
+  ],
+  "auroraPeakRaw": 0.7024894839901858,
+  "auroraPeakRawPixel": [
+    217,
+    218,
+    221
+  ],
+  "erosionRadiusDevicePx": 4,
+  "auroraPeakAtSample": 2,
+  "mwPeak": 0.47481895960805687,
+  "mwPeakPixel": [
+    179,
+    183,
+    197
+  ],
+  "assertion": "max(auroraPeak) < mwPeak",
+  "pass": true
+}
+aurora ceiling PASS at 1440x900: max auroraPeak 0.1035 < mwPeak 0.4748 (24 samples / 21.6s window)

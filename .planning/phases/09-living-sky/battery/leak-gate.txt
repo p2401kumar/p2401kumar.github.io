@@ -1,0 +1,13 @@
+== leak gate: ambient JS unreachable from /work/* + /404 ==
+dynamodb-cellularization
+elb-auto-weight-away
+work pages: dist/work/dynamodb-cellularization/index.html
+dist/work/elb-auto-weight-away/index.html
+-- nightsky refs (want 0 per page) --
+dist/work/dynamodb-cellularization/index.html: nightsky=0 /sky/=0 script-src-tags=0
+dist/work/elb-auto-weight-away/index.html: nightsky=0 /sky/=0 script-src-tags=0
+dist/404.html: nightsky=0 /sky/=0 script-src-tags=0
+-- which built chunks contain the ambient code --
+ambient chunks: dist/_astro/NightSky.astro_astro_type_script_index_0_lang.k0pUprmR.js
+-- index.html DOES reference the ambient chunk (positive control) --
+index.html -> NightSky.astro_astro_type_script_index_0_lang.k0pUprmR.js: 1

@@ -1,0 +1,4 @@
+verify-banding --selftest (comb-spike detector fixtures)
+  clean  (10-bit AVIF q60 + pre-noise): runsAboveZero=1 zeroGaps=0 bins=21/21 range=[6,26] -> PASS
+  banded (posterized 24 + JPEG q35):    runsAboveZero=4 zeroGaps=3 bins=16/19 range=[7,25] -> FAIL
+selftest OK: clean passes, banded control fails.

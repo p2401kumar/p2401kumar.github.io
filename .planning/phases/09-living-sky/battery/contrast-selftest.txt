@@ -1,0 +1,14 @@
+verify-contrast --selftest (WCAG 2.2 SC 1.4.3 formula fixtures)
+  ok  contrast(#000, #fff) = 21.0000
+  ok  contrast(#808080, #808080) = 1.0000
+  ok  contrast(#767676, #fff) = 4.5422
+  ok  worstCaseContrastInRegion(black+white, whiteText) = 1.0000
+  ok  worst pixel correctly located at the brightest sample
+  ok  --ink over --bg = 15.70:1 (tokens.css live values)
+  ok  deck.css scrim stops match SCRIM_STOPS (6 stops)
+  ok  scrim peak 0.38 <= 0.38 ceiling
+  ok  peakLuminanceInRegion(mw fixture) — saturated white = 1.0000
+  ok  moon fixture: moonPeak 0.1739 < mwPeak 1.0000
+  ok  coverSourceRect posX round-trip (1440 tier) = 0.7200
+  ok  coverSourceRect window x[588.7..2331.1] of 2560
+SELFTEST PASS
