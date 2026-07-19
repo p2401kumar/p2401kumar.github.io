@@ -6,7 +6,7 @@ current_phase: 9
 current_phase_name: Living Sky
 status: phase_complete
 stopped_at: "Completed 09-03-PLAN.md — Phase 9 CLOSED (AMB-01..05 Complete); next: plan Phase 10 (Integration & Launch)"
-last_updated: "2026-07-19T21:30:00.000Z"
+last_updated: "2026-07-19T21:06:57.654Z"
 last_activity: 2026-07-19
 last_activity_desc: "09-03 executed: mobile shed ladder + full closing battery + phase close-out (AMB-05)"
 progress:
@@ -14,7 +14,7 @@ progress:
   completed_phases: 3
   total_plans: 10
   completed_plans: 10
-  percent: 100
+  percent: 75
 ---
 
 # Project State
@@ -39,7 +39,7 @@ Prior phase: 8 (Glass System) — COMPLETE (3/3 plans)
 Plan: 08-03 COMPLETE — GLS-04 real-page re-proof PASS + full battery green + phase closed
 Status: GLS-01..04 all Complete. Real-page 60s idle soak (built preview, 1440×900 DPR1, same-page glass toggle via prefers-reduced-transparency emulation): total with glass **6.10% < 10%** (3.9pp headroom), 60.0fps, 0 long tasks, LayoutDuration Δ 0.000s; main-thread marginal ~0 within ±0.4pp scene noise vs Spike-2's +0.47pp projection, whole-tree cross-check +6.68pp vs the spike's +6.48pp — projection confirmed on the production page. Lighthouse mobile 99/100/100/100 + desktop 100×4, TBT 0ms both (07-04 family held). Full carried-floor battery ALL GREEN; leak gate airtight; DeckIndex-relocation smoke PASS.
 **Phase 9 budget note:** ambient animation must fit inside the ~3.9pp of main-thread headroom glass leaves (measured real-page total 6.10% under the 10% floor, software raster, 1440×900 DPR1); the screenshot-sampled `--cdp-screenshot` contrast floor (≥4.5:1, worst surface today: header 6.23) is the arbiter any ambient light source must not breach.
-Last activity: 2026-07-19 — 09-02 executed: --aurora token + aurora module + luminance gate (AMB-03)
+Last activity: 2026-07-19 — 09-03 executed: mobile shed ladder + full closing battery + Phase 9 close-out (AMB-05)
 
 ## Performance Metrics
 
@@ -113,7 +113,7 @@ Last activity: 2026-07-19 — 09-02 executed: --aurora token + aurora module + l
 | Phase 08 P03 | 25min | 3 tasks | 7 files |
 | Phase 09 P01 | 21min | 3 tasks | 6 files |
 | Phase 09 P02 | ~24 min | 3 tasks | 5 files |
-| Phase 09 P03 | ~60min | 3 tasks | 7 files |
+| Phase 09 P03 | ~60min | 3 tasks | 28 files |
 
 ## Accumulated Context
 
@@ -244,7 +244,7 @@ Items acknowledged and carried forward:
 
 ## Session Continuity
 
-Last session: 2026-07-19T21:30:00.000Z
+Last session: 2026-07-19T21:06:57.641Z
 Stopped at: Completed 09-03-PLAN.md — Phase 9 CLOSED (AMB-01..05 Complete, full battery green); next: plan Phase 10 (Integration & Launch)
 Resume file: None
 

@@ -162,7 +162,7 @@ Full details: [milestones/v2.0-ROADMAP.md](milestones/v2.0-ROADMAP.md) · Phase 
 | 6. Integration & Launch | v2.0 | 2/2 | Complete | 2026-07-18 |
 | 7. Real-Sky Foundation | v3.0 | 4/4 | Complete   | 2026-07-19 |
 | 8. Glass System | v3.0 | 3/3 | Complete | 2026-07-19 |
-| 9. Living Sky | v3.0 | 3/3 | Complete | 2026-07-19 |
+| 9. Living Sky | v3.0 | 3/3 | Complete   | 2026-07-19 |
 | 10. Integration & Launch | v3.0 | 0/TBD | Not started | - |
 
 ---
