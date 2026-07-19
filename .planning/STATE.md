@@ -6,14 +6,14 @@ current_phase: 7
 current_phase_name: Real-Sky Foundation
 status: ready_to_plan
 stopped_at: v3.0 roadmap created
-last_updated: "2026-07-19T12:38:26.645Z"
+last_updated: "2026-07-19T12:57:49.126Z"
 last_activity: 2026-07-19
-last_activity_desc: "07-01 executed: build-sky.mjs + verify-banding.mjs + 5 banding-free sky masters committed (winner A-core-t20)"
+last_activity_desc: "07-03 executed: real-sky integration complete — photo delivery + overlay surgery + photo-aware contrast, vignette widened after 1280 gate failure (4.06 -> 4.58)"
 progress:
   total_phases: 4
   completed_phases: 0
   total_plans: 4
-  completed_plans: 2
+  completed_plans: 3
   percent: 0
 ---
 
@@ -29,9 +29,9 @@ See: .planning/PROJECT.md (updated 2026-07-18)
 ## Current Position
 
 Phase: 7 (Real-Sky Foundation) — executing
-Plan: 3 of 4 (07-01 Spike 1 banding COMPLETE — masters committed; next: 07-02 glass spike)
-Status: executing — Spike 1 PASS (banding gate + eyeball evidence); 07-02/07-03/07-04 remain
-Last activity: 2026-07-19 — 07-01 executed: build-sky.mjs + verify-banding.mjs + 5 banding-free sky masters committed (winner A-core-t20)
+Plan: 4 of 4 (07-03 real-sky integration COMPLETE — photo live behind everything, contrast gates green both widths after vignette widening; next: 07-04 credit line + gate battery + LCP checkpoint)
+Status: executing — 07-01/07-02/07-03 complete; 07-04 remains
+Last activity: 2026-07-19 — 07-03 executed + gate-failure continuation: photo delivery, overlay surgery, photo-aware verify-contrast, widened column vignette (1280 contrast 4.06 -> 4.58, 1440 5.24 -> 12.22)
 
 ## Performance Metrics
 
@@ -98,6 +98,7 @@ Last activity: 2026-07-19 — 07-01 executed: build-sky.mjs + verify-banding.mjs
 </details>
 | Phase 07 P01 | 35m | 3 tasks | 23 files |
 | Phase 07 P02 | 35min | 2 tasks | 3 files |
+| Phase 7 P3 | 120min | 4 tasks | 16 files |
 
 ## Accumulated Context
 
@@ -171,6 +172,7 @@ Recent decisions affecting current work:
 - [Phase 07]: 07-02 Spike 2 verdict PASS: 4 blur(12px) glass surfaces over the animating scene cost +0.47pp main-thread CPU (4.04->4.52%, 60s soaks) — full glass proceeds in Phase 8, no mitigation ladder required
 - [Phase 07]: Phase 8 blur radius budget from measured sensitivity: 12px default, 16px hard ceiling over canvas (12->16px costs +0.68pp main-thread / +4.15pp whole-tree)
 - [Phase 07]: Soak methodology extended with whole-Chrome-process-tree CPU cross-check: renderer TaskDuration alone is blind to compositor-side blur cost (+6.48pp under software raster recorded as conservative upper bound)
+- [Phase 07]: 07-03 vignette sized to max 1.6:1-tier column+ramp edge (0.234043/0.042553): 1280 contrast 4.06 -> 4.58, galactic-core margin brightness kept (mwPeak <1% change)
 
 ### Pending Todos
 
@@ -190,7 +192,7 @@ None yet.
 
 </details>
 
-- 07-03 PRODUCT GATE FAIL: photo-aware contrast at 1280x800 worst-case 4.06:1 vs --ink (<4.5 floor). Baked column vignette is reference-tier-mapped (0.3226 window-frac = 413px at 1280) but the fixed 880px column needs 440px+ramp there; bright photo pixels under text at column edges. Fix: widen vignette in scripts/build-sky.mjs, rebuild + re-gate masters (07-01 pipeline), re-run 07-03 gates. 1440x900 passes (5.24); --moon passes both widths.
+- ~~07-03 PRODUCT GATE FAIL (1280x800 contrast 4.06:1)~~ **RESOLVED 2026-07-19** (commit 27c7bc7): column vignette widened to the max 1.6:1-tier column+ramp edge (0.234043/0.042553 master-frac), masters re-baked + full banding gate re-passed; contrast now 4.58 @1280 / 12.22 @1440, --moon PASS both widths with core brightness intact (mwPeak <1% change).
 
 ## Deferred Items
 
@@ -203,7 +205,7 @@ Items acknowledged and carried forward:
 
 ## Session Continuity
 
-Last session: 2026-07-19T12:38:17.314Z
+Last session: 2026-07-19T12:57:22.866Z
 Stopped at: v3.0 roadmap created — phases 7-10 mapped (18/18 requirements), ready to plan Phase 7
 Resume file: None
 

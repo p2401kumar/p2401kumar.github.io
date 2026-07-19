@@ -60,11 +60,11 @@ Full details: [milestones/v2.0-ROADMAP.md](milestones/v2.0-ROADMAP.md) · Phase 
   - **Spike 2 — Glass-over-animating-canvas CPU**: measure idle CPU (scene alone vs scene + 4 glass surfaces); marginal re-blur cost must fit inside the <10% idle floor (target ≤2–3% marginal). This is the milestone's **re-scope trigger** — if it can't tune under the floor, "full glass over a permanently-animating scene" needs a structural rethink (glass over static-only regions), decided before glass is built in Phase 8.
   - **LCP checkpoint (lifted forward from FLR-01)**: immediately after photo integration, a dedicated LCP/Lighthouse read confirms LCP is within the realistic mobile budget (research: 1.5–2.8s with full-viewport AVIF) before glass/animations compound. FLR-01 is finally *verified* live in Phase 10; this early checkpoint de-risks it.
 
-**Plans**: 2/4 plans executed
+**Plans**: 3/4 plans executed
 
   - [x] 07-01-PLAN.md — Spike 1: banding pipeline (build-sky.mjs + verify-banding.mjs, committed masters, SPIKE-BANDING.md)
   - [x] 07-02-PLAN.md — Spike 2: glass-over-animating-canvas CPU (milestone re-scope trigger, SPIKE-GLASS.md; FAIL stops the chain)
-  - [ ] 07-03-PLAN.md — Real-sky integration: photo delivery + overlay surgery + photo-aware contrast
+  - [x] 07-03-PLAN.md — Real-sky integration: photo delivery + overlay surgery + photo-aware contrast
   - [ ] 07-04-PLAN.md — Credit line + full gate battery + blocking LCP checkpoint + IMG-01..05 close-out
 
 **UI hint**: yes
@@ -150,7 +150,7 @@ Full details: [milestones/v2.0-ROADMAP.md](milestones/v2.0-ROADMAP.md) · Phase 
 | 5. Night-Sky Scene | v2.0 | 6/6 | Complete | 2026-07-18 |
 | 5.1 Celestial Extras (INSERTED) | v2.0 | 1/1 | Complete | 2026-07-18 |
 | 6. Integration & Launch | v2.0 | 2/2 | Complete | 2026-07-18 |
-| 7. Real-Sky Foundation | v3.0 | 2/4 | In Progress|  |
+| 7. Real-Sky Foundation | v3.0 | 3/4 | In Progress|  |
 | 8. Glass System | v3.0 | 0/TBD | Not started | - |
 | 9. Living Sky | v3.0 | 0/TBD | Not started | - |
 | 10. Integration & Launch | v3.0 | 0/TBD | Not started | - |
