@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>07-02 Spike 2 — glass-over-animating-canvas CPU harness</title>
+<!--
+  Spike-2 harness (07-02-PLAN.md Task 1, per 07-RESEARCH.md §3.2):
+  a fixed full-viewport stack of
+    (bottom, z:-2)  the committed real sky master  /sky/milky-way-2560.avif
+    (middle, z:-1)  #nightsky-canvas driven by the REAL initNightSky() engine
+                    (src/lib/nightsky/scene.ts, esbuild-bundled by soak.mjs to
+                    /scene-bundle.mjs — the actual live engine, never a mock;
+                    mirrors v2's spike-milkyway.html precedent)
+    (top)           4 mock .glass surfaces at production-like geometry with
+                    backdrop-filter blur 12px + saturate 150% over
+                    rgb(255 255 255 / 0.07) fill (GLASS.md §2.1/§6 recipe)
+
+  Toggle contract (one page serves both soak runs):
+    ?glass=0  -> the 4 .glass divs stay display:none  (BASELINE run)
+    ?glass=1  -> body.glass-on shows them             (GLASS run)
+    ?blur=N   -> overrides the blur radius via an inline style built at
+                 runtime (radius-sensitivity probe, e.g. blur 16 vs 12) —
+                 deliberately string-built in JS so the CSS below stays the
+                 single literal blur-12px occurrence (Task-1 verify gate).
+
+  NOTE: no -webkit-backdrop-filter duplicate here (deviation from the
+  GLASS.md production recipe, which Phase 8 must still include): this is a
+  Chrome-only measurement harness (unprefixed backdrop-filter has shipped in
+  Chrome since 76), and the Task-1 automated gate requires exactly ONE
+  blur-12px literal in this file.
+-->
+<style>
+  /* Token mirror — values copied verbatim from src/styles/tokens.css
+     (--bg #0f1216, --accent #d99163, --sky-zenith #05070a,
+      --sky-horizon #141a2c, --milkyway #cfd9f2, --star #eef2fa).
+     This is a build/verify-time planning artifact, not site CSS; the
+     zero-hex-outside-tokens.css doctrine is a site-CSS rule (same
+     provenance-comment convention as scripts/build-sky.mjs). Update both
+     if tokens.css ever changes. The scene engine's getSkyTokens() reads
+     these five custom properties off :root at init. */
+  :root {
+    --bg: #0f1216;
+    --accent: #d99163;
+    --sky-zenith: #05070a;
+    --sky-horizon: #141a2c;
+    --milkyway: #cfd9f2;
+    --star: #eef2fa;
+  }
+
+  html,
+  body {
+    margin: 0;
+    height: 100%;
+    background: var(--bg);
+    overflow: hidden;
+  }
+
+  /* Bottom layer: the committed real sky master (07-01), cover-fit exactly
+     like the production <picture> will be. A static, never-repainting img —
+     costs the glass nothing recurring once painted (GLASS.md §1.4 item 1). */
+  .photo {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+  }
+  .photo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Middle layer: the real scene host — same DOM contract as
+     NightSky.astro (.nightsky-host > #nightsky-canvas), same stacking
+     (fixed, inset 0, z-index:-1). */
+  .nightsky-host {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+  }
+  #nightsky-canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  /* Top layer: 4 mock glass surfaces at production-like geometry
+     (07-RESEARCH.md §3.2 / GLASS.md ≤4-surface ceiling):
+       header    top strip, 64px
+       footer    bottom strip, 88px
+       jumpindex bottom-right DeckIndex block, 160x220
+       panel     centered 880px content column, 60vh
+     Hidden by default (BASELINE run measures scene-alone); the GLASS run
+     flips body.glass-on. display:none removes them from the paint tree
+     entirely — the same mechanism GLASS.md §1.4 prescribes for inactive
+     production panels. */
+  .glass {
+    position: fixed;
+    display: none;
+    background: rgb(255 255 255 / 0.07);
+    backdrop-filter: blur(12px) saturate(150%);
+  }
+  body.glass-on .glass {
+    display: block;
+  }
+  .glass.header {
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+  }
+  .glass.footer {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 88px;
+  }
+  .glass.jumpindex {
+    bottom: 24px;
+    right: 24px;
+    width: 160px;
+    height: 220px;
+  }
+  .glass.panel {
+    top: 96px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 880px;
+    height: 60vh;
+  }
+</style>
+</head>
+<body>
+  <div class="photo"><img src="/sky/milky-way-2560.avif" alt="" /></div>
+
+  <div class="nightsky-host" aria-hidden="true">
+    <canvas id="nightsky-canvas"></canvas>
+  </div>
+
+  <div class="glass header"></div>
+  <div class="glass footer"></div>
+  <div class="glass jumpindex"></div>
+  <div class="glass panel"></div>
+
+  <script type="module">
+    // Apply the run toggles BEFORE booting the scene so each soak run's
+    // paint tree is stable from the first engine frame.
+    const params = new URLSearchParams(location.search);
+    if (params.get("glass") === "1") document.body.classList.add("glass-on");
+    const blurOverride = params.get("blur");
+    if (blurOverride) {
+      const px = Math.max(0, Number.parseInt(blurOverride, 10) || 0);
+      for (const el of document.querySelectorAll(".glass")) {
+        // String-built on purpose — keeps the stylesheet above the only
+        // literal blur-12px in this file (Task-1 verify gate).
+        el.style.backdropFilter = "blur(" + px + "px) saturate(150%)";
+      }
+    }
+
+    // Boot the REAL live engine (bundled from src/lib/nightsky/scene.ts by
+    // soak.mjs — blit + ~40-star twinkle subset + 9 fireflies + the
+    // constellation/meteor hooks, the exact production idle profile).
+    const { initNightSky } = await import("/scene-bundle.mjs");
+    const host = document.querySelector(".nightsky-host");
+    initNightSky(host);
+    window.__harnessBooted = true;
+  </script>
+</body>
+</html>
