@@ -6,14 +6,14 @@ current_phase: 7
 current_phase_name: Real-Sky Foundation
 status: ready_to_plan
 stopped_at: v3.0 roadmap created
-last_updated: "2026-07-19T04:29:28.245Z"
+last_updated: "2026-07-19T04:51:59.757Z"
 last_activity: 2026-07-19
 last_activity_desc: "07-01 executed: build-sky.mjs + verify-banding.mjs + 5 banding-free sky masters committed (winner A-core-t20)"
 progress:
   total_phases: 4
   completed_phases: 0
   total_plans: 4
-  completed_plans: 1
+  completed_plans: 2
   percent: 0
 ---
 
@@ -29,7 +29,7 @@ See: .planning/PROJECT.md (updated 2026-07-18)
 ## Current Position
 
 Phase: 7 (Real-Sky Foundation) — executing
-Plan: 2 of 4 (07-01 Spike 1 banding COMPLETE — masters committed; next: 07-02 glass spike)
+Plan: 3 of 4 (07-01 Spike 1 banding COMPLETE — masters committed; next: 07-02 glass spike)
 Status: executing — Spike 1 PASS (banding gate + eyeball evidence); 07-02/07-03/07-04 remain
 Last activity: 2026-07-19 — 07-01 executed: build-sky.mjs + verify-banding.mjs + 5 banding-free sky masters committed (winner A-core-t20)
 
@@ -97,6 +97,7 @@ Last activity: 2026-07-19 — 07-01 executed: build-sky.mjs + verify-banding.mjs
 
 </details>
 | Phase 07 P01 | 35m | 3 tasks | 23 files |
+| Phase 07 P02 | 35min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -167,6 +168,9 @@ Recent decisions affecting current work:
 - [Phase 07]: 07-01 saturation deviation: bulk sky graded to hue 218deg / S~31% HSL vs UI-SPEC <=15% — The grading target tokens themselves are S 33-37% HSL; <=15% is unreachable while matching the token family — intent (no clashing hue patches) honored
 - [Phase 07]: 07-01 integration note: mobile object-position should target ~10% 70%, not 12% 25% — The committed master's upper-left carries band glow; the quiet region is the lower-left seam-faded zone
 - [Phase 07]: 07-01 Task 3 eyeball checkpoint auto-resolved under /gsd-autonomous — Committed encode + histogram evidence; objective gate held hard; async user veto available (rerun build-sky.mjs to swap masters)
+- [Phase 07]: 07-02 Spike 2 verdict PASS: 4 blur(12px) glass surfaces over the animating scene cost +0.47pp main-thread CPU (4.04->4.52%, 60s soaks) — full glass proceeds in Phase 8, no mitigation ladder required
+- [Phase 07]: Phase 8 blur radius budget from measured sensitivity: 12px default, 16px hard ceiling over canvas (12->16px costs +0.68pp main-thread / +4.15pp whole-tree)
+- [Phase 07]: Soak methodology extended with whole-Chrome-process-tree CPU cross-check: renderer TaskDuration alone is blind to compositor-side blur cost (+6.48pp under software raster recorded as conservative upper bound)
 
 ### Pending Todos
 
@@ -197,7 +201,7 @@ Items acknowledged and carried forward:
 
 ## Session Continuity
 
-Last session: 2026-07-19T04:27:44.492Z
+Last session: 2026-07-19T04:51:20.064Z
 Stopped at: v3.0 roadmap created — phases 7-10 mapped (18/18 requirements), ready to plan Phase 7
 Resume file: None
 
