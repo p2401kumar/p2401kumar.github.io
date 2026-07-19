@@ -1,45 +1,41 @@
-# Requirements: Prateek Kumar — Portfolio · Milestone v2.0 "Night Sky"
+# Requirements: Prateek Kumar — Portfolio · Milestone v3.0 "Real Sky"
 
-**Defined:** 2026-07-17
-**Core Value:** Within seconds of landing, a senior engineering leader should think "this person operates at our level" — credibility delivered through demonstrated craft, not adjectives. v2.0 adds: the first seconds should also be *beautiful* — a zero-light-pollution night that no other engineer's portfolio has.
+**Defined:** 2026-07-18
+**Core Value:** Within seconds of landing, a senior engineering leader should think "this person operates at our level" — credibility delivered through demonstrated craft, not adjectives. v3.0 adds: the sky becomes *real* — composited astrophotography, glass, and living atmosphere, with every floor intact.
 
-## v2.0 Requirements
+## v3.0 Requirements
 
-Requirements for this milestone. Each maps to roadmap phases (numbering continues from Phase 4).
+Each maps to roadmap phases (numbering continues from Phase 7). Prior-milestone requirements are archived: [v1](milestones/v1.0-REQUIREMENTS.md) · [v2](milestones/v2.0-REQUIREMENTS.md).
 
-### Deck Mechanics
+### Real Sky (imagery)
 
-- [x] **DECK-01**: Visitor advances/retreats panels via mouse wheel — one gesture = one panel (delta accumulation + transition lock; no trackpad double-fire, no dead mouse feel)
-- [x] **DECK-02**: Visitor advances/retreats via vertical touch swipe on mobile
-- [x] **DECK-03**: Visitor navigates fully by keyboard with a keymap that does not collide with Fig. 01's inner controls; hidden panels are `inert`; panel changes are announced via `aria-live`
-- [x] **DECK-04**: Visitor sees a progress indicator (mono index) and can jump directly to any panel from it
-- [x] **DECK-05**: Every panel has a URL hash — browser back/forward work, deep links cold-load to the correct panel
-- [x] **DECK-06**: First-visit affordance hints how to navigate, then gets out of the way
-- [x] **DECK-07**: With JS unavailable the page renders as the v1 scrolling layout (progressive enhancement — `.deck-active` added only after successful init); a quiet "view classic" link offers the scrolling view anytime
-- [x] **DECK-08**: Panel transitions are instant under `prefers-reduced-motion`
+- [ ] **IMG-01**: A composited real-astrophotography Milky Way sky (NOIRLab `noirlab2430b` primary / ESO `eso0932a` fallback, combined + rotated/cropped at build time into a checked-in master) renders full-viewport behind everything on the home page
+- [ ] **IMG-02**: The photo ships as a static `<img>`/CSS background — never canvas-drawn — so it is LCP-discoverable (preload + `fetchpriority=high` + LQIP ladder, no CLS) and present in the no-JS classic mode
+- [ ] **IMG-03**: Encode pipeline (AVIF 10-bit 4:4:4 + WebP fallback) produces no visible banding on an 8-bit display, proven by the banding spike (histogram comb-spike test + eyeball) before integration
+- [ ] **IMG-04**: A photo credit line renders in the footer/colophon — exact attribution text with source link, CC BY 4.0 compliant; license page manually verified in a browser before ship
+- [ ] **IMG-05**: The authored overlay survives on the real sky: career constellations with panel-reactive brightening, meteors, and the drawn crescent moon (photo moon rejected on physics — recorded decision)
 
-### Night Scene
+### Glass System
 
-- [x] **SKY-01**: Persistent zero-light-pollution scene — dense pre-rendered starfield + vivid Milky Way band (offscreen-rendered once, blitted) behind every panel
-- [x] **SKY-02**: Camper-car camp silhouette at the horizon with a single warm copper glow (hand-authored static SVG, outside the animation loop)
-- [x] **SKY-03**: Sparse drifting fireflies + twinkling star subset are the only per-frame canvas work; idle CPU < 10% sustained over 5 minutes
-- [x] **SKY-04**: Scene pauses when the tab is hidden and while Fig. 01's panel is active (one-active-animation rule); `prefers-reduced-motion` renders one static frame with no animation loop
-- [x] **SKY-05**: All text over the sky passes WCAG 1.4.3 contrast at worst-case brightness points via a scrim that preserves the dark aesthetic
-- [x] **SKY-06**: Occasional shooting stars streak the upper sky — one at a time, ~20–45s cadence, fading trail — absent under reduced-motion and while the scene is paused *(Phase 5.1, INSERTED)*
-- [x] **SKY-07**: A thin crescent moon (static Layer 0, tokens-only, procedural — no image assets) sits low and dim, clear of the Milky Way band, preserving the zero-light-pollution premise *(Phase 5.1, INSERTED)*
+- [ ] **GLS-01**: Full glass chrome — content panels, header/footer, and jump index render as frosted-glass surfaces (translucent fill + backdrop blur + saturation + 1px light edge, token-expressed as `--glass-*`), tiering permitted within the grammar for text-dense panels if the contrast floor demands it
+- [ ] **GLS-02**: Glass degrades cleanly: `@supports` ladder to the opaque `--panel` baseline, `prefers-reduced-transparency` renders solid surfaces (additive enhancement pattern), print styles sane
+- [ ] **GLS-03**: The contrast verifier is re-architected to sample real post-composite screenshots (analytic compositing cannot model blur) BEFORE glass values lock; every panel × both viewports holds ≥4.5:1 worst-case over the photo
+- [ ] **GLS-04**: Glass + scene idle CPU stays under the 10% total floor — the glass-over-animating-canvas spike measures the marginal re-blur cost first and the mitigation ladder (throttle-under-glass, density, blur cap) is applied as measured
 
-### Constellations
+### Living Sky (ambient animations)
 
-- [x] **CONST-01**: Stars form named career-chapter constellations (AWS · Microsoft · Samsung · education/patents) defined in a typed data module with source-annotated labels (honesty gate)
-- [x] **CONST-02**: The active panel's constellation brightens while others dim, driven by the `nightsky:panel-change` event contract
-- [x] **CONST-03**: Neural links between constellation stars occasionally fire a quiet signal (reusing the Fig. 01 beam pattern; sparse, decorative-classified motion)
+- [ ] **AMB-01**: Two drifting cloud/haze layers (pre-rendered sprites, wraparound blit) move slowly across the lower sky inside the existing scene tick
+- [ ] **AMB-02**: Sky, horizon, and foreground shift at different rates on every panel change (CSS `translate3d` transitions, 300–500ms, compositor-only); instant under reduced-motion
+- [ ] **AMB-03**: A faint breathing aurora (noise-driven curtains, updates throttled to every 3–5 frames) glows with peak luminance capped below the Milky Way band — the one sanctioned light source
+- [ ] **AMB-04**: The twinkle subset upgrades to atmospheric scintillation (2-oscillator waveform + occasional chromatic nudge on the brightest few) without widening the star count
+- [ ] **AMB-05**: Bounded-ambient doctrine: all systems run inside the single rAF + existing pause machine (hidden/fig01-active/reduced-motion), a documented mobile degradation ladder sheds load in order (far clouds → aurora throttle → color nudge; parallax never sheds), reduced-motion renders one static frame
 
-### Integration & Floors
+### Floors & Launch
 
-- [x] **INTG-01**: All v1 content sections render as panels without forking their markup (thin `Panel.astro` slot wrapper; hide via transform, never `display:none`)
-- [x] **INTG-02**: Fig. 01 works fully as a panel — resize-on-activation handled, complete v1 verification checklist re-passes while embedded
-- [x] **INTG-03**: Case studies keep distinct, cold-loadable URLs linked from the systems panel; sitemap remains valid
-- [x] **INTG-04**: Home page holds Lighthouse ≥ 90 in all four categories with deck + scene active (mobile and desktop runs, live URL)
+- [ ] **FLR-01**: Live Lighthouse ≥90 all four categories, both presets, after full integration — with a dedicated LCP checkpoint immediately after photo integration (before glass/animations compound)
+- [ ] **FLR-02**: The full carry-forward regression list re-passes: Fig. 01 embedded 36-check audit, deck mechanics, no-JS classic WITH the photo, view-classic, case-study scene-free leak gate, sitemap, `/#work` alias, cold-`/#fig-01` pause, honesty gate, single-rAF counts, zero-hex (new tokens in tokens.css only)
+- [ ] **FLR-03**: Reduced-motion full-stop, keyboard operability, and the honesty gate remain intact through every phase
+- [ ] **LNC-01**: Deploy via the existing pipeline, gated on explicit user go (v2 precedent); rollback path documented
 
 ## Future Requirements
 
@@ -50,53 +46,47 @@ Deferred. Tracked but not in this milestone.
 - **CASE-04**: Third case study (azure/health-snapshots)
 - **PLAT-08**: JSON-LD Person structured data
 - **OG-02**: Panel-aware OG share cards — pending real usage signal
+- **OG-03**: Refresh the static OG image to the v3 real-sky look — candidate for this milestone's launch phase if trivial
 
 ## Out of Scope
 
 | Feature | Reason |
 |---------|--------|
-| Auto-advancing panels | Research-corroborated anti-feature: rushes readers, motion-sickness and WCAG 2.2.2 risk |
-| three.js / GSAP / fullPage.js / swiper | Bundle cost + paradigm mismatch; everything achievable with the proven Canvas2D + vanilla TS pattern |
-| Horizontal swipe axis on mobile | iOS edge-swipe collision (Pitfall 10); vertical axis chosen |
-| Preloaders/splash screens | Anti-feature; scene must init within the TBT budget instead |
-| WebGL rendering | Element counts far below where it pays; adds context-loss risk with no precedent in this codebase |
-| Dimming-only reduced-motion | WCAG C39 requires decorative motion to STOP — static frame, not dimmer |
+| Photo moon | Physics: a real moon bright enough to see washes out a real Milky Way in the same exposure — drawn crescent stays (research-validated) |
+| Canvas-drawn photo sky | Breaks LCP discoverability AND the no-JS classic floor — photo is `<img>`/CSS, period |
+| WebGL / shader aurora | Element counts far below where it pays; Canvas2D noise curtains suffice within budget |
+| Continuous scroll-linked parallax | Deck is discrete panels; scroll-linked effects contradict the no-scroll model and cost frames |
+| Third-party image CDN | GitHub Pages static constraint; checked-in optimized masters |
+| Removing the procedural starfield engine | The drawn overlay (constellations/moon/meteors/scintillation) IS the procedural engine repurposed — it stays |
 
 ## Traceability
 
-Which phases cover which requirements. Updated during roadmap creation.
-
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DECK-01 | Phase 4 | Complete |
-| DECK-02 | Phase 4 | Complete |
-| DECK-03 | Phase 4 | Complete |
-| DECK-04 | Phase 4 | Complete |
-| DECK-05 | Phase 4 | Complete |
-| DECK-06 | Phase 4 | Complete |
-| DECK-07 | Phase 4 | Complete |
-| DECK-08 | Phase 4 | Complete |
-| SKY-01 | Phase 5 | Complete |
-| SKY-02 | Phase 5 | Complete |
-| SKY-03 | Phase 5 | Complete |
-| SKY-04 | Phase 5 | Complete |
-| SKY-05 | Phase 5 | Complete |
-| CONST-01 | Phase 5 | Complete |
-| CONST-02 | Phase 5 | Complete |
-| CONST-03 | Phase 5 | Complete |
-| SKY-06 | Phase 5.1 | Complete |
-| SKY-07 | Phase 5.1 | Complete |
-| INTG-01 | Phase 6 | Complete |
-| INTG-02 | Phase 6 | Complete |
-| INTG-03 | Phase 6 | Complete |
-| INTG-04 | Phase 6 | Complete |
+| IMG-01 | TBD | Pending |
+| IMG-02 | TBD | Pending |
+| IMG-03 | TBD | Pending |
+| IMG-04 | TBD | Pending |
+| IMG-05 | TBD | Pending |
+| GLS-01 | TBD | Pending |
+| GLS-02 | TBD | Pending |
+| GLS-03 | TBD | Pending |
+| GLS-04 | TBD | Pending |
+| AMB-01 | TBD | Pending |
+| AMB-02 | TBD | Pending |
+| AMB-03 | TBD | Pending |
+| AMB-04 | TBD | Pending |
+| AMB-05 | TBD | Pending |
+| FLR-01 | TBD | Pending |
+| FLR-02 | TBD | Pending |
+| FLR-03 | TBD | Pending |
+| LNC-01 | TBD | Pending |
 
 **Coverage:**
 
-- v2.0 requirements: 22 total (20 original + 2 inserted via Phase 5.1)
-- Mapped to phases: 22 ✓
-- Unmapped: 0
+- v3.0 requirements: 18 total
+- Mapped to phases: 0 (roadmap pending)
+- Unmapped: 18
 
 ---
-*Requirements defined: 2026-07-17*
-*Last updated: 2026-07-17 after roadmap creation (Phases 4-6 mapped)*
+*Requirements defined: 2026-07-18 from user-locked direction + 4-lane research synthesis*
