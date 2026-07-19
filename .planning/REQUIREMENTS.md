@@ -24,10 +24,10 @@ Each maps to roadmap phases (numbering continues from Phase 7). Prior-milestone 
 
 ### Living Sky (ambient animations)
 
-- [ ] **AMB-01**: Two drifting cloud/haze layers (pre-rendered sprites, wraparound blit) move slowly across the lower sky inside the existing scene tick
-- [ ] **AMB-02**: Sky, horizon, and foreground shift at different rates on every panel change (CSS `translate3d` transitions, 300–500ms, compositor-only); instant under reduced-motion
+- [x] **AMB-01**: Two drifting cloud/haze layers (pre-rendered sprites, wraparound blit) move slowly across the lower sky inside the existing scene tick
+- [x] **AMB-02**: Sky, horizon, and foreground shift at different rates on every panel change (CSS `translate3d` transitions, 300–500ms, compositor-only); instant under reduced-motion
 - [ ] **AMB-03**: A faint breathing aurora (noise-driven curtains, updates throttled to every 3–5 frames) glows with peak luminance capped below the Milky Way band — the one sanctioned light source
-- [ ] **AMB-04**: The twinkle subset upgrades to atmospheric scintillation (2-oscillator waveform + occasional chromatic nudge on the brightest few) without widening the star count
+- [x] **AMB-04**: The twinkle subset upgrades to atmospheric scintillation (2-oscillator waveform + occasional chromatic nudge on the brightest few) without widening the star count
 - [ ] **AMB-05**: Bounded-ambient doctrine: all systems run inside the single rAF + existing pause machine (hidden/fig01-active/reduced-motion), a documented mobile degradation ladder sheds load in order (far clouds → aurora throttle → color nudge; parallax never sheds), reduced-motion renders one static frame
 
 ### Floors & Launch
@@ -74,10 +74,10 @@ Each requirement maps to the phase that **completes** it. FLR-01's LCP checkpoin
 | GLS-02 | Phase 8 | Complete |
 | GLS-03 | Phase 8 | Complete |
 | GLS-04 | Phase 8 | Complete |
-| AMB-01 | Phase 9 | Pending |
-| AMB-02 | Phase 9 | Pending |
+| AMB-01 | Phase 9 | Complete |
+| AMB-02 | Phase 9 | Complete |
 | AMB-03 | Phase 9 | Pending |
-| AMB-04 | Phase 9 | Pending |
+| AMB-04 | Phase 9 | Complete |
 | AMB-05 | Phase 9 | Pending |
 | FLR-01 | Phase 10 | Pending (LCP checkpoint also gated in Phase 7) |
 | FLR-02 | Phase 10 | Pending |
