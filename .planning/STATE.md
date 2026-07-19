@@ -6,7 +6,7 @@ current_phase: 7
 current_phase_name: Real-Sky Foundation
 status: ready_to_plan
 stopped_at: v3.0 roadmap created
-last_updated: "2026-07-19T04:51:59.757Z"
+last_updated: "2026-07-19T12:38:26.645Z"
 last_activity: 2026-07-19
 last_activity_desc: "07-01 executed: build-sky.mjs + verify-banding.mjs + 5 banding-free sky masters committed (winner A-core-t20)"
 progress:
@@ -190,6 +190,8 @@ None yet.
 
 </details>
 
+- 07-03 PRODUCT GATE FAIL: photo-aware contrast at 1280x800 worst-case 4.06:1 vs --ink (<4.5 floor). Baked column vignette is reference-tier-mapped (0.3226 window-frac = 413px at 1280) but the fixed 880px column needs 440px+ramp there; bright photo pixels under text at column edges. Fix: widen vignette in scripts/build-sky.mjs, rebuild + re-gate masters (07-01 pipeline), re-run 07-03 gates. 1440x900 passes (5.24); --moon passes both widths.
+
 ## Deferred Items
 
 Items acknowledged and carried forward:
@@ -201,7 +203,7 @@ Items acknowledged and carried forward:
 
 ## Session Continuity
 
-Last session: 2026-07-19T04:51:20.064Z
+Last session: 2026-07-19T12:38:17.314Z
 Stopped at: v3.0 roadmap created — phases 7-10 mapped (18/18 requirements), ready to plan Phase 7
 Resume file: None
 
