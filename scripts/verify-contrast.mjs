@@ -4,6 +4,26 @@
 // `astro build` — a verification-time tool whose recorded output lives in
 // .planning/phases/05-night-sky-scene/contrast-evidence.md.
 //
+// 07-03 photo-aware evolution (IMG-05 honesty gate): the real Milky-Way
+// photo (.sky-photo <img>, DOM-below the now-mostly-transparent canvas) is
+// composited as the BOTTOM sampling layer via an analytic in-page
+// drawImage of the already-decoded <img> bitmap (07-RESEARCH.md §6 Option
+// A) — the object-fit:cover + object-position source-rect math is
+// replicated in coverSourceRect() below (drawImage understands neither).
+// Compositing order per pixel: photo (opaque bottom) <- canvas pixel via
+// source-over using the canvas pixel's own alpha <- scrim <- DOM bg
+// layers. This is mathematically exact for the PRE-BLUR stack; it
+// intentionally does NOT model backdrop-filter blur — none exists yet.
+// Phase 8 (glass) owns the screenshot-sampling gate that handles blur
+// (07-RESEARCH.md §6.3); do not mistake "handles the photo correctly"
+// for "handles glass correctly".
+//
+// --moon's Milky-Way-core comparator (sample point B) reads the PHOTO's
+// brightest galactic-core pixel since 07-03 (the procedural MW is gone);
+// moonPeak composites the canvas moon pixels over the photo behind them
+// (raw canvas RGB is non-premultiplied and would overread a 0.45-alpha
+// crescent as near-white).
+//
 // Modes:
 //
 //   node scripts/verify-contrast.mjs --selftest
@@ -38,15 +58,16 @@
 //
 //   node scripts/verify-contrast.mjs --moon [--url http://localhost:4321/]
 //                                    [--width 1440] [--height 900]
-//     SKY-07 moon-dimness assertion (05.1-01, FLAG 1): launches headless
-//     Chrome at the given viewport, waits for the scene to paint, then
-//     reads the live canvas via getImageData over (a) the moon's bounding
-//     box [moonX-1.1R, moonY-1.1R, 2.2R, 2.2R] (geometry recomputed
-//     in-page with the SAME formulas as starfield.ts, from
-//     window.innerWidth/innerHeight) and (b) the Milky-Way-core box
-//     [x:0.80-0.98, y:0.30-0.60 of the viewport]. Computes the MAX
-//     relative luminance in each (moonPeak, mwPeak) and asserts
-//     moonPeak < mwPeak strictly. Exits non-zero on failure.
+//     SKY-07 moon-dimness assertion (05.1-01, FLAG 1; photo-aware since
+//     07-03): launches headless Chrome at the given viewport, waits for
+//     the scene to paint, then samples (a) the moon's bounding box
+//     [moonX-1.1R, moonY-1.1R, 2.2R, 2.2R] — canvas pixels composited
+//     over the photo behind them (geometry recomputed in-page with the
+//     SAME formulas as starfield.ts) and (b) the PHOTO's Milky-Way-core
+//     box [x:0.80-0.98, y:0.30-0.60 of the viewport] via the same
+//     object-fit:cover composite. Computes the MAX relative luminance in
+//     each (moonPeak, mwPeak) and asserts moonPeak < mwPeak strictly.
+//     Exits non-zero on failure.
 //
 // WCAG references implemented verbatim (do not hand-roll variants):
 //   relative luminance  https://www.w3.org/WAI/GL/wiki/Relative_luminance
@@ -102,6 +123,68 @@ export function worstCaseContrastInRegion(imageData, textLuminance) {
     }
   }
   return { worst, worstPixel };
+}
+
+/**
+ * CSS object-fit:cover source-rect math WITH object-position (07-03,
+ * plan-inlined reference implementation — plain center-cover math misses
+ * object-position). posX/posY are the active media-query tier's
+ * object-position fractions (e.g. 0.72/0.38 at 1440×900). Returns the
+ * visible source window of the image; draw via
+ * drawImage(img, srcX, srcY, srcW, srcH, 0, 0, boxW*dpr, boxH*dpr).
+ * Serialized into the page alongside the samplers below.
+ */
+export function coverSourceRect(imgW, imgH, boxW, boxH, posX, posY) {
+  const scale = Math.max(boxW / imgW, boxH / imgH);
+  const srcW = boxW / scale, srcH = boxH / scale; // visible source window
+  const srcX = (imgW - srcW) * posX, srcY = (imgH - srcH) * posY;
+  return { srcX, srcY, srcW, srcH };
+}
+
+/**
+ * Builds an offscreen canvas holding the .sky-photo <img> rendered through
+ * its LIVE computed object-fit:cover/object-position crop, sized to the
+ * scene canvas's backing store (deviceW × deviceH). Returns the 2d context
+ * (willReadFrequently — many getImageData reads per pass), or null when
+ * the photo isn't present/decoded yet. Serialized into the page; only
+ * browser globals + coverSourceRect may be referenced.
+ */
+export function makePhotoCanvas(deviceW, deviceH) {
+  const img = document.querySelector(".sky-photo img");
+  if (!img || !img.complete || !img.naturalWidth) return null;
+  const c = document.createElement("canvas");
+  c.width = deviceW;
+  c.height = deviceH;
+  const pctx = c.getContext("2d", { willReadFrequently: true });
+  if (!pctx) return null;
+  // Computed object-position — honors the responsive ladder's active
+  // media tier without duplicating it here. Our CSS uses % pairs only;
+  // anything else falls back to center (0.5).
+  const op = (getComputedStyle(img).objectPosition || "50% 50%").split(/\s+/);
+  const frac = (tok) => (tok && tok.endsWith("%") ? parseFloat(tok) / 100 : 0.5);
+  const posX = frac(op[0]);
+  const posY = frac(op[1] || "50%");
+  const { srcX, srcY, srcW, srcH } = coverSourceRect(
+    img.naturalWidth,
+    img.naturalHeight,
+    window.innerWidth,
+    window.innerHeight,
+    posX,
+    posY
+  );
+  // 07-03 Rule-1 fix: naturalWidth/naturalHeight are DENSITY-CORRECTED for
+  // srcset w-descriptor images (e.g. the 1920w resource reports natural
+  // 1424×605 at a 1440-wide viewport), while 9-arg drawImage SOURCE
+  // coordinates are in the underlying BITMAP's pixel space — passing the
+  // natural-space window there samples the wrong region (measured: core
+  // cropped out entirely). Instead map the WHOLE image (coordinate-space
+  // unambiguous 5-arg draw) so the natural-space window srcX..srcX+srcW
+  // lands exactly on 0..deviceW — mathematically identical to CSS
+  // object-fit:cover + object-position rendering.
+  const kx = deviceW / srcW;
+  const ky = deviceH / srcH;
+  pctx.drawImage(img, -srcX * kx, -srcY * ky, img.naturalWidth * kx, img.naturalHeight * ky);
+  return pctx;
 }
 
 /**
@@ -285,6 +368,32 @@ function selftest() {
     `  ok  moon fixture: moonPeak ${moonPeakFx.toFixed(4)} < mwPeak ${mwPeakFx.toFixed(4)}`
   );
 
+  // 9. coverSourceRect fixture (07-03): 1440×900 box over the 2560×1089
+  //    master at the desktop tier's object-position 72% 38%. The returned
+  //    source window must sit right-of-center of the master, and the
+  //    horizontal placement fraction must round-trip: srcX/(imgW-srcW)
+  //    ≈ 0.72 ± 0.01 (guards a regression to plain center-cover math,
+  //    which would silently sample the wrong region of the photo).
+  {
+    const imgW = 2560, imgH = 1089;
+    const { srcX, srcY, srcW, srcH } = coverSourceRect(imgW, imgH, 1440, 900, 0.72, 0.38);
+    if (srcW > imgW + 1e-6 || srcH > imgH + 1e-6) {
+      throw new Error("FIXTURE FAIL: coverSourceRect window larger than the source image");
+    }
+    approx(srcX / (imgW - srcW), 0.72, 0.01, "coverSourceRect posX round-trip (1440 tier)");
+    const centerX = srcX + srcW / 2;
+    if (!(centerX > imgW / 2)) {
+      throw new Error("FIXTURE FAIL: 72% window must sit right-of-center of the master");
+    }
+    // Vertical: at this geometry cover uses the full image height, so the
+    // window must span it exactly (srcY 0, srcH == imgH) — above-center
+    // trivially holds.
+    if (Math.abs(srcY) > 1e-6 || Math.abs(srcH - imgH) > 1e-6) {
+      throw new Error("FIXTURE FAIL: 1440×900 over 2560×1089 must use the full source height");
+    }
+    console.log(`  ok  coverSourceRect window x[${srcX.toFixed(1)}..${(srcX + srcW).toFixed(1)}] of ${imgW}`);
+  }
+
   console.log("SELFTEST PASS");
 }
 
@@ -304,6 +413,13 @@ function samplePageOnce(cfg) {
   const ctx = canvas.getContext("2d", { willReadFrequently: true });
   const dprX = canvas.width / window.innerWidth;
   const dprY = canvas.height / window.innerHeight;
+
+  // 07-03: the photo is the BOTTOM sampling layer. Same-backing-store
+  // offscreen composite of the .sky-photo <img> through its live
+  // object-fit:cover/object-position crop. When the photo is absent /
+  // not yet decoded (photoCtx null), the base falls back to --bg — the
+  // root background that literally shows through a transparent canvas.
+  const photoCtx = makePhotoCanvas(canvas.width, canvas.height);
 
   const panel =
     document.querySelector('.panel[data-state="active"]') ||
@@ -429,13 +545,14 @@ function samplePageOnce(cfg) {
     let scanError = null;
     for (const lr of lineRects) {
       let region;
+      let photoRegion = null;
       try {
-        region = ctx.getImageData(
-          Math.round(lr.x0 * dprX),
-          Math.round(lr.y0 * dprY),
-          Math.max(1, Math.round((lr.x1 - lr.x0) * dprX)),
-          Math.max(1, Math.round((lr.y1 - lr.y0) * dprY))
-        );
+        const gx = Math.round(lr.x0 * dprX);
+        const gy = Math.round(lr.y0 * dprY);
+        const gw = Math.max(1, Math.round((lr.x1 - lr.x0) * dprX));
+        const gh = Math.max(1, Math.round((lr.y1 - lr.y0) * dprY));
+        region = ctx.getImageData(gx, gy, gw, gh);
+        if (photoCtx) photoRegion = photoCtx.getImageData(gx, gy, gw, gh);
       } catch (e) {
         scanError = String(e);
         continue;
@@ -446,10 +563,19 @@ function samplePageOnce(cfg) {
         const py = Math.floor(i / 4 / w);
         const viewportY = lr.y0 + py / dprY;
         const yFrac = viewportY / window.innerHeight;
+        // 07-03 bottom layer: photo pixel first, then the canvas pixel
+        // composited over it via source-over using the canvas pixel's OWN
+        // alpha (Layer 0 is now mostly transparent — most pixels show
+        // ~100% photo; moon/twinkle/constellation/meteor/firefly pixels
+        // partially or fully override it where drawn).
+        const ca = region.data[i + 3] / 255;
+        const baseR = photoRegion ? photoRegion.data[i] : cfg.bg.r;
+        const baseG = photoRegion ? photoRegion.data[i + 1] : cfg.bg.g;
+        const baseB = photoRegion ? photoRegion.data[i + 2] : cfg.bg.b;
         const c = compositePixel(
-          region.data[i],
-          region.data[i + 1],
-          region.data[i + 2],
+          ca * region.data[i] + (1 - ca) * baseR,
+          ca * region.data[i + 1] + (1 - ca) * baseG,
+          ca * region.data[i + 2] + (1 - ca) * baseB,
           yFrac,
           bgLayers
         );
@@ -491,7 +617,13 @@ function samplePageOnce(cfg) {
     });
   }
 
-  return { panel: panelId, viewport: { w: window.innerWidth, h: window.innerHeight }, dpr: dprX, results };
+  return {
+    panel: panelId,
+    viewport: { w: window.innerWidth, h: window.innerHeight },
+    dpr: dprX,
+    photoPresent: !!photoCtx,
+    results,
+  };
 }
 
 function buildInjectedSource() {
@@ -503,6 +635,10 @@ function buildInjectedSource() {
     contrastRatio.toString() +
     "\n" +
     scrimAlphaAt.toString() +
+    "\n" +
+    coverSourceRect.toString() +
+    "\n" +
+    makePhotoCanvas.toString() +
     "\n" +
     samplePageOnce.toString() +
     `\nwindow.__sampleContrast = () => samplePageOnce(${JSON.stringify(cfg)});` +
@@ -535,6 +671,38 @@ function findChrome() {
 }
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+// Scene-readiness probe (07-03 Rule-1 tooling fix): the pre-photo probe
+// asserted an opaque pixel at canvas center — Layer 0 is TRANSPARENT there
+// forever after the overlay surgery, so it would time out. The moon is the
+// FINAL Layer-0 work unit, so "a bright pixel exists in the moon box"
+// proves the whole chunked queue drained AND the scene adopted/blitted.
+// Also requires the .sky-photo <img> to be decoded (the samplers composite
+// it as the bottom layer — sampling before decode would silently fall back
+// to --bg and weaken the gate).
+const READY_PROBE = `(() => {
+  const c = document.querySelector('#nightsky-canvas');
+  const img = document.querySelector('.sky-photo img');
+  if (!c || !c.width || !img || !img.complete || !img.naturalWidth) return false;
+  const ctx = c.getContext('2d');
+  const w = window.innerWidth, h = window.innerHeight;
+  const dpr = c.width / w;
+  const pad = Math.min(32, Math.max(18, w * 0.04));
+  const half = Math.min(880, w - 2 * pad) / 2;
+  const colLeft = w / 2 - half;
+  const R = Math.min(22, Math.max(12, 0.018 * Math.min(w, h)));
+  const mx = 0.3 * colLeft, my = 0.68 * h;
+  const d = ctx.getImageData(
+    Math.max(0, Math.round((mx - R) * dpr)),
+    Math.max(0, Math.round((my - R) * dpr)),
+    Math.max(1, Math.round(2 * R * dpr)),
+    Math.max(1, Math.round(2 * R * dpr))
+  ).data;
+  for (let i = 0; i < d.length; i += 4) {
+    if (d[i] > 80 && d[i + 3] > 50) return true; // lit crescent pixel
+  }
+  return false;
+})()`;
 
 async function launchChrome(width, height) {
   const profile = mkdtempSync(join(tmpdir(), "verify-contrast-"));
@@ -641,6 +809,14 @@ function sampleMoonOnce() {
   const dprX = canvas.width / w;
   const dprY = canvas.height / h;
 
+  // 07-03: the MW core lives on the PHOTO now, and the canvas is
+  // transparent behind the moon — sample point A (moon) composites the
+  // canvas pixels over the photo (raw non-premultiplied canvas RGB would
+  // overread a 0.45-alpha crescent as near-white); sample point B reads
+  // the photo's own brightest galactic-core pixel.
+  const photoCtx = makePhotoCanvas(canvas.width, canvas.height);
+  if (!photoCtx) return { error: "no decoded .sky-photo img (photo comparator unavailable)" };
+
   // Moon geometry — identical formulas to starfield.ts (constants:
   // MOON_RADIUS_COEFF 0.018, floor 12, cap 22; MOON_X_MARGIN_FRACTION 0.30
   // of the deck.css column-left edge; MOON_Y_FRACTION 0.68).
@@ -651,12 +827,41 @@ function sampleMoonOnce() {
   const moonX = 0.3 * columnLeft;
   const moonY = 0.68 * h;
 
-  const peakOf = (x0, y0, x1, y1) => {
+  const deviceRect = (x0, y0, x1, y1) => {
     const dx0 = Math.max(0, Math.round(x0 * dprX));
     const dy0 = Math.max(0, Math.round(y0 * dprY));
     const dw = Math.max(1, Math.min(canvas.width - dx0, Math.round((x1 - x0) * dprX)));
     const dh = Math.max(1, Math.min(canvas.height - dy0, Math.round((y1 - y0) * dprY)));
-    const region = ctx.getImageData(dx0, dy0, dw, dh);
+    return { dx0, dy0, dw, dh };
+  };
+
+  // Sample A (moon): canvas pixels source-over-composited onto the photo
+  // pixels behind them — the luminance a viewer actually sees.
+  const compositedPeakOf = (x0, y0, x1, y1) => {
+    const { dx0, dy0, dw, dh } = deviceRect(x0, y0, x1, y1);
+    const scene = ctx.getImageData(dx0, dy0, dw, dh);
+    const photo = photoCtx.getImageData(dx0, dy0, dw, dh);
+    let peak = 0;
+    let px = null;
+    for (let i = 0; i < scene.data.length; i += 4) {
+      const a = scene.data[i + 3] / 255;
+      const r = a * scene.data[i] + (1 - a) * photo.data[i];
+      const g = a * scene.data[i + 1] + (1 - a) * photo.data[i + 1];
+      const b = a * scene.data[i + 2] + (1 - a) * photo.data[i + 2];
+      const l = relativeLuminance(r, g, b);
+      if (l > peak) {
+        peak = l;
+        px = [Math.round(r), Math.round(g), Math.round(b)];
+      }
+    }
+    return { peak, px };
+  };
+
+  // Sample B (MW core): the PHOTO's own brightest galactic-core pixel —
+  // the 07-UI-SPEC Overlay Harmony comparator target.
+  const photoPeakOf = (x0, y0, x1, y1) => {
+    const { dx0, dy0, dw, dh } = deviceRect(x0, y0, x1, y1);
+    const region = photoCtx.getImageData(dx0, dy0, dw, dh);
     let peak = 0;
     let px = null;
     for (let i = 0; i < region.data.length; i += 4) {
@@ -671,11 +876,12 @@ function sampleMoonOnce() {
 
   // Moon bounding box: [moonX-1.1R, moonY-1.1R, 2.2R, 2.2R] CSS px.
   const moonBox = { x0: moonX - 1.1 * R, y0: moonY - 1.1 * R, x1: moonX + 1.1 * R, y1: moonY + 1.1 * R };
-  // Milky-Way core box: x 0.80-0.98, y 0.30-0.60 of the viewport.
+  // Milky-Way core box: x 0.80-0.98, y 0.30-0.60 of the viewport (covers
+  // the UI-SPEC's x:0.90/y:0.50 spot sample).
   const mwBox = { x0: 0.8 * w, y0: 0.3 * h, x1: 0.98 * w, y1: 0.6 * h };
 
-  const moon = peakOf(moonBox.x0, moonBox.y0, moonBox.x1, moonBox.y1);
-  const mw = peakOf(mwBox.x0, mwBox.y0, mwBox.x1, mwBox.y1);
+  const moon = compositedPeakOf(moonBox.x0, moonBox.y0, moonBox.x1, moonBox.y1);
+  const mw = photoPeakOf(mwBox.x0, mwBox.y0, mwBox.x1, mwBox.y1);
 
   return {
     viewport: { w, h },
@@ -701,33 +907,32 @@ async function moonMain(args) {
     const cdp = await connectCdp(port);
     await cdp.send("Page.enable");
     await cdp.send("Page.navigate", { url });
-    // Wait for load + scene readiness (Layer 0 is idle-scheduled; the moon
-    // is the FINAL work unit, so a painted-center probe alone could race
-    // it — poll until the moon-box itself contains non-background pixels
-    // OR the settle timeout passes after first paint).
+    // Wait for load + scene readiness: READY_PROBE requires the decoded
+    // photo AND a lit moon pixel (moon = final Layer-0 work unit, so the
+    // whole chunked queue has drained once it appears).
     let ready = false;
     for (let i = 0; i < 120; i++) {
       await sleep(250);
       try {
-        ready = await cdp.evaluate(`(() => {
-          const c = document.querySelector('#nightsky-canvas');
-          if (!c || !c.width) return false;
-          const ctx = c.getContext('2d');
-          const d = ctx.getImageData(Math.floor(c.width/2), Math.floor(c.height/4), 1, 1).data;
-          return d[3] > 0; // scene has painted (sky wash is opaque)
-        })()`);
+        ready = await cdp.evaluate(READY_PROBE);
         if (ready) break;
       } catch {
         /* page still loading */
       }
     }
     if (!ready) throw new Error("scene never painted (Layer 0 not adopted within 30s)");
-    // Settle: let the chunked Layer-0 queue (incl. the final moon unit)
-    // fully drain before sampling.
-    await sleep(2500);
+    // Settle margin retained (cheap; guards any straggling paint).
+    await sleep(1000);
 
     await cdp.evaluate(
-      relativeLuminance.toString() + "\n" + sampleMoonOnce.toString() + '\n"installed";'
+      relativeLuminance.toString() +
+        "\n" +
+        coverSourceRect.toString() +
+        "\n" +
+        makePhotoCanvas.toString() +
+        "\n" +
+        sampleMoonOnce.toString() +
+        '\n"installed";'
     );
     snap = await cdp.evaluate("sampleMoonOnce()");
     if (snap.error) throw new Error(snap.error);
@@ -775,18 +980,13 @@ async function cdpMain(args) {
     const cdp = await connectCdp(port);
     await cdp.send("Page.enable");
     await cdp.send("Page.navigate", { url });
-    // Wait for load + scene readiness (Layer 0 is idle-scheduled).
+    // Wait for load + scene readiness (photo decoded + moon painted —
+    // see READY_PROBE).
     let ready = false;
     for (let i = 0; i < 120; i++) {
       await sleep(250);
       try {
-        ready = await cdp.evaluate(`(() => {
-          const c = document.querySelector('#nightsky-canvas');
-          if (!c || !c.width) return false;
-          const ctx = c.getContext('2d');
-          const d = ctx.getImageData(Math.floor(c.width/2), Math.floor(c.height/4), 1, 1).data;
-          return d[3] > 0; // scene has painted (sky wash is opaque)
-        })()`);
+        ready = await cdp.evaluate(READY_PROBE);
         if (ready) break;
       } catch {
         /* page still loading */
@@ -815,6 +1015,11 @@ async function cdpMain(args) {
       for (let s = 0; s < samples; s++) {
         const snap = await cdp.evaluate("window.__sampleContrast()");
         if (snap.error) throw new Error(snap.error);
+        if (!snap.photoPresent) {
+          // 07-03 honesty gate: sampling without the photo would fall back
+          // to --bg and understate worst-case brightness — hard-fail.
+          throw new Error("photo not decoded during sampling — gate would be dishonest");
+        }
         meta = { panel: snap.panel, dpr: snap.dpr };
         for (const r of snap.results) {
           if (!r.overSky || r.error) {
