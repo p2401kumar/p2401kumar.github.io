@@ -14,9 +14,19 @@ Within seconds of landing, a senior engineering leader should think "this person
 
 Milestone stats: 4 phases (4, 5, 5.1 inserted, 6), 12 plans, all 22 v2.0 requirements complete and verified (archives: `milestones/v2.0-*`). Codebase: Astro 7.0.7 static; `src/lib/fig01/` + `src/lib/nightsky/` canvas engines (one rAF loop each, event-contract coupling only); zero new dependencies added in v2.0. Deploys on push to `main` via GitHub Actions.
 
-## Current Milestone: none (between milestones)
+## Current Milestone: v3.0 Real Sky
 
-v2.0 closed 2026-07-18. Next-milestone candidates live in Future candidates below and REQUIREMENTS.md Future Requirements. Open post-launch items: retire/redirect the old `/home` repo; user-run real-device touch checklist + 5-min idle-CPU check (documented in `milestones/v2.0-phases/06-integration-launch/06-01-LAUNCH-READINESS.md` §5–6, rollback path included).
+**Goal (user, 2026-07-18):** "Improve the background. glassy look, real sky. use images by combining real images. add real life animations. bring realism to life." — The night scene graduates from procedural drawing to a composited real-astrophotography sky with a full frosted-glass content system floating over it, and ambient realism animations that make the scene feel alive without breaking a single floor.
+
+**Locked direction (user Q&A, 2026-07-18):**
+- **Sky source:** real photo base + authored overlay — a real Milky Way panorama (NASA/ESO-class astrophotography, composited from real images) becomes the sky; the career constellations, meteors, and crescent moon remain a drawn layer on top (the personal star map survives on a real sky)
+- **Glass:** FULL glass system — content panels, header/footer, and jump index all become frosted-glass surfaces (backdrop blur, translucency, hairline light edges) over the photo
+- **Real-life animations (all four):** drifting clouds/haze layers · parallax depth between sky/horizon/foreground on panel change · faint breathing aurora shimmer · atmospheric star scintillation (replaces the simple alpha twinkle)
+- **Floors:** ALL v2 floors carry forward (Lighthouse ≥90 ×4 both presets, reduced-motion full-stop, contrast ≥4.5:1 worst-case, honesty gate, idle CPU <10%) + a small photo-credit line (e.g. "Sky: ESO/S. Brunier, CC BY 4.0") in the footer/colophon — attribution as an extension of the honesty discipline
+
+**Known tensions research must resolve:** ambient-animation budget (4 systems + fireflies + beams + meteors vs <10% idle CPU — the one-active-animation doctrine evolves into a bounded-ambient-set + pause machine), backdrop-filter cost over large imagery, dark-photo banding on 8-bit displays, LCP with a full-viewport photo, DPR strategy for photos (crispness on 4K vs weight), reduced-transparency preference handling for glass.
+
+Open post-launch items from v2.0 (unchanged): retire/redirect the old `/home` repo; user-run real-device touch checklist + 5-min idle-CPU check (documented in `milestones/v2.0-phases/06-integration-launch/06-01-LAUNCH-READINESS.md` §5–6).
 
 ## Requirements
 
@@ -36,7 +46,11 @@ v2.0 closed 2026-07-18. Next-milestone candidates live in Future candidates belo
 
 ### Active
 
-*(none — between milestones)*
+- [ ] Real composited sky: full-viewport real-astrophotography Milky Way panorama (combined real images), AVIF/WebP optimized, no banding, credit line rendered
+- [ ] Authored overlay survives: career constellations, meteors, crescent moon drawn over the photo sky; panel-reactive brightening intact
+- [ ] Full glass system: panels, header/footer, jump index as frosted-glass surfaces (backdrop blur + translucency + hairline light edges) passing contrast floors
+- [ ] Real-life animations: drifting clouds/haze, parallax depth on panel change, faint aurora shimmer, atmospheric star scintillation — all inside the idle-CPU and reduced-motion floors
+- [ ] Floors: Lighthouse ≥90 ×4 live both presets, reduced-motion full-stop, contrast ≥4.5:1 worst-case, honesty gate + photo attribution
 
 **Future candidates (not this milestone):**
 - Notes/writing section (NOTE-01) — only once a content pipeline exists
