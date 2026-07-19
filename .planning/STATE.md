@@ -2,18 +2,18 @@
 gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Real Sky
-current_phase: 9
-current_phase_name: Living Sky
-status: phase_complete
-stopped_at: "Completed 09-03-PLAN.md — Phase 9 CLOSED (AMB-01..05 Complete); next: plan Phase 10 (Integration & Launch)"
-last_updated: "2026-07-19T21:06:57.654Z"
+current_phase: 10
+current_phase_name: Integration & Launch
+status: in_progress
+stopped_at: "Completed 10-01-PLAN.md — launch-readiness pack ready (20/21 gates green locally); 10-02 deploy BLOCKED on explicit human go"
+last_updated: "2026-07-19T22:22:27.592Z"
 last_activity: 2026-07-19
-last_activity_desc: "09-03 executed: mobile shed ladder + full closing battery + phase close-out (AMB-05)"
+last_activity_desc: "09-03 executed: mobile shed ladder + full closing battery + Phase 9 close-out (AMB-05)"
 progress:
   total_phases: 4
   completed_phases: 3
-  total_plans: 10
-  completed_plans: 10
+  total_plans: 12
+  completed_plans: 11
   percent: 75
 ---
 
@@ -28,7 +28,9 @@ See: .planning/PROJECT.md (updated 2026-07-18)
 
 ## Current Position
 
-Phase: 9 (Living Sky) — COMPLETE (3/3 plans) — next: plan Phase 10 (Integration & Launch)
+Phase: 10 (Integration & Launch) — IN PROGRESS (1/2 plans) — next: 10-02 gated deploy (human go required)
+Plan: 10-01 COMPLETE — the complete LOCAL launch-readiness proof: embedded Fig. 01 36-check audit re-passed on the FULLY COMPOSITED page (one-active-animation with all four ambient systems frozen, cold `/#fig-01` via Fix B AND the event path); deck mechanics / no-JS classic floor / case-study+SEO surface all green; the full carry-forward battery landed inside the Phase-9 families (contrast worsts identical 15.06/15.55/15.57/6.23/13.55, aurora 0.1052/0.0386, moon 0.2374/0.2466, banding runs=1 gaps=0, soak 6.39%<10% at 60fps 0 long tasks, rAF 2/2/0x5, zero-hex 0, local Lighthouse mobile 99/100/100/100 LCP 1.9s + desktop 100x4 LCP 0.5s). OG-03 CLOSED (real 1200x630 reduced-motion capture). `10-01-LAUNCH-READINESS.md` is the decision pack: before/after heroes, 21-gate table (20 green; LIVE Lighthouse the sole deferral), rollback (revert 3fbbcd2..HEAD + FF push; tags v1.0/v2.0), real-device checklist + v3 additions, fix-forward list. NOTHING pushed — origin/main 65 commits behind, asserted.
+Phase: 9 (Living Sky) — COMPLETE (3/3 plans)
 Plan: 09-03 COMPLETE — AMB-05 closed: mobile degradation ladder shipped (computeAmbientTier in scene.ts — tier≥1 `w<640 OR dm≤4` sheds far clouds; tier≥2 `w<480 OR dm≤2` throttles aurora shape repaint to every 9 frames; tier≥3 `w<390 OR (dm≤2 AND tier 2)` drops the chromatic nudge; deviceMemory feature-detected, Safari/iOS width-only; PARALLAX NEVER SHEDS — proven firing at 375w tier 3). Full closing battery GREEN (`battery/battery-summary.md`).
 **Phase 9 measured ambient budget:** real-page 60s soak with ALL four ambient systems + glass live (1440×900 DPR1 software raster): **TOTAL 5.49% < 10%** (4.51pp headroom), 60.0fps, 0 long tasks, Layout 0.000s. Plan-designed marginal vs the reduced-motion baseline (whole scene vs static frame): +4.26pp. **Projection-comparable marginal vs 08's 6.10% glass-live reference: −0.61pp ≈ 0 within the ±0.4–0.7pp scene-noise family — at/below the 0.3–0.7pp projection.** Whole-tree cross-check: 35.32% vs 08's 36.67% (−1.35pp, no compositor blowout).
 **Phase 9 invariants re-proved:** single-rAF (scene 2 / clouds+aurora+parallax+idle-queue+meteors+starfield 0 / fig01 2); pause machine covers all four ambient systems (hidden / fig-01-active / reduced-motion capture-pairs identical); canvas + host transform 'none' at rest AND mid-parallax-nudge both viewports; reduced-motion renders exactly ONE static frame carrying photo + moon + constellations + clouds + aurora (byte-identical pair; the 09-02 carried note fixed — clouds now request a static repaint when the idle-queued sprite drain lands while no loop runs); `--aurora` gate 0.1035/0.0384 << mwPeak both viewports; `--aurora` token (#bfe8df) stays the one hue exception in tokens.css; aurora draws over the moon / before the clouds; zero-hex, source-over-only, leak gate airtight, Lighthouse 99+100×7 TBT 0ms.
@@ -114,6 +116,7 @@ Last activity: 2026-07-19 — 09-03 executed: mobile shed ladder + full closing 
 | Phase 09 P01 | 21min | 3 tasks | 6 files |
 | Phase 09 P02 | ~24 min | 3 tasks | 5 files |
 | Phase 09 P03 | ~60min | 3 tasks | 28 files |
+| Phase 10 P01 | ~50 min | 3 tasks | 17 files |
 
 ## Accumulated Context
 
@@ -212,6 +215,9 @@ Recent decisions affecting current work:
 - [Phase 09]: 09-03: Rule-2 fix — clouds' idle-queued sprite drain now requests a static repaint when no loop runs (requestRepaint seam mirroring constellations), closing the 09-02 carried note: visitors loading with reduced-motion already set get clouds in the still (column-band max was 0, now 5)
 - [Phase 09]: 09-03: soak marginal framed honestly — the plan's RM baseline stops the WHOLE scene, so +4.26pp is the full living-scene cost; the 0.3-0.7pp projection's basis is 08's 6.10% glass-live total, against which the four new ambient systems measure -0.61pp ≈ 0 within noise
 - [Phase 09]: 09-03: far-shed proven behaviorally via right-margin haze-coverage probe (x0.82-0.98, y0.645-0.685 — no aurora/moon/MW by construction) under deterministic reduced-motion emulation: cover 0.213 -> 0.029 at dm=4; max-alpha probes are star-polluted and were rejected as the instrument
+- [Phase 10]: 10-01: OG-03 taken — real 1200x630 reduced-motion hero capture (1440x756 -> Lanczos downscale, no crop) replaces the v1/v2-era OG card; meta + build + dims verified
+- [Phase 10]: 10-01: shed-ladder far-strip rows diagnosed as instrument fragility (per-process sprite-layout luck; same-size re-roll regenerates Layer 0 but reuses cloud sprites) — far shed proven via tier-flip delta with exact restore; product bit-identical to the 09-03-proven source
+- [Phase 10]: 10-01: soak 6.39% total = +0.90pp vs the 5.49% point, inside the 08-03 glass-live 6.10% noise family (machine shared with audit workload); <10% floor holds with 3.61pp headroom
 
 ### Pending Todos
 
@@ -244,7 +250,7 @@ Items acknowledged and carried forward:
 
 ## Session Continuity
 
-Last session: 2026-07-19T21:06:57.641Z
+Last session: 2026-07-19T22:21:21.597Z
 Stopped at: Completed 09-03-PLAN.md — Phase 9 CLOSED (AMB-01..05 Complete, full battery green); next: plan Phase 10 (Integration & Launch)
 Resume file: None
 
