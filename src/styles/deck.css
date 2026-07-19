@@ -40,14 +40,17 @@ html.deck-active .deck {
 /* 2. Panel positioning — each panel fills the full deck viewport and
    scrolls internally (tall panels like experience/skills stay usable).
    Centered content column padding clears the fixed header (top) and
-   footer (bottom) bars so they never occlude panel content. */
+   footer (bottom) bars so they never occlude panel content.
+   Bottom padding 136px since 07-04: the footer gained the CC BY 4.0
+   credit line (2-line flex column, CDP-measured 131.5px fixed height in
+   deck mode at both check widths) — 112px no longer cleared it. */
 html.deck-active .panel {
   position: absolute;
   inset: 0;
   overflow: auto;
   display: flex;
   justify-content: center;
-  padding: 96px clamp(18px, 4vw, 32px) 112px;
+  padding: 96px clamp(18px, 4vw, 32px) 136px;
 }
 
 html.deck-active .panel > * {
