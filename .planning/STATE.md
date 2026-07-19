@@ -4,17 +4,17 @@ milestone: v3.0
 milestone_name: Real Sky
 current_phase: 7
 current_phase_name: Real-Sky Foundation
-status: ready_to_plan
-stopped_at: v3.0 roadmap created
-last_updated: "2026-07-19T12:57:49.126Z"
+status: phase_complete_ready_to_plan_next
+stopped_at: Phase 7 complete (07-04 executed; blocking LCP checkpoint PASS) — next plan Phase 8 (Glass System)
+last_updated: "2026-07-19T13:25:30.979Z"
 last_activity: 2026-07-19
-last_activity_desc: "07-03 executed: real-sky integration complete — photo delivery + overlay surgery + photo-aware contrast, vignette widened after 1280 gate failure (4.06 -> 4.58)"
+last_activity_desc: "07-04 executed: CC BY 4.0 credit line (both modes) + full battery green + blocking LCP checkpoint PASS (mobile 99/LCP 1.9s, desktop 100x4/LCP 0.5s) — Phase 7 COMPLETE, IMG-01..05 done"
 progress:
   total_phases: 4
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 4
-  completed_plans: 3
-  percent: 0
+  completed_plans: 4
+  percent: 25
 ---
 
 # Project State
@@ -28,10 +28,10 @@ See: .planning/PROJECT.md (updated 2026-07-18)
 
 ## Current Position
 
-Phase: 7 (Real-Sky Foundation) — executing
-Plan: 4 of 4 (07-03 real-sky integration COMPLETE — photo live behind everything, contrast gates green both widths after vignette widening; next: 07-04 credit line + gate battery + LCP checkpoint)
-Status: executing — 07-01/07-02/07-03 complete; 07-04 remains
-Last activity: 2026-07-19 — 07-03 executed + gate-failure continuation: photo delivery, overlay surgery, photo-aware verify-contrast, widened column vignette (1280 contrast 4.06 -> 4.58, 1440 5.24 -> 12.22)
+Phase: 7 (Real-Sky Foundation) — COMPLETE 2026-07-19 (4/4 plans)
+Plan: — (next: plan Phase 8, Glass System)
+Status: Phase 7 closed — IMG-01..05 Complete; full battery green; blocking LCP checkpoint PASSED (mobile 99/100/100/100, LCP 1.9s inside the 1.5–2.8s budget; desktop 100×4, LCP 0.5s); visual sign-off auto-resolved with committed evidence (async veto open until Phase 10 deploy)
+Last activity: 2026-07-19 — 07-04 executed: credit line + gate battery + LCP checkpoint + phase close-out
 
 ## Performance Metrics
 
@@ -99,6 +99,7 @@ Last activity: 2026-07-19 — 07-03 executed + gate-failure continuation: photo 
 | Phase 07 P01 | 35m | 3 tasks | 23 files |
 | Phase 07 P02 | 35min | 2 tasks | 3 files |
 | Phase 7 P3 | 120min | 4 tasks | 16 files |
+| Phase 07 P04 | 35min | 3 tasks | 13 files |
 
 ## Accumulated Context
 
@@ -173,6 +174,8 @@ Recent decisions affecting current work:
 - [Phase 07]: Phase 8 blur radius budget from measured sensitivity: 12px default, 16px hard ceiling over canvas (12->16px costs +0.68pp main-thread / +4.15pp whole-tree)
 - [Phase 07]: Soak methodology extended with whole-Chrome-process-tree CPU cross-check: renderer TaskDuration alone is blind to compositor-side blur cost (+6.48pp under software raster recorded as conservative upper bound)
 - [Phase 07]: 07-03 vignette sized to max 1.6:1-tier column+ramp edge (0.234043/0.042553): 1280 contrast 4.06 -> 4.58, galactic-core margin brightness kept (mwPeak <1% change)
+- [Phase 07]: 07-04: credit line added unconditionally to the shared footer (all pages, both modes); deck .panel bottom padding 112->136px and deck fixed-chrome offsets +24px for the measured 131.5px 2-line footer
+- [Phase 07]: 07-04: blocking LCP checkpoint PASS with the honest LCP-element nuance — Chrome excludes full-viewport images from LCP candidacy, so LCP is hero text (mobile 1.9s in budget); single-fetch preload invariant held
 
 ### Pending Todos
 
@@ -205,12 +208,13 @@ Items acknowledged and carried forward:
 
 ## Session Continuity
 
-Last session: 2026-07-19T12:57:22.866Z
+Last session: 2026-07-19T13:24:51.817Z
 Stopped at: v3.0 roadmap created — phases 7-10 mapped (18/18 requirements), ready to plan Phase 7
 Resume file: None
 
 ## Operator Next Steps
 
-- Review the v3.0 roadmap (`.planning/ROADMAP.md`) — 4 phases (7-10), spike-first Phase 7, glass-before-ambient sequencing
-- Plan Phase 7 with `/gsd-plan-phase 7` — both empirical spikes (banding + glass-CPU) run FIRST inside the phase before any pipeline work
+- Phase 7 is closed — review the visual sign-off evidence at your leisure (`.planning/phases/07-real-sky-foundation/07-04-visual-signoff.md` + `integration-evidence/07-04-*.png`); async veto stays open until the Phase 10 deploy (re-run build-sky.mjs / adjust object-position to revise)
+- Plan Phase 8 with `/gsd-plan-phase 8` — Glass System, against the recorded baseline (contrast worst 4.58 @1280, blur budget 12px/16px, mobile perf 99/LCP 1.9s)
+- Before the Phase 10 ship: manually browser-verify the NOIRLab license page (noirlab.edu/public/copyright/) — the IMG-04 "before ship" clause (STATE blocker)
 - (Carried from v2.0 close) retire/redirect the old `p2401kumar.github.io/home` repo; run the live-site real-device touch + 5-min idle-CPU check at your leisure (06-01-LAUNCH-READINESS.md §5–6)
