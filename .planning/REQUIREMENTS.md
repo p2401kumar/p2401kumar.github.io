@@ -32,10 +32,10 @@ Each maps to roadmap phases (numbering continues from Phase 7). Prior-milestone 
 
 ### Floors & Launch
 
-- [ ] **FLR-01**: Live Lighthouse ≥90 all four categories, both presets, after full integration — with a dedicated LCP checkpoint immediately after photo integration (before glass/animations compound)
+- [x] **FLR-01**: Live Lighthouse ≥90 all four categories, both presets, after full integration — with a dedicated LCP checkpoint immediately after photo integration (before glass/animations compound)
 - [x] **FLR-02**: The full carry-forward regression list re-passes: Fig. 01 embedded 36-check audit, deck mechanics, no-JS classic WITH the photo, view-classic, case-study scene-free leak gate, sitemap, `/#work` alias, cold-`/#fig-01` pause, honesty gate, single-rAF counts, zero-hex (new tokens in tokens.css only)
 - [x] **FLR-03**: Reduced-motion full-stop, keyboard operability, and the honesty gate remain intact through every phase
-- [ ] **LNC-01**: Deploy via the existing pipeline, gated on explicit user go (v2 precedent); rollback path documented
+- [x] **LNC-01**: Deploy via the existing pipeline, gated on explicit user go (v2 precedent); rollback path documented
 
 ## Future Requirements
 
@@ -79,10 +79,10 @@ Each requirement maps to the phase that **completes** it. FLR-01's LCP checkpoin
 | AMB-03 | Phase 9 | Complete |
 | AMB-04 | Phase 9 | Complete |
 | AMB-05 | Phase 9 | Complete |
-| FLR-01 | Phase 10 | Pending (LCP checkpoint also gated in Phase 7) |
+| FLR-01 | Phase 10 | Complete |
 | FLR-02 | Phase 10 | Complete |
 | FLR-03 | Phase 10 | Complete |
-| LNC-01 | Phase 10 | Pending |
+| LNC-01 | Phase 10 | Complete |
 
 **Coverage:**
 

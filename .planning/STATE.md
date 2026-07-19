@@ -4,17 +4,17 @@ milestone: v3.0
 milestone_name: Real Sky
 current_phase: 10
 current_phase_name: Integration & Launch
-status: in_progress
-stopped_at: "Completed 10-01-PLAN.md — launch-readiness pack ready (20/21 gates green locally); 10-02 deploy BLOCKED on explicit human go"
-last_updated: "2026-07-19T22:22:27.592Z"
+status: milestone_execution_complete
+stopped_at: Completed 10-02-PLAN.md — v3.0 Real Sky LIVE (user-gated deploy, LIVE Lighthouse 100×8); milestone v3.0 execution complete
+last_updated: "2026-07-19T23:44:17.941Z"
 last_activity: 2026-07-19
 last_activity_desc: "09-03 executed: mobile shed ladder + full closing battery + Phase 9 close-out (AMB-05)"
 progress:
   total_phases: 4
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 12
-  completed_plans: 11
-  percent: 75
+  completed_plans: 12
+  percent: 100
 ---
 
 # Project State
@@ -24,11 +24,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-18)
 
 **Core value:** Within seconds of landing, a senior engineering leader should think "this person operates at our level" — credibility delivered through demonstrated craft (a live systems demo), not adjectives. v3.0 adds: the sky becomes *real* — composited astrophotography, glass, and living atmosphere, with every floor intact.
-**Current focus:** Milestone v3.0 Real Sky — roadmap created (phases 7-10, coarse granularity); ready to plan Phase 7 (Real-Sky Foundation, spikes-first).
+**Current focus:** Milestone v3.0 Real Sky — SHIPPED 2026-07-19 (all 4 phases complete, LIVE at https://p2401kumar.github.io/). Next: post-launch real-device checklist (user, at leisure) + milestone archive (/gsd-complete-milestone).
 
 ## Current Position
 
-Phase: 10 (Integration & Launch) — IN PROGRESS (1/2 plans) — next: 10-02 gated deploy (human go required)
+Phase: 10 (Integration & Launch) — COMPLETE (2/2 plans) — v3.0 LIVE
+Plan: 10-02 COMPLETE — the gated launch: Task 1's blocking human gate resolved by the user's explicit "Launch now" in chat (2026-07-19, after reviewing 10-01-LAUNCH-READINESS.md — recorded verbatim in 10-02-SUMMARY.md); FF push `15e6742..0dbe46f` (67 commits, never --force); Actions run 29708118111 build+deploy both success; live pages byte-identical to the 10-01-verified dist; live smoke 13/13 (scene alive at hero, glass backdrop-filter live, cold `/#fig-01` ambient frozen via Fix B seed, `/#work` alias → systems, both `/work/*` scene-free, 404, credit links 200, OG byte-identical 309,377 B); **LIVE Lighthouse 100×8** (mobile 100/100/100/100 LCP 1.5s TBT 0ms — beats the local 99 pre-flight; desktop 100×4 LCP 0.4s) recorded as FLR-01's authoritative evidence in `10-02-lighthouse-scores-live.md`. FLR-01..03 + LNC-01 Complete; ROADMAP Phase 10 + the v3.0 milestone line closed. Rollback stays available (tags v1.0/v2.0; revert `3fbbcd2..0dbe46f` + FF push).
 Plan: 10-01 COMPLETE — the complete LOCAL launch-readiness proof: embedded Fig. 01 36-check audit re-passed on the FULLY COMPOSITED page (one-active-animation with all four ambient systems frozen, cold `/#fig-01` via Fix B AND the event path); deck mechanics / no-JS classic floor / case-study+SEO surface all green; the full carry-forward battery landed inside the Phase-9 families (contrast worsts identical 15.06/15.55/15.57/6.23/13.55, aurora 0.1052/0.0386, moon 0.2374/0.2466, banding runs=1 gaps=0, soak 6.39%<10% at 60fps 0 long tasks, rAF 2/2/0x5, zero-hex 0, local Lighthouse mobile 99/100/100/100 LCP 1.9s + desktop 100x4 LCP 0.5s). OG-03 CLOSED (real 1200x630 reduced-motion capture). `10-01-LAUNCH-READINESS.md` is the decision pack: before/after heroes, 21-gate table (20 green; LIVE Lighthouse the sole deferral), rollback (revert 3fbbcd2..HEAD + FF push; tags v1.0/v2.0), real-device checklist + v3 additions, fix-forward list. NOTHING pushed — origin/main 65 commits behind, asserted.
 Phase: 9 (Living Sky) — COMPLETE (3/3 plans)
 Plan: 09-03 COMPLETE — AMB-05 closed: mobile degradation ladder shipped (computeAmbientTier in scene.ts — tier≥1 `w<640 OR dm≤4` sheds far clouds; tier≥2 `w<480 OR dm≤2` throttles aurora shape repaint to every 9 frames; tier≥3 `w<390 OR (dm≤2 AND tier 2)` drops the chromatic nudge; deviceMemory feature-detected, Safari/iOS width-only; PARALLAX NEVER SHEDS — proven firing at 375w tier 3). Full closing battery GREEN (`battery/battery-summary.md`).
@@ -117,6 +118,7 @@ Last activity: 2026-07-19 — 09-03 executed: mobile shed ladder + full closing 
 | Phase 09 P02 | ~24 min | 3 tasks | 5 files |
 | Phase 09 P03 | ~60min | 3 tasks | 28 files |
 | Phase 10 P01 | ~50 min | 3 tasks | 17 files |
+| Phase 10 P02 | ~25 min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -218,6 +220,8 @@ Recent decisions affecting current work:
 - [Phase 10]: 10-01: OG-03 taken — real 1200x630 reduced-motion hero capture (1440x756 -> Lanczos downscale, no crop) replaces the v1/v2-era OG card; meta + build + dims verified
 - [Phase 10]: 10-01: shed-ladder far-strip rows diagnosed as instrument fragility (per-process sprite-layout luck; same-size re-roll regenerates Layer 0 but reuses cloud sprites) — far shed proven via tier-flip delta with exact restore; product bit-identical to the 09-03-proven source
 - [Phase 10]: 10-01: soak 6.39% total = +0.90pp vs the 5.49% point, inside the 08-03 glass-live 6.10% noise family (machine shared with audit workload); <10% floor holds with 3.61pp headroom
+- [Phase 10]: 10-02: launch approved by the user's explicit "Launch now" in chat (2026-07-19) after reviewing 10-01-LAUNCH-READINESS.md — the blocking gate was human-resolved, never auto-advanced; FF push 15e6742..0dbe46f (67 commits, never --force), Actions 29708118111 green, LIVE Lighthouse 100x8 (FLR-01 authoritative), live smoke 13/13 — v3.0 SHIPPED
+- [Phase 10]: 10-02: live smoke harness active-panel probe corrected from a stale .is-active selector to the product's data-state="active" marker (deck.ts:118) — instrument-only; the deployed pages are byte-identical (cmp) to the 10-01-verified local dist
 
 ### Pending Todos
 
@@ -226,7 +230,7 @@ None yet.
 ### Blockers/Concerns
 
 - **Milestone re-scope trigger (Phase 7 Spike 2)**: the "full glass over a permanently-animating scene" premise is gated by the glass-over-animating-canvas CPU spike. If the marginal re-blur cost can't tune under the <10% idle floor, glass scope is restructured (glass over static-only regions) before Phase 8 builds it. Empirical, decided in Phase 7.
-- **NOIRLab license (Phase 7, IMG-04)**: `noirlab2430b` license/resolution corroborated via mirrors only (site bot-gated); manual browser check of noirlab.edu/public/copyright/ required before ship — ESO `eso0932a` is the CC BY 4.0 fallback.
+- ~~**NOIRLab license (Phase 7, IMG-04)**~~ RESOLVED before ship: IMG-04 closed Complete in Phase 7 (credit line + license verification); at launch (10-02) both credit links verified resolving from the live site — noirlab.edu/public/images/noirlab2430b/ 200, creativecommons.org/licenses/by/4.0/ 200; credit line serving verbatim in the live footer.
 
 <details>
 <summary>v2.0-era blockers (resolved)</summary>
@@ -250,15 +254,13 @@ Items acknowledged and carried forward:
 
 ## Session Continuity
 
-Last session: 2026-07-19T22:21:21.597Z
-Stopped at: Completed 09-03-PLAN.md — Phase 9 CLOSED (AMB-01..05 Complete, full battery green); next: plan Phase 10 (Integration & Launch)
+Last session: 2026-07-19T23:44:17.928Z
+Stopped at: Completed 10-02-PLAN.md — v3.0 Real Sky LIVE (user-gated deploy, Actions 29708118111 green, LIVE Lighthouse 100×8, smoke 13/13); milestone v3.0 execution complete — next: real-device checklist (user, at leisure) + /gsd-complete-milestone
 Resume file: None
 
 ## Operator Next Steps
 
-- Phase 7 is closed — review the visual sign-off evidence at your leisure (`.planning/phases/07-real-sky-foundation/07-04-visual-signoff.md` + `integration-evidence/07-04-*.png`); async veto stays open until the Phase 10 deploy (re-run build-sky.mjs / adjust object-position to revise)
-- Phase 8 is closed (GLS-01..04 Complete) — review at your leisure: the glass gate record (`08-02-glass-gate.md` + `glass-evidence/`) and the GLS-04 re-proof (`.planning/phases/08-glass-system/08-03-glass-reproof.md`: 6.10% total idle, Lighthouse 99+100×7, battery + leak gate green); async veto stays open until the Phase 10 deploy
-- Phase 9 is closed (AMB-01..05 Complete) — review at your leisure: the closing battery (`.planning/phases/09-living-sky/battery/battery-summary.md`), the reduced-motion marquee still (`battery/reduced-motion-still-1440x900.png`) and the 375w shed-ladder still (`battery/shed-ladder-375w.png`); async veto stays open until the Phase 10 deploy
-- Next: plan Phase 10 (Integration & Launch) — full carry-forward regression battery + live Lighthouse + user-gated deploy; measured entering budget: total 5.49% idle with everything live (4.51pp headroom)
-- Before the Phase 10 ship: manually browser-verify the NOIRLab license page (noirlab.edu/public/copyright/) — the IMG-04 "before ship" clause (STATE blocker)
-- (Carried from v2.0 close) retire/redirect the old `p2401kumar.github.io/home` repo; run the live-site real-device touch + 5-min idle-CPU check at your leisure (06-01-LAUNCH-READINESS.md §5–6)
+- **v3.0 Real Sky is LIVE at https://p2401kumar.github.io/** (shipped 2026-07-19, LIVE Lighthouse 100×8) — run the real-device touch checklist at your leisure (`10-01-LAUNCH-READINESS.md` §6: carried v2 items + 5 v3 additions — cellular photo load, iOS Safari glass, parallax feel, scroll jank, 5-min idle warmth); rollback stays one revert away (§5; tags v1.0/v2.0)
+- Archive the milestone when ready: `/gsd-complete-milestone` (phases 7–10 all complete, FLR/LNC/IMG/GLS/AMB all closed)
+- Fix-forward levers (optional, non-user-facing): aurora lateral-softening (documented in `aurora.ts`), shed-ladder far-strip battery instrument (`10-01-battery.md`)
+- (Carried from v2.0 close) retire/redirect the old `p2401kumar.github.io/home` repo

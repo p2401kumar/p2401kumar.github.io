@@ -4,7 +4,7 @@
 
 - ✅ **v1.0 Launch** — Phases 1-3 (shipped 2026-07-17) — [archive](milestones/v1.0-ROADMAP.md)
 - ✅ **v2.0 Night Sky** — Phases 4-6 (shipped 2026-07-18) — [archive](milestones/v2.0-ROADMAP.md)
-- 🌌 **v3.0 Real Sky (current)** — Phases 7-10 — composited astrophotography sky + full glass chrome + ambient realism over the shipped v2 deck
+- ✅ **v3.0 Real Sky** — Phases 7-10 (shipped 2026-07-19) — composited astrophotography sky + full glass chrome + ambient realism over the shipped v2 deck
 
 ## Phases
 
@@ -36,7 +36,7 @@ Full details: [milestones/v2.0-ROADMAP.md](milestones/v2.0-ROADMAP.md) · Phase 
 - [x] **Phase 7: Real-Sky Foundation** - Both empirical spikes first, then a real composited Milky Way photo lands LCP-clean behind everything with the authored overlay intact (completed 2026-07-19)
 - [x] **Phase 8: Glass System** - Frosted-glass panels + chrome over the photo, contrast verifier re-architected to screenshot-sample before glass values lock (completed 2026-07-19)
 - [x] **Phase 9: Living Sky** - Clouds, panel-change parallax, breathing aurora, and scintillation inside one bounded-ambient rAF budget (completed 2026-07-19)
-- [ ] **Phase 10: Integration & Launch** - Full carry-forward regression battery re-passes, live Lighthouse ≥90 ×4, user-gated deploy
+- [x] **Phase 10: Integration & Launch** - Full carry-forward regression battery re-passes, live Lighthouse ≥90 ×4, user-gated deploy (completed 2026-07-19, LIVE)
 
 ## Phase Details
 
@@ -139,10 +139,10 @@ Full details: [milestones/v2.0-ROADMAP.md](milestones/v2.0-ROADMAP.md) · Phase 
   - **Carry-forward regression battery** (verbatim from research SUMMARY): the full checklist in criterion 2 above is the launch gate — every item re-passes on the composited build.
   - **Real-device checklist + gated deploy**: the user-run real-device touch + 5-min idle-CPU check precedes deploy; deploy is gated on explicit user approval (v2 precedent — replacing the live professional site is outward-facing).
 
-**Plans**: 1/2 plans executed
+**Plans**: 2/2 plans complete
 
   - [x] 10-01-PLAN.md — Launch readiness: full carry-forward regression battery re-run on the composited build (embedded Fig. 01 36-check with full ambient paused, deck mechanics, no-JS classic, case-study/SEO/leak/sitemap/alias/credit, every verifier mode + soak + local Lighthouse), OG-03 opportunistic, the decision-ready go/no-go pack — NO push
-  - [ ] 10-02-PLAN.md — Gated launch: blocking human go/no-go (never auto-resolved), then FF push (never --force) → Actions watch → live verify + live Lighthouse (FLR-01 authoritative) → FLR-01..03 + LNC-01 close-out
+  - [x] 10-02-PLAN.md — Gated launch: blocking human go/no-go (resolved by explicit user approval in chat), then FF push (never --force) → Actions watch → live verify + live Lighthouse (FLR-01 authoritative: 100×8) → FLR-01..03 + LNC-01 close-out
 
 **UI hint**: yes
 
@@ -167,7 +167,7 @@ Full details: [milestones/v2.0-ROADMAP.md](milestones/v2.0-ROADMAP.md) · Phase 
 | 7. Real-Sky Foundation | v3.0 | 4/4 | Complete   | 2026-07-19 |
 | 8. Glass System | v3.0 | 3/3 | Complete | 2026-07-19 |
 | 9. Living Sky | v3.0 | 3/3 | Complete   | 2026-07-19 |
-| 10. Integration & Launch | v3.0 | 1/2 | In Progress|  |
+| 10. Integration & Launch | v3.0 | 2/2 | Complete | 2026-07-19 |
 
 ---
 *Phase numbering continues from the last shipped phase in the next milestone (never restarts).*
