@@ -39,6 +39,7 @@
 // (including the Layer-0 blit destination rect and the star metadata
 // positions) use plain CSS-pixel coordinates.
 
+import { initAurora, type AuroraHandle } from './aurora';
 import { initClouds, type CloudsHandle } from './clouds';
 import { initConstellations, type ConstellationHandle } from './constellations';
 import { initMeteors, type MeteorHandle } from './meteors';
@@ -214,6 +215,12 @@ let meteorsHandle: MeteorHandle | null = null;
  * subset). Zero owned timers/rAF: sprite generation is idle-queued on
  * resize only; the pause machine covers it for free. */
 let cloudsHandle: CloudsHandle | null = null;
+/** 09-02's aurora subsystem handle (AMB-03) — advance/draw ride the same
+ * single tick as Layer 1.25 (after the Layer-0 blit, before the clouds).
+ * Zero owned timers/rAF: all cadence (the 4-frame shape throttle
+ * included) is an internal frame counter inside advance(); the pause
+ * machine covers it for free. */
+let auroraHandle: AuroraHandle | null = null;
 /** Monotonic generation counter — a resize that lands mid-generation
  * invalidates the in-flight result instead of adopting a stale size. */
 let generation = 0;
@@ -415,6 +422,17 @@ function drawFrame(ts: number): void {
   visibleCtx.clearRect(0, 0, w, h);
   visibleCtx.drawImage(layer0.canvas, 0, 0, w, h);
 
+  // --- Layer 1.25: aurora (09-02, AMB-03) — composites OVER the moon
+  // (baked into Layer 0) and BEFORE the clouds, per 09-UI-SPEC Aurora
+  // Placement (supersedes the RESEARCH diagram's tentative last-layer
+  // placement): physically correct — the aurora (~100km up) is vastly
+  // closer than the moon, so the moon dims very slightly through the
+  // curtain at breathing peaks. Intentional, not a defect. ---
+  if (auroraHandle) {
+    auroraHandle.advance(ts);
+    auroraHandle.draw(visibleCtx, w, h);
+  }
+
   // --- Layer 1.5: clouds (09-01, AMB-01) — wraparound sprite blit of the
   // two drifting lower-sky layers, column-governed inside clouds.ts.
   // Drawn after the Layer-0 blit and before the twinkle subset so the
@@ -530,6 +548,9 @@ function renderStaticFrame(): void {
   if (!visibleCtx || !layer0) return;
   visibleCtx.clearRect(0, 0, layer0.cssWidth, layer0.cssHeight);
   visibleCtx.drawImage(layer0.canvas, 0, 0, layer0.cssWidth, layer0.cssHeight);
+  // Aurora (09-02, AMB-03) at its FIXED mid-breath phase — over the
+  // moon, before the clouds, same order as the live tick.
+  auroraHandle?.drawStatic(visibleCtx, layer0.cssWidth, layer0.cssHeight);
   cloudsHandle?.drawStatic(visibleCtx, layer0.cssWidth, layer0.cssHeight);
   if (constellationsHandle) {
     constellationsHandle.draw(visibleCtx, layer0.cssWidth, layer0.cssHeight, performance.now());
@@ -579,9 +600,10 @@ function adoptLayer0(result: Layer0Result): void {
   sizeVisibleCanvas(result);
   seedTwinkles(result.twinkleStars);
   seedFireflies(result.cssWidth, result.cssHeight);
-  // Clouds adopt the new size BEFORE the static paint so the very first
-  // (and every reduced-motion) frame already carries the governed band.
+  // Clouds + aurora adopt the new size BEFORE the static paint so the
+  // very first (and every reduced-motion) frame already carries them.
   cloudsHandle?.resize(result.cssWidth, result.cssHeight);
+  auroraHandle?.resize(result.cssWidth, result.cssHeight);
   renderStaticFrame();
   seedFig01ActiveFromDom(); // 06-02 Fix B — one-shot, before the loop can start
   updateRunState();
@@ -631,6 +653,15 @@ export function initNightSky(root: HTMLElement): () => void {
   // Its AMB-02 mid-layer nudge listener subscribes to the literal
   // 'nightsky:panel-change' event independently (never deck.ts). ---
   cloudsHandle = initClouds({
+    tokens: skyTokens,
+    getViewport: () => (layer0 ? { width: layer0.cssWidth, height: layer0.cssHeight } : null),
+  });
+
+  // --- Aurora subsystem (09-02, AMB-03): handle-shaped, zero owned
+  // timers/rAF — the noise table builds once at init; advance/draw ride
+  // this module's single tick (Layer 1.25, over the moon / before the
+  // clouds). Hard-capped at 0.20 alpha in-code; left margin only. ---
+  auroraHandle = initAurora({
     tokens: skyTokens,
     getViewport: () => (layer0 ? { width: layer0.cssWidth, height: layer0.cssHeight } : null),
   });
@@ -719,6 +750,8 @@ export function initNightSky(root: HTMLElement): () => void {
     meteorsHandle = null;
     cloudsHandle?.teardown();
     cloudsHandle = null;
+    auroraHandle?.teardown();
+    auroraHandle = null;
     document.removeEventListener('visibilitychange', onVisibilityChange);
     document.removeEventListener('nightsky:panel-change', onPanelChange);
     rm.removeEventListener('change', onMotionChange);
