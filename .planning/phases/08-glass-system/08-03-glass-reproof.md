@@ -73,3 +73,55 @@ Identical to the 07-04 pre-glass baseline (mobile 99 / LCP 1.9 s / CLS 0.003; de
 | Mitigation ladder | not needed |
 
 **GLS-04: PASS.**
+
+---
+
+## Full carry-forward regression battery (composited build, 2026-07-19)
+
+Every gate asserted (`test "$(grep -o … | wc -l | tr -d ' ')" = N` convention against source; `grep -c` nowhere).
+
+| Gate | Result |
+|---|---|
+| `npx astro check` | **PASS — 0 errors / 0 warnings / 0 hints** |
+| `npm run build` | **PASS — green, 4 pages + sitemap-index** |
+| `--glass-*` token declarations in tokens.css | **exactly 13**; 0 hex characters in the 13 declarations (values stay rgb()/px/%/decimal) |
+| Zero-hex, standard regex (deck.css / SiteHeader / SiteFooter / BaseLayout / index.astro) | **0** |
+| Zero-hex, DeckIndex.astro identifier-boundary PCRE (`#[0-9a-fA-F]{3,8}(?![0-9A-Za-z_-])` skips `#deck-*` ids) | **0** |
+| Single-rAF invariant | scene.ts = **2** · starfield.ts = **0** · meteors.ts = **0** · fig01/render.ts = **2** — unchanged |
+| Scene-module deck/fig01 imports (scene/starfield/constellations/meteors/tokens import lines) | **0** |
+| `verify-contrast.mjs --selftest` (incl. scrim 0.38 deck.css sync check — scrim untouched this phase) | **PASS** |
+| `verify-contrast.mjs --agreement-selftest` | **PASS** (solid fixture within ±0.05 asserted; glass divergence recorded as designed) |
+| `verify-banding.mjs --selftest` | **PASS** (clean control passes, banded control fails) |
+| `verify-banding.mjs` — 4 committed masters × 2 regions | **all PASS** (runsAboveZero=1, zeroGaps=0 everywhere) |
+| `--cdp-screenshot` @1280×800 | **exit 0** — worst 6.331 (header); hero 13.40 · systems 13.22 · experience 12.16 · patents 15.55 · skills 15.55 · contact 14.02 · footer 12.11 · jump-index 10.29 — matches 08-02's final post-relocation table (twinkle-phase deltas ≤0.05) |
+| `--cdp-screenshot` @1440×900 | **exit 0** — worst 6.234 (header); hero 13.55 · systems 13.37 · experience 15.06 · patents 15.55 · skills 15.58 · contact 14.02 · footer 12.28 · jump-index 10.60 — matches 08-02's final table |
+| `--moon` @1280×800 | **PASS** — moonPeak 0.2123 < mwPeak 0.4695 (identical to 07-03/07-04: glass is a DOM layer above the canvas; --moon reads canvas pixels directly) |
+| `--moon` @1440×900 | **PASS** — moonPeak 0.1857 < mwPeak 0.4748 (identical) |
+| Sitemap | **exactly 3 `<loc>` routes** |
+| package.json / package-lock.json / .planning/config.json | **untouched** (`git diff --quiet` clean); zero installs |
+
+### Leak gate (built output)
+
+| Assertion | Result |
+|---|---|
+| `dist/index.html` body carries `has-sky` | **PASS** — `<body class="has-sky">` (1 body-tag match) |
+| `dist/work/*/index.html` + `dist/404.html` bodies carry `has-sky` | **PASS — 0** (`<body>` bare on all three) |
+| backdrop-filter on /work + /404 (inlined chrome CSS) | **airtight** — 8 occurrences per page, ALL accounted for: 4 inside `@supports` condition text + 4 inside `body.has-sky`-scoped rules that cannot match (unaccounted = 0 on every page) |
+| Panel/deck glass reaching /work or /404 | **0** — zero `data-state="active"` / `.deck` / `--glass-panel` selectors in their CSS (deck.css stays PanelDeck-only → index-only) |
+| Scene/sky JS on /work + /404 (carried from 07-04) | **PASS** — zero `<script src>` tags, zero `nightsky`/`/sky/` refs (sole inline module script = pre-existing footer clock, matching 07-04's record) |
+| Dist CSS ships BOTH backdrop-filter forms (08-02 cssTarget fix regression check) | **PASS** — 6 `-webkit-backdrop-filter` + 6 unprefixed `backdrop-filter` in `dist/_astro/*.css` |
+
+**Assertion-precision note (recorded, not a gate change):** the plan's literal file-wide grep `cat dist/work/*/index.html dist/404.html | grep -o 'has-sky' | wc -l = 0` counts **6** — but all six are the *selector text* of the inlined, unmatched `body.has-sky` chrome rules, not a leak. The gate's stated truth ("body has no has-sky class → no chrome-glass rule can match") is what's asserted above, boundary-correctly, on the `<body>` tags themselves. Nothing was weakened: the stronger per-occurrence accounting (unaccounted = 0) plus the body-tag assertion subsume the intent.
+
+### DeckIndex-relocation regression smoke (CDP, built preview @1440×900)
+
+08-02 moved `<DeckIndex />` out of `.deck`'s stacking context and document-scoped deck.ts's six hooks — this smoke proves the deck still works end-to-end:
+
+| Check | Result |
+|---|---|
+| `#deck-index` present AND outside `.deck` (relocation held in dist) | **PASS** |
+| Jump-link click (`data-panel-index="2"`, `#systems`) → correct panel active | **PASS** — `data-panel-id="systems"` active, count text `03 / 07` |
+| `aria-current` follows navigation (exactly one carrier) | **PASS** — 0 → 2 → 0 across jump + return, always exactly 1 anchor |
+| `nightsky:panel-change` fires per navigation (the fig-01 pause contract's transport) | **PASS** — exactly 1 event per jump (2 total for 2 navigations); dist JS carries 5 `nightsky:panel-change` refs (source untouched since 08-02's final commit — dist is byte-equivalent by construction) |
+
+**Battery verdict: ALL GREEN — zero fixes required, zero gates weakened.**
