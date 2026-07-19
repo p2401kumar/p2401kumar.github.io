@@ -1,0 +1,134 @@
+{
+  "1280x800": {
+    "deckHeroComputed": {
+      "panel": "hero",
+      "backdropFilter": "blur(12px) saturate(1.5) brightness(0.9)",
+      "backgroundColor": "rgba(255, 255, 255, 0.06)",
+      "borderTop": "1px rgba(255, 255, 255, 0.1)"
+    },
+    "pillComputed": {
+      "backdropFilter": "blur(10px) saturate(1.4) brightness(0.92)",
+      "backgroundColor": "rgba(255, 255, 255, 0.05)",
+      "borderTopColor": "rgba(255, 255, 255, 0.1)",
+      "borderBottomColor": "rgb(40, 48, 59)"
+    },
+    "deckTier2Computed": {
+      "panel": "experience",
+      "backdropFilter": "blur(10px) saturate(1.3) brightness(0.96)",
+      "backgroundColor": "rgba(15, 18, 23, 0.55)"
+    },
+    "classicSwitch": {
+      "deckActive": false,
+      "classicActive": true
+    },
+    "classicComputed": {
+      "scrollable": true,
+      "hero": {
+        "backdropFilter": "blur(12px) saturate(1.5) brightness(0.9)",
+        "backgroundColor": "rgba(255, 255, 255, 0.06)",
+        "backgroundImage": "linear-gradient(color(srgb 0.0588235 0.0705882 0.0862745 / 0"
+      },
+      "experience": {
+        "backdropFilter": "blur(10px) saturate(1.3) brightness(0.96)",
+        "backgroundColor": "rgba(15, 18, 23, 0.55)",
+        "backgroundImage": "linear-gradient(color(srgb 0.0588235 0.0705882 0.0862745 / 0"
+      }
+    },
+    "reducedTransparencyMatches": true,
+    "reducedComputed": {
+      "panel": {
+        "backdropFilter": "none",
+        "backgroundColor": "rgba(0, 0, 0, 0)"
+      },
+      "header": {
+        "backdropFilter": "none",
+        "backgroundColor": "rgba(0, 0, 0, 0)"
+      },
+      "pill": {
+        "backdropFilter": "none",
+        "backgroundColor": "rgb(15, 18, 22)"
+      }
+    },
+    "printComputed": {
+      "panel": {
+        "backdropFilter": "none",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "backgroundImage": "none"
+      },
+      "header": {
+        "backdropFilter": "none",
+        "backgroundColor": "rgba(0, 0, 0, 0)"
+      },
+      "pill": {
+        "backdropFilter": "none",
+        "backgroundColor": "rgba(0, 0, 0, 0)"
+      }
+    }
+  },
+  "1440x900": {
+    "deckHeroComputed": {
+      "panel": "hero",
+      "backdropFilter": "blur(12px) saturate(1.5) brightness(0.9)",
+      "backgroundColor": "rgba(255, 255, 255, 0.06)",
+      "borderTop": "1px rgba(255, 255, 255, 0.1)"
+    },
+    "pillComputed": {
+      "backdropFilter": "blur(10px) saturate(1.4) brightness(0.92)",
+      "backgroundColor": "rgba(255, 255, 255, 0.05)",
+      "borderTopColor": "rgba(255, 255, 255, 0.1)",
+      "borderBottomColor": "rgb(40, 48, 59)"
+    },
+    "deckTier2Computed": {
+      "panel": "experience",
+      "backdropFilter": "blur(10px) saturate(1.3) brightness(0.96)",
+      "backgroundColor": "rgba(15, 18, 23, 0.55)"
+    },
+    "classicSwitch": {
+      "deckActive": false,
+      "classicActive": true
+    },
+    "classicComputed": {
+      "scrollable": true,
+      "hero": {
+        "backdropFilter": "blur(12px) saturate(1.5) brightness(0.9)",
+        "backgroundColor": "rgba(255, 255, 255, 0.06)",
+        "backgroundImage": "linear-gradient(color(srgb 0.0588235 0.0705882 0.0862745 / 0"
+      },
+      "experience": {
+        "backdropFilter": "blur(10px) saturate(1.3) brightness(0.96)",
+        "backgroundColor": "rgba(15, 18, 23, 0.55)",
+        "backgroundImage": "linear-gradient(color(srgb 0.0588235 0.0705882 0.0862745 / 0"
+      }
+    },
+    "reducedTransparencyMatches": true,
+    "reducedComputed": {
+      "panel": {
+        "backdropFilter": "none",
+        "backgroundColor": "rgba(0, 0, 0, 0)"
+      },
+      "header": {
+        "backdropFilter": "none",
+        "backgroundColor": "rgba(0, 0, 0, 0)"
+      },
+      "pill": {
+        "backdropFilter": "none",
+        "backgroundColor": "rgb(15, 18, 22)"
+      }
+    },
+    "printComputed": {
+      "panel": {
+        "backdropFilter": "none",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "backgroundImage": "none"
+      },
+      "header": {
+        "backdropFilter": "none",
+        "backgroundColor": "rgba(0, 0, 0, 0)"
+      },
+      "pill": {
+        "backdropFilter": "none",
+        "backgroundColor": "rgba(0, 0, 0, 0)"
+      }
+    }
+  }
+}

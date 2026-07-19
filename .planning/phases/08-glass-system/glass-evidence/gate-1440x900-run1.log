@@ -1,0 +1,11 @@
+panel hero: 7 over-sky text regions, worst vs --ink = 13.55
+panel fig-01: 0 over-sky text regions, worst vs --ink = n/a
+panel systems: 16 over-sky text regions, worst vs --ink = 13.37
+panel experience: 23 over-sky text regions, worst vs --ink = 15.06
+panel patents: 9 over-sky text regions, worst vs --ink = 15.55
+panel skills: 6 over-sky text regions, worst vs --ink = 15.57
+panel contact: 3 over-sky text regions, worst vs --ink = 14.02
+panel header: 5 over-sky text regions, worst vs --ink = 6.23
+panel footer: 5 over-sky text regions, worst vs --ink = 11.49
+panel jump-index: 1 over-sky text regions, worst vs --ink = 10.85
+contrast gate PASS at 1440x900 (screenshot mode, DPR1)
