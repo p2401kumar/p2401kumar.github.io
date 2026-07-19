@@ -161,6 +161,15 @@ export interface CloudsInitOptions {
    * used as a lazy-geometry fallback if draw() ever runs before the first
    * resize() adoption. */
   getViewport: () => { width: number; height: number } | null;
+  /** 09-03 (AMB-05, reduced-motion completeness): invoked once each time a
+   * freshly drained sprite pair is adopted. Sprite generation is idle-
+   * queued, so the static frame scene.ts paints synchronously inside
+   * adoptLayer0 ALWAYS precedes the drain — without a repaint request the
+   * reduced-motion (or otherwise paused) still would permanently lack
+   * clouds. Mirrors constellations.ts's requestRepaint idiom; the caller
+   * decides whether a repaint is actually needed (a running loop repaints
+   * next tick anyway). */
+  requestRepaint?: () => void;
 }
 
 /** The handle scene.ts drives from its single rAF tick (Layer 1.5). */
@@ -193,7 +202,7 @@ export interface CloudsHandle {
  * mid-layer nudge (deck.ts is never imported).
  */
 export function initClouds(options: CloudsInitOptions): CloudsHandle {
-  const { tokens, getViewport } = options;
+  const { tokens, getViewport, requestRepaint } = options;
   const milkyway = tokens.milkyway;
   const skyHorizon = tokens.skyHorizon;
   const rm = matchMedia('(prefers-reduced-motion: reduce)');
@@ -378,6 +387,10 @@ export function initClouds(options: CloudsInitOptions): CloudsHandle {
       if (gen !== generation || tornDown) return; // superseded / torn down
       farSprite = farCanvas;
       nearSprite = nearCanvas;
+      // Freshly drained sprites need a repaint wherever no loop is running
+      // (reduced-motion / hidden / fig-01-active): the pre-drain static
+      // frame was cloudless by construction (09-03 carried-note fix).
+      requestRepaint?.();
     });
   }
 

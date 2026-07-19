@@ -262,6 +262,41 @@ function seedFig01ActiveFromDom(): void {
     document.querySelector('.panel[data-state="active"]')?.getAttribute('data-panel-id') === 'fig-01';
 }
 
+/**
+ * 09-03 (AMB-05) — the documented mobile degradation ladder. Computed here
+ * (scene.ts owns adopt/resize) and PUSHED to the seams 09-01/09-02 exposed;
+ * recomputed on every Layer-0 adoption (init + every debounced resize).
+ *
+ * LOCKED ladder order (09-UI-SPEC.md Composition Doctrine):
+ *   Tier 1 — shed the far cloud layer entirely (cloudsHandle.setFarShed)
+ *   Tier 2 — additionally throttle the aurora SHAPE repaint from every 4
+ *            frames to every 9 (the 8–10 window's midpoint); the aurora
+ *            brightness sine stays per-frame, unaffected
+ *   Tier 3 — additionally drop the scintillation chromatic nudge (the
+ *            2-oscillator amplitude wobble stays; color stays neutral)
+ *
+ * PARALLAX NEVER SHEDS at any tier (locked, 09-CONTEXT.md) — it is
+ * event-driven and compositor-only, effectively free; deliberately NOT
+ * referenced anywhere in this function or its call site.
+ *
+ * Triggers (width OR feature-detected navigator.deviceMemory; deviceMemory
+ * is absent on Safari/iOS, which falls back cleanly to width-only — the
+ * same fallback-as-first-class-path precedent as starfield.ts's
+ * requestIdleCallback shim):
+ *   Tier >= 1: cssWidth < 640  OR deviceMemory <= 4
+ *   Tier >= 2: cssWidth < 480  OR deviceMemory <= 2
+ *   Tier >= 3: cssWidth < 390  OR (deviceMemory <= 2 AND tier 2 active)
+ */
+function computeAmbientTier(cssWidth: number): number {
+  const dmRaw = (navigator as Navigator & { deviceMemory?: unknown }).deviceMemory;
+  const dm = typeof dmRaw === 'number' ? dmRaw : null;
+  let tier = 0;
+  if (cssWidth < 640 || (dm !== null && dm <= 4)) tier = 1;
+  if (cssWidth < 480 || (dm !== null && dm <= 2)) tier = 2;
+  if (cssWidth < 390 || (dm !== null && dm <= 2 && tier >= 2)) tier = 3;
+  return tier;
+}
+
 function lerp(a: number, b: number, t: number): number {
   return a + (b - a) * t;
 }
@@ -604,6 +639,14 @@ function adoptLayer0(result: Layer0Result): void {
   // very first (and every reduced-motion) frame already carries them.
   cloudsHandle?.resize(result.cssWidth, result.cssHeight);
   auroraHandle?.resize(result.cssWidth, result.cssHeight);
+  // 09-03 (AMB-05): apply the mobile degradation ladder for this size —
+  // far-cloud shed (tier 1) -> aurora shape throttle 9 (tier 2) ->
+  // chromatic-nudge drop (tier 3). Parallax is never touched here (it
+  // NEVER sheds — see computeAmbientTier's doctrine block).
+  const tier = computeAmbientTier(result.cssWidth);
+  cloudsHandle?.setFarShed(tier >= 1);
+  auroraHandle?.setShapeThrottle(tier >= 2 ? 9 : 4);
+  chromaticNudgeEnabled = tier < 3;
   renderStaticFrame();
   seedFig01ActiveFromDom(); // 06-02 Fix B — one-shot, before the loop can start
   updateRunState();
@@ -655,6 +698,15 @@ export function initNightSky(root: HTMLElement): () => void {
   cloudsHandle = initClouds({
     tokens: skyTokens,
     getViewport: () => (layer0 ? { width: layer0.cssWidth, height: layer0.cssHeight } : null),
+    // 09-03 (AMB-05): sprite drains are idle-queued, so they always land
+    // AFTER adoptLayer0's synchronous static paint. When no loop is
+    // running (reduced-motion / hidden / fig-01-active), repaint the
+    // static frame once so the still gains its clouds; a running loop
+    // repaints on its next tick anyway (gate keeps this a paused-only
+    // repaint — never an extra frame mid-animation).
+    requestRepaint: () => {
+      if (rafId === null) renderStaticFrame();
+    },
   });
 
   // --- Aurora subsystem (09-02, AMB-03): handle-shaped, zero owned
