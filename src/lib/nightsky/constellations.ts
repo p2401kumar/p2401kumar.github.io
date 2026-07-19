@@ -50,29 +50,38 @@ interface AlphaChannels {
   starBright: number;
   /** Alpha for the hairline link segments. */
   link: number;
-  /** Alpha for the radial halo (brightened state only). */
+  /** Alpha for the radial halo (ambient rests faint, brightened peaks —
+   * 07-UI-SPEC Overlay Harmony). */
   halo: number;
+  /** Halo radius multiplier over the star radius — tweened with the
+   * alphas so the resting 1.3× halo grows smoothly into the brightened
+   * 1.5× halo (07-03). */
+  haloScale: number;
 }
 
 const STATE_ALPHAS: Record<HighlightState, AlphaChannels> = {
-  // Star 0.40–0.55, link 0.12–0.20, no halo.
-  ambient: { starMid: 0.45, starBright: 0.55, link: 0.16, halo: 0 },
-  // Star 0.85–1.00, link 0.45–0.55, halo alpha 0.20–0.30.
-  brightened: { starMid: 0.88, starBright: 1, link: 0.5, halo: 0.25 },
-  // Star 0.25–0.35, link 0.08–0.12, no halo.
-  dimmed: { starMid: 0.27, starBright: 0.34, link: 0.1, halo: 0 },
+  // Star 0.40–0.55, link 0.12–0.20. 07-03 (real-photo backdrop): a FAINT
+  // resting halo (alpha 0.15 within the 0.12–0.18 band, radius 1.3×) so
+  // authored stars read categorically apart from the photo's real star
+  // specks — kept visibly quieter than the brightened 1.5×/0.25 halo.
+  ambient: { starMid: 0.45, starBright: 0.55, link: 0.16, halo: 0.15, haloScale: 1.3 },
+  // Star 0.85–1.00, link 0.45–0.55, halo alpha 0.20–0.30 at 1.5×.
+  brightened: { starMid: 0.88, starBright: 1, link: 0.5, halo: 0.25, haloScale: 1.5 },
+  // Star 0.25–0.35, link 0.08–0.12, no halo — deliberately recedes.
+  dimmed: { starMid: 0.27, starBright: 0.34, link: 0.1, halo: 0, haloScale: 1.3 },
 };
 
 /** Brighten/dim tween duration (locked ~400ms ease-out, 05-CONTEXT.md). */
 const TWEEN_MS = 400;
-/** Constellation star radii (05-UI-SPEC.md: 2.5–4px, always larger than
- * the ambient field's 2px cap so clusters are findable at rest). */
-const STAR_RADIUS_MID = 2.75;
-const STAR_RADIUS_BRIGHT = 4;
-/** Link hairline stroke (05-UI-SPEC.md: 0.75–1px). */
+/** Constellation star radii — 07-03 raised to the UPPER half of the
+ * 05-UI-SPEC 2.5–4px range (07-UI-SPEC Overlay Harmony: the delivered
+ * photo's real stars resolve to ~1–2px specks, so 3.0/4.5px reads
+ * categorically larger at every check width). */
+const STAR_RADIUS_MID = 3.0;
+const STAR_RADIUS_BRIGHT = 4.5;
+/** Link hairline stroke (05-UI-SPEC.md: 0.75–1px — unchanged in 07-03; a
+ * straight segment is a shape no real starfield produces). */
 const LINK_STROKE_WIDTH = 0.85;
-/** Brightened halo radius multiplier over the star radius (≈1.5×). */
-const HALO_SCALE = 1.5;
 /** Alpha below which halo drawing is skipped entirely. */
 const HALO_EPSILON = 0.01;
 
@@ -384,6 +393,7 @@ export function initConstellations(options: ConstellationInitOptions): Constella
           starBright: lerp(rt.from.starBright, rt.target.starBright, e),
           link: lerp(rt.from.link, rt.target.link, e),
           halo: lerp(rt.from.halo, rt.target.halo, e),
+          haloScale: lerp(rt.from.haloScale, rt.target.haloScale, e),
         };
       }
     }
@@ -450,10 +460,11 @@ export function initConstellations(options: ConstellationInitOptions): Constella
         ctx.lineTo(geom.x2, geom.y2);
       }
       ctx.stroke();
-      // Halos (brightened only) under their star dots.
+      // Halos under their star dots — resting (ambient) halos are faint
+      // and 1.3×; brightened halos 1.5×/0.25; dimmed has none (07-03).
       if (cur.halo > HALO_EPSILON) {
         for (let i = 0; i < rt.starX.length; i++) {
-          const haloRadius = rt.starRadius[i] * HALO_SCALE;
+          const haloRadius = rt.starRadius[i] * cur.haloScale;
           const halo = ctx.createRadialGradient(
             rt.starX[i],
             rt.starY[i],
