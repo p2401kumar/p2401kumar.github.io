@@ -39,6 +39,7 @@
 // (including the Layer-0 blit destination rect and the star metadata
 // positions) use plain CSS-pixel coordinates.
 
+import { initClouds, type CloudsHandle } from './clouds';
 import { initConstellations, type ConstellationHandle } from './constellations';
 import { initMeteors, type MeteorHandle } from './meteors';
 import { generateLayer0, type Layer0Result, type StarMeta } from './starfield';
@@ -176,6 +177,11 @@ let constellationsHandle: ConstellationHandle | null = null;
  * same single tick (drawFrame Layer 2d); spawn cadence is setTimeout-
  * scheduled inside meteors.ts. It never owns a loop either. */
 let meteorsHandle: MeteorHandle | null = null;
+/** 09-01's cloud subsystem handle (AMB-01) — advance/draw ride the same
+ * single tick as Layer 1.5 (after the Layer-0 blit, before the twinkle
+ * subset). Zero owned timers/rAF: sprite generation is idle-queued on
+ * resize only; the pause machine covers it for free. */
+let cloudsHandle: CloudsHandle | null = null;
 /** Monotonic generation counter — a resize that lands mid-generation
  * invalidates the in-flight result instead of adopting a stale size. */
 let generation = 0;
@@ -333,6 +339,16 @@ function drawFrame(ts: number): void {
   visibleCtx.clearRect(0, 0, w, h);
   visibleCtx.drawImage(layer0.canvas, 0, 0, w, h);
 
+  // --- Layer 1.5: clouds (09-01, AMB-01) — wraparound sprite blit of the
+  // two drifting lower-sky layers, column-governed inside clouds.ts.
+  // Drawn after the Layer-0 blit and before the twinkle subset so the
+  // crisp point features (stars, fireflies, constellations) sit ON TOP
+  // of the haze. ---
+  if (cloudsHandle) {
+    cloudsHandle.advance(ts, dt);
+    cloudsHandle.draw(visibleCtx, w, h);
+  }
+
   // --- Layer 2a: twinkle subset (unsynchronized sine alpha wobble). ---
   for (const s of twinkles) {
     const alpha = clamp01(s.baseAlpha + s.amplitude * Math.sin(ts / s.periodMs + s.phase));
@@ -406,19 +422,22 @@ function stopAnimationLoop(): void {
 /**
  * Renders exactly ONE complete static frame with no loop scheduled — the
  * SKY-04 reduced-motion composition and the paused/interim repaint path.
- * Layer 0 already bakes EVERY star (including the twinkle-eligible ones)
- * at its fixed base alpha, so the blit alone IS "all stars at base
- * alpha"; Layer 1 (camper + glow) is DOM/CSS in NightSky.astro. Twinkle
- * and fireflies are fully OFF here — removed, not dampened
- * (05-UI-SPEC.md reduced-motion table, WCAG C39). Constellations DO
- * appear, drawn at their instant current state (brighten/dim is
- * essential wayfinding and still occurs under reduced motion, collapsed
- * to a 0ms change — 05-05).
+ * Layer 0 bakes the moon (07-03: the photo provides the ambient stars),
+ * so the blit is the static sky base; Layer 1 (camper + glow) is DOM/CSS
+ * in NightSky.astro. Clouds (09-01, AMB-01) ARE drawn here — once, at a
+ * fixed phase (offset 0, peak margin alpha, nudge 0): a beautiful still,
+ * not a dimmed one. The twinkle subset and fireflies stay fully OFF —
+ * removed, not dampened (05-UI-SPEC.md reduced-motion table, WCAG C39;
+ * the photo's own stars provide the base). Constellations DO appear,
+ * drawn at their instant current state (brighten/dim is essential
+ * wayfinding and still occurs under reduced motion, collapsed to a 0ms
+ * change — 05-05).
  */
 function renderStaticFrame(): void {
   if (!visibleCtx || !layer0) return;
   visibleCtx.clearRect(0, 0, layer0.cssWidth, layer0.cssHeight);
   visibleCtx.drawImage(layer0.canvas, 0, 0, layer0.cssWidth, layer0.cssHeight);
+  cloudsHandle?.drawStatic(visibleCtx, layer0.cssWidth, layer0.cssHeight);
   if (constellationsHandle) {
     constellationsHandle.draw(visibleCtx, layer0.cssWidth, layer0.cssHeight, performance.now());
   }
@@ -467,6 +486,9 @@ function adoptLayer0(result: Layer0Result): void {
   sizeVisibleCanvas(result);
   seedTwinkles(result.twinkleStars);
   seedFireflies(result.cssWidth, result.cssHeight);
+  // Clouds adopt the new size BEFORE the static paint so the very first
+  // (and every reduced-motion) frame already carries the governed band.
+  cloudsHandle?.resize(result.cssWidth, result.cssHeight);
   renderStaticFrame();
   seedFig01ActiveFromDom(); // 06-02 Fix B — one-shot, before the loop can start
   updateRunState();
@@ -509,6 +531,16 @@ export function initNightSky(root: HTMLElement): () => void {
   visibleCtx = ctx;
   const skyTokens = getSkyTokens();
   tokens = skyTokens;
+
+  // --- Cloud subsystem (09-01, AMB-01): handle-shaped, zero owned
+  // timers/rAF — sprite generation rides the shared idle queue on
+  // resize(); advance/draw ride this module's single tick (Layer 1.5).
+  // Its AMB-02 mid-layer nudge listener subscribes to the literal
+  // 'nightsky:panel-change' event independently (never deck.ts). ---
+  cloudsHandle = initClouds({
+    tokens: skyTokens,
+    getViewport: () => (layer0 ? { width: layer0.cssWidth, height: layer0.cssHeight } : null),
+  });
 
   // --- Constellation subsystem (05-05): initialized BEFORE this module's
   // own listeners so its reduced-motion snap runs ahead of the scene's
@@ -592,6 +624,8 @@ export function initNightSky(root: HTMLElement): () => void {
     constellationsHandle = null;
     meteorsHandle?.teardown();
     meteorsHandle = null;
+    cloudsHandle?.teardown();
+    cloudsHandle = null;
     document.removeEventListener('visibilitychange', onVisibilityChange);
     document.removeEventListener('nightsky:panel-change', onPanelChange);
     rm.removeEventListener('change', onMotionChange);

@@ -29,6 +29,7 @@
 // star metadata positions/radii here are directly reusable without
 // re-deriving a DPR factor per read.
 
+import { drainQueue, type WorkUnit } from './idle-queue';
 import { getSkyTokens, rgba, type RgbTriple } from './tokens';
 
 /** DPR cap — identical doctrine to fig01/deck (PROJECT.md constraints):
@@ -230,52 +231,11 @@ export interface Layer0Result {
   twinkleStars: StarMeta[];
 }
 
-type IdleDeadlineLike = { timeRemaining: () => number; didTimeout: boolean };
-type WorkUnit = () => void;
-
-/** Feature-detects requestIdleCallback, falling back to a setTimeout shim
- * that mimics its deadline.timeRemaining() contract (05-RESEARCH.md
- * Pattern 3 / Pitfall 2 — Safari ships no requestIdleCallback at all, so
- * this fallback is the PRIMARY path for a meaningful audience slice on
- * this project, not a rare edge case — built and exercised as a first-
- * class path, not an afterthought). */
-function requestIdle(cb: (deadline: IdleDeadlineLike) => void): void {
-  if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
-    (
-      window as unknown as {
-        requestIdleCallback: (cb: (d: IdleDeadlineLike) => void) => void;
-      }
-    ).requestIdleCallback(cb);
-    return;
-  }
-  const start = Date.now();
-  setTimeout(() => {
-    cb({ timeRemaining: () => Math.max(0, 50 - (Date.now() - start)), didTimeout: false });
-  }, 1);
-}
-
-/** Drains a queue of work units across idle callbacks, checking
- * `deadline.timeRemaining() > 0` before each unit — self-adjusting
- * regardless of per-unit cost, per 05-RESEARCH.md's Open Questions
- * recommendation (no fixed batch-size constant needed). KEPT after 07-03
- * even though the queue is now tiny (~90 metadata pushes + 1 moon draw
- * vs ~2,000+ draw calls before): it is cheap infrastructure when
- * near-empty, and Phase 9's ambient systems may plausibly reuse it. */
-function drainQueue(queue: WorkUnit[], onDone: () => void): void {
-  let i = 0;
-  function step(deadline: IdleDeadlineLike): void {
-    while (i < queue.length && deadline.timeRemaining() > 0) {
-      queue[i]();
-      i++;
-    }
-    if (i < queue.length) {
-      requestIdle(step);
-    } else {
-      onDone();
-    }
-  }
-  requestIdle(step);
-}
+// The idle scheduler (requestIdle/drainQueue + IdleDeadlineLike/WorkUnit)
+// was extracted VERBATIM to idle-queue.ts in 09-01 so clouds.ts (AMB-01)
+// can reuse it without duplicating the Safari-first-class setTimeout shim.
+// Behavior-preserving: the imported functions are byte-identical to the
+// former local ones; Layer-0 generation semantics are unchanged.
 
 function lerp(a: number, b: number, t: number): number {
   return a + (b - a) * t;
