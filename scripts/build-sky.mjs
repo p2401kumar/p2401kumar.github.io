@@ -154,7 +154,10 @@ const CANDIDATES = [
 ];
 
 // Locked by the spike verdict (07-SPIKE-BANDING.md): candidate A.
-const WINNER = "A-core-t20";
+// `--winner <id>` overrides for candidate-comparison encodes (spike use only
+// — the committed public/sky/ masters must always come from the default).
+const winnerArgIdx = process.argv.indexOf("--winner");
+const WINNER = winnerArgIdx >= 0 ? process.argv[winnerArgIdx + 1] : "A-core-t20";
 
 // ---------------------------------------------------------------------------
 // 1. Download + integrity gate
