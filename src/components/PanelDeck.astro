@@ -66,8 +66,16 @@ import "../styles/deck.css";
 
 <div class="deck">
   <slot />
-  <DeckIndex />
 </div>
+{/* DeckIndex renders OUTSIDE .deck since Phase 8 (08-02): .deck is
+    position:fixed z-index:1 — a stacking context that trapped the fixed
+    index pill / hint / mode links (z-index 21) BENEATH the z-index 20
+    header/footer, so the footer's new backdrop-filter glass smeared the
+    pill into its backdrop (invisible pre-glass because the footer painted
+    nothing). As a root-level sibling, z-index 21 now genuinely beats the
+    chrome's 20 — the pill paints (and hit-tests) above the footer glass.
+    deck.ts locates these hooks document-wide (ids/classes are unique). */}
+<DeckIndex />
 
 <script>
   import { initDeck } from "../lib/nightsky/deck";

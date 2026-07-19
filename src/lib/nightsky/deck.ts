@@ -452,19 +452,23 @@ export function initDeck(root: HTMLElement): () => void {
     throw new Error(`initDeck: expected ${PANEL_COUNT} .panel elements, found ${nodeList.length}`);
   }
   panelEls = Array.from(nodeList);
-  liveEl = required(root.querySelector<HTMLElement>('#deck-live'), '#deck-live');
-  indexCountEl = required(root.querySelector<HTMLElement>('#deck-index-count'), '#deck-index-count');
-  hintEl = required(root.querySelector<HTMLElement>('#deck-hint'), '#deck-hint');
-  const jumpAnchors = root.querySelectorAll<HTMLAnchorElement>('.deck-jump a[data-panel-index]');
+  // DeckIndex hooks are document-scoped since Phase 8 (08-02): DeckIndex
+  // moved OUTSIDE .deck (PanelDeck.astro) so the fixed pill/hint/mode links
+  // escape .deck's position:fixed stacking context and paint above the
+  // z-index 20 glass chrome. All ids/classes below are globally unique.
+  liveEl = required(document.querySelector<HTMLElement>('#deck-live'), '#deck-live');
+  indexCountEl = required(document.querySelector<HTMLElement>('#deck-index-count'), '#deck-index-count');
+  hintEl = required(document.querySelector<HTMLElement>('#deck-hint'), '#deck-hint');
+  const jumpAnchors = document.querySelectorAll<HTMLAnchorElement>('.deck-jump a[data-panel-index]');
   if (jumpAnchors.length !== PANEL_COUNT) {
     throw new Error(`initDeck: expected ${PANEL_COUNT} jump-list anchors, found ${jumpAnchors.length}`);
   }
   jumpAnchorEls = Array.from(jumpAnchors);
   const viewClassicLink = required(
-    root.querySelector<HTMLAnchorElement>('.deck-view-classic'),
+    document.querySelector<HTMLAnchorElement>('.deck-view-classic'),
     '.deck-view-classic',
   );
-  const viewDeckLink = required(root.querySelector<HTMLAnchorElement>('.deck-view-deck'), '.deck-view-deck');
+  const viewDeckLink = required(document.querySelector<HTMLAnchorElement>('.deck-view-deck'), '.deck-view-deck');
 
   // 2-3. Resolve + apply the initial panel state SYNCHRONOUSLY — a
   // cold-load to #patents paints #patents first, never panel 0.
