@@ -4,17 +4,17 @@ milestone: v3.0
 milestone_name: Real Sky
 current_phase: 9
 current_phase_name: Living Sky
-status: in_progress
-stopped_at: "Completed 09-02-PLAN.md — aurora live + --aurora luminance gate green both viewports; next: 09-03 (mobile ladder + closing battery)"
-last_updated: "2026-07-19T20:30:55.748Z"
+status: phase_complete
+stopped_at: "Completed 09-03-PLAN.md — Phase 9 CLOSED (AMB-01..05 Complete); next: plan Phase 10 (Integration & Launch)"
+last_updated: "2026-07-19T21:30:00.000Z"
 last_activity: 2026-07-19
-last_activity_desc: "09-02 executed: --aurora token + aurora module + luminance gate (AMB-03)"
+last_activity_desc: "09-03 executed: mobile shed ladder + full closing battery + phase close-out (AMB-05)"
 progress:
   total_phases: 4
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 10
-  completed_plans: 9
-  percent: 90
+  completed_plans: 10
+  percent: 100
 ---
 
 # Project State
@@ -28,9 +28,13 @@ See: .planning/PROJECT.md (updated 2026-07-18)
 
 ## Current Position
 
-Phase: 9 (Living Sky) — IN PROGRESS (2/3 plans) — next: execute 09-03 (mobile ladder + closing battery)
+Phase: 9 (Living Sky) — COMPLETE (3/3 plans) — next: plan Phase 10 (Integration & Launch)
+Plan: 09-03 COMPLETE — AMB-05 closed: mobile degradation ladder shipped (computeAmbientTier in scene.ts — tier≥1 `w<640 OR dm≤4` sheds far clouds; tier≥2 `w<480 OR dm≤2` throttles aurora shape repaint to every 9 frames; tier≥3 `w<390 OR (dm≤2 AND tier 2)` drops the chromatic nudge; deviceMemory feature-detected, Safari/iOS width-only; PARALLAX NEVER SHEDS — proven firing at 375w tier 3). Full closing battery GREEN (`battery/battery-summary.md`).
+**Phase 9 measured ambient budget:** real-page 60s soak with ALL four ambient systems + glass live (1440×900 DPR1 software raster): **TOTAL 5.49% < 10%** (4.51pp headroom), 60.0fps, 0 long tasks, Layout 0.000s. Plan-designed marginal vs the reduced-motion baseline (whole scene vs static frame): +4.26pp. **Projection-comparable marginal vs 08's 6.10% glass-live reference: −0.61pp ≈ 0 within the ±0.4–0.7pp scene-noise family — at/below the 0.3–0.7pp projection.** Whole-tree cross-check: 35.32% vs 08's 36.67% (−1.35pp, no compositor blowout).
+**Phase 9 invariants re-proved:** single-rAF (scene 2 / clouds+aurora+parallax+idle-queue+meteors+starfield 0 / fig01 2); pause machine covers all four ambient systems (hidden / fig-01-active / reduced-motion capture-pairs identical); canvas + host transform 'none' at rest AND mid-parallax-nudge both viewports; reduced-motion renders exactly ONE static frame carrying photo + moon + constellations + clouds + aurora (byte-identical pair; the 09-02 carried note fixed — clouds now request a static repaint when the idle-queued sprite drain lands while no loop runs); `--aurora` gate 0.1035/0.0384 << mwPeak both viewports; `--aurora` token (#bfe8df) stays the one hue exception in tokens.css; aurora draws over the moon / before the clouds; zero-hex, source-over-only, leak gate airtight, Lighthouse 99+100×7 TBT 0ms.
 Plan: 09-02 COMPLETE — --aurora token + 3-curtain breathing aurora (AMB-03) over the moon / before clouds; --aurora full-cycle luminance gate PASS both viewports (0.1018/0.0384 << mwPeak 0.4748/0.4695), --moon + --cdp-screenshot + --selftest all green, single-rAF held (scene 2 / aurora 0), reduced-motion still byte-deterministic
 Plan: 09-01 COMPLETE — idle-queue extraction + two column-governed cloud layers + camper/cloud parallax + 2-oscillator scintillation (AMB-01/02/04); contrast gate PASS both viewports, canvas never transformed, single-rAF held (scene 2 / new modules 0)
+Residual tuning items for Phase 10 integration: none blocking — aurora lateral softening (offscreen-pass, research Open Question 2) remains an optional aesthetic lever, deliberately not taken (curtain side edges are vertical exactly as specified); the 375w evidence still is committed for the Phase-10 real-device checklist to eyeball.
 Prior phase: 8 (Glass System) — COMPLETE (3/3 plans)
 Plan: 08-03 COMPLETE — GLS-04 real-page re-proof PASS + full battery green + phase closed
 Status: GLS-01..04 all Complete. Real-page 60s idle soak (built preview, 1440×900 DPR1, same-page glass toggle via prefers-reduced-transparency emulation): total with glass **6.10% < 10%** (3.9pp headroom), 60.0fps, 0 long tasks, LayoutDuration Δ 0.000s; main-thread marginal ~0 within ±0.4pp scene noise vs Spike-2's +0.47pp projection, whole-tree cross-check +6.68pp vs the spike's +6.48pp — projection confirmed on the production page. Lighthouse mobile 99/100/100/100 + desktop 100×4, TBT 0ms both (07-04 family held). Full carried-floor battery ALL GREEN; leak gate airtight; DeckIndex-relocation smoke PASS.
@@ -109,6 +113,7 @@ Last activity: 2026-07-19 — 09-02 executed: --aurora token + aurora module + l
 | Phase 08 P03 | 25min | 3 tasks | 7 files |
 | Phase 09 P01 | 21min | 3 tasks | 6 files |
 | Phase 09 P02 | ~24 min | 3 tasks | 5 files |
+| Phase 09 P03 | ~60min | 3 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -203,6 +208,10 @@ Recent decisions affecting current work:
 - [Phase 09]: 09-01: starfield imports { drainQueue, type WorkUnit } only (plan listed requestIdle too — unused import would fail astro check under noUnusedLocals); requestIdle stays exported from idle-queue.ts for 09-02's aurora
 - [Phase 09]: 09-02: aurora curtain layout/noise fully deterministic (jitter-free sine-sum table) — reduced-motion still proven byte-identical across captures
 - [Phase 09]: 09-02: --aurora gate erodes sub-window point features (separable min, ~7 CSS px) before peaking — raw box peak is pre-existing stars/moon; reported, never asserted
+- [Phase 09]: 09-03: mobile ladder centralized in scene.ts's computeAmbientTier (recomputed every adopt/resize) pushing to the 09-01/09-02 seams — setFarShed / setShapeThrottle(9) / chromaticNudgeEnabled; parallax deliberately never referenced (NEVER sheds)
+- [Phase 09]: 09-03: Rule-2 fix — clouds' idle-queued sprite drain now requests a static repaint when no loop runs (requestRepaint seam mirroring constellations), closing the 09-02 carried note: visitors loading with reduced-motion already set get clouds in the still (column-band max was 0, now 5)
+- [Phase 09]: 09-03: soak marginal framed honestly — the plan's RM baseline stops the WHOLE scene, so +4.26pp is the full living-scene cost; the 0.3-0.7pp projection's basis is 08's 6.10% glass-live total, against which the four new ambient systems measure -0.61pp ≈ 0 within noise
+- [Phase 09]: 09-03: far-shed proven behaviorally via right-margin haze-coverage probe (x0.82-0.98, y0.645-0.685 — no aurora/moon/MW by construction) under deterministic reduced-motion emulation: cover 0.213 -> 0.029 at dm=4; max-alpha probes are star-polluted and were rejected as the instrument
 
 ### Pending Todos
 
@@ -235,14 +244,15 @@ Items acknowledged and carried forward:
 
 ## Session Continuity
 
-Last session: 2026-07-19T20:30:15.019Z
-Stopped at: Completed 09-02-PLAN.md — aurora live (AMB-03) + --aurora gate green both viewports; next: execute 09-03 (mobile ladder + closing battery)
+Last session: 2026-07-19T21:30:00.000Z
+Stopped at: Completed 09-03-PLAN.md — Phase 9 CLOSED (AMB-01..05 Complete, full battery green); next: plan Phase 10 (Integration & Launch)
 Resume file: None
 
 ## Operator Next Steps
 
 - Phase 7 is closed — review the visual sign-off evidence at your leisure (`.planning/phases/07-real-sky-foundation/07-04-visual-signoff.md` + `integration-evidence/07-04-*.png`); async veto stays open until the Phase 10 deploy (re-run build-sky.mjs / adjust object-position to revise)
 - Phase 8 is closed (GLS-01..04 Complete) — review at your leisure: the glass gate record (`08-02-glass-gate.md` + `glass-evidence/`) and the GLS-04 re-proof (`.planning/phases/08-glass-system/08-03-glass-reproof.md`: 6.10% total idle, Lighthouse 99+100×7, battery + leak gate green); async veto stays open until the Phase 10 deploy
-- Next: plan Phase 9 (Living Sky) — ambient budget is the ~3.9pp of main-thread headroom glass leaves under the 10% floor; the `--cdp-screenshot` contrast gate (worst surface: header 6.23) is the arbiter for any ambient light source
+- Phase 9 is closed (AMB-01..05 Complete) — review at your leisure: the closing battery (`.planning/phases/09-living-sky/battery/battery-summary.md`), the reduced-motion marquee still (`battery/reduced-motion-still-1440x900.png`) and the 375w shed-ladder still (`battery/shed-ladder-375w.png`); async veto stays open until the Phase 10 deploy
+- Next: plan Phase 10 (Integration & Launch) — full carry-forward regression battery + live Lighthouse + user-gated deploy; measured entering budget: total 5.49% idle with everything live (4.51pp headroom)
 - Before the Phase 10 ship: manually browser-verify the NOIRLab license page (noirlab.edu/public/copyright/) — the IMG-04 "before ship" clause (STATE blocker)
 - (Carried from v2.0 close) retire/redirect the old `p2401kumar.github.io/home` repo; run the live-site real-device touch + 5-min idle-CPU check at your leisure (06-01-LAUNCH-READINESS.md §5–6)

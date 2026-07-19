@@ -35,7 +35,7 @@ Full details: [milestones/v2.0-ROADMAP.md](milestones/v2.0-ROADMAP.md) · Phase 
 
 - [x] **Phase 7: Real-Sky Foundation** - Both empirical spikes first, then a real composited Milky Way photo lands LCP-clean behind everything with the authored overlay intact (completed 2026-07-19)
 - [x] **Phase 8: Glass System** - Frosted-glass panels + chrome over the photo, contrast verifier re-architected to screenshot-sample before glass values lock (completed 2026-07-19)
-- [ ] **Phase 9: Living Sky** - Clouds, panel-change parallax, breathing aurora, and scintillation inside one bounded-ambient rAF budget
+- [x] **Phase 9: Living Sky** - Clouds, panel-change parallax, breathing aurora, and scintillation inside one bounded-ambient rAF budget (completed 2026-07-19)
 - [ ] **Phase 10: Integration & Launch** - Full carry-forward regression battery re-passes, live Lighthouse ≥90 ×4, user-gated deploy
 
 ## Phase Details
@@ -114,11 +114,11 @@ Full details: [milestones/v2.0-ROADMAP.md](milestones/v2.0-ROADMAP.md) · Phase 
   - **Budget re-proof**: per-system frame-cost profiling; the full ambient set + glass must re-prove idle <10% CPU. Validate the mobile ladder in order (drop far cloud layer → throttle aurora → drop color nudge; NEVER drop parallax).
   - **Reduced-motion**: always full-stop — one static frame, no exceptions.
 
-**Plans**: 2/3 plans executed
+**Plans**: 3/3 plans complete
 
 - [x] 09-01-PLAN.md — Clouds + scintillation + parallax (tick-native systems: idle-queue extraction, clouds sprite module + column governor, 2-oscillator scintillation, camper/cloud parallax nudge)
 - [x] 09-02-PLAN.md — Aurora + luminance gate (--aurora token, noise-curtain aurora over-moon/before-clouds, verify-contrast --aurora mode asserting auroraPeak < mwPeak both viewports)
-- [ ] 09-03-PLAN.md — Doctrine battery + close-out (mobile shed ladder, full ambient soak <10%, contrast/aurora/banding/Lighthouse/pause/reduced-motion battery, requirements + roadmap close-out)
+- [x] 09-03-PLAN.md — Doctrine battery + close-out (mobile shed ladder, full ambient soak <10%, contrast/aurora/banding/Lighthouse/pause/reduced-motion battery, requirements + roadmap close-out)
 
 **UI hint**: yes
 
@@ -162,7 +162,7 @@ Full details: [milestones/v2.0-ROADMAP.md](milestones/v2.0-ROADMAP.md) · Phase 
 | 6. Integration & Launch | v2.0 | 2/2 | Complete | 2026-07-18 |
 | 7. Real-Sky Foundation | v3.0 | 4/4 | Complete   | 2026-07-19 |
 | 8. Glass System | v3.0 | 3/3 | Complete | 2026-07-19 |
-| 9. Living Sky | v3.0 | 2/3 | In Progress|  |
+| 9. Living Sky | v3.0 | 3/3 | Complete | 2026-07-19 |
 | 10. Integration & Launch | v3.0 | 0/TBD | Not started | - |
 
 ---

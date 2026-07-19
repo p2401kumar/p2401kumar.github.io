@@ -28,7 +28,7 @@ Each maps to roadmap phases (numbering continues from Phase 7). Prior-milestone 
 - [x] **AMB-02**: Sky, horizon, and foreground shift at different rates on every panel change (CSS `translate3d` transitions, 300–500ms, compositor-only); instant under reduced-motion
 - [x] **AMB-03**: A faint breathing aurora (noise-driven curtains, updates throttled to every 3–5 frames) glows with peak luminance capped below the Milky Way band — the one sanctioned light source
 - [x] **AMB-04**: The twinkle subset upgrades to atmospheric scintillation (2-oscillator waveform + occasional chromatic nudge on the brightest few) without widening the star count
-- [ ] **AMB-05**: Bounded-ambient doctrine: all systems run inside the single rAF + existing pause machine (hidden/fig01-active/reduced-motion), a documented mobile degradation ladder sheds load in order (far clouds → aurora throttle → color nudge; parallax never sheds), reduced-motion renders one static frame
+- [x] **AMB-05**: Bounded-ambient doctrine: all systems run inside the single rAF + existing pause machine (hidden/fig01-active/reduced-motion), a documented mobile degradation ladder sheds load in order (far clouds → aurora throttle → color nudge; parallax never sheds), reduced-motion renders one static frame
 
 ### Floors & Launch
 
@@ -78,7 +78,7 @@ Each requirement maps to the phase that **completes** it. FLR-01's LCP checkpoin
 | AMB-02 | Phase 9 | Complete |
 | AMB-03 | Phase 9 | Complete |
 | AMB-04 | Phase 9 | Complete |
-| AMB-05 | Phase 9 | Pending |
+| AMB-05 | Phase 9 | Complete |
 | FLR-01 | Phase 10 | Pending (LCP checkpoint also gated in Phase 7) |
 | FLR-02 | Phase 10 | Pending |
 | FLR-03 | Phase 10 | Pending |
