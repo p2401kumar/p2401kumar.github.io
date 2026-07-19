@@ -1,83 +1,51 @@
 # Project Research Summary
 
 **Project:** Prateek Kumar — Portfolio
-**Milestone:** v2.0 "Night Sky" — immersive single-viewport re-skin
-**Domain:** Persistent canvas night scene (starfield, Milky Way, career constellations, camper silhouette, fireflies) + no-scroll full-viewport panel deck over the shipped v1.0 Astro site
-**Researched:** 2026-07-17
-**Confidence:** MEDIUM-HIGH overall (Architecture HIGH — grounded in reading shipped source; Milky Way visual technique LOW — needs spike)
+**Milestone:** v3.0 "Real Sky" — composited real-astrophotography sky + full glass chrome + ambient realism
+**Researched:** 2026-07-18 (4 parallel lanes: [IMAGERY.md](IMAGERY.md) · [GLASS.md](GLASS.md) · [AMBIENT.md](AMBIENT.md) · [PITFALLS.md](PITFALLS.md) — this file is the decision layer; lanes hold full evidence + URLs. v2.0's summary preserved in git history at tag v2.0.)
+**Confidence:** MEDIUM-HIGH overall (architecture + licensing HIGH/MEDIUM; encode numbers + glass CPU cost are spike-gated by design)
 
-## Executive Summary
+## Architecture Verdict
 
-v2.0 is a **presentation-layer remodel of existing content, not a product rearchitecture**. It transforms the shipped v1.0 portfolio (live Fig. 01 canvas demo, all CV content, Lighthouse ≥90) into an immersive single-viewport experience: a persistent zero-light-pollution night scene with all CV content cycling as full-viewport overlay panels instead of scrolling.
+Static astrophotography photo (NOIRLab `noirlab2430b`, CC BY 4.0; ESO `eso0932a` fallback) delivered as a **real `<img>`/CSS background — never canvas-drawn**: LCP-discoverable, survives the no-JS classic mode (a canvas-drawn photo would silently break the DECK-07 floor), and costs nothing behind glass once painted (static backdrop content is cached after first blur). Above it, the **drawn overlay canvas** carries everything that moves or is authored: career constellations, meteors, the drawn crescent moon (photo moon physically rejected — a real moon bright enough to see washes out a real Milky Way in the same exposure), fireflies, clouds, aurora, scintillation. **Glass surfaces sit on top** (panels + header/footer + jump index). Single rAF loop, existing 3-state pause machine covers all four new ambient systems, no new pause states needed.
 
-**Core technical challenge:** layering a new persistent, always-on animation surface *alongside* the existing Fig. 01 canvas engine while keeping the Lighthouse ≥90 / 60fps / reduced-motion floors. This is a two-rAF-loop **coordination** problem, not a two-framework problem — resolved by pausing the ambient scene while Fig. 01's panel is active.
+**The open cross-lane question (resolved empirically in the spike, not by argument):** how much animating canvas overlaps glass panels and what the per-frame re-blur costs. `backdrop-filter` re-blurs whatever changes behind it — no architectural trick exempts animated content. Mitigation ladder if the spike measures hot: throttle canvas work under glass regions to 15–20fps → reduce spawn density under glass → cap blur at 12–16px where overlapped → shrink animated footprint under panels. ≤4 simultaneous glass surfaces (exactly our chrome scope).
 
-**Critical sequencing insight:** the panel-cycling interaction model (wheel/swipe/keys/dots, hash routing, focus management) must be bulletproof *before* visual content is layered on. Half the pitfalls (scroll-hijack disorientation, focus traps, SEO loss) emerge from mechanics, not aesthetics. Build **Mechanics → Canvas Scene → Integration**, not visual-first.
+## Two Spike Gates (empirical, run FIRST — v2's spike-first pattern)
 
-## Key Findings
+1. **Banding spike** — AVIF 10-bit 4:4:4 encode (+ film-grain/noise strategy + 2×-resolution-lower-quality trick) must show no visible banding on a real 8-bit display; verified by histogram comb-spike test + eyeball. Banding baked into the foundation is the costliest late discovery — it decides premium vs cheap.
+2. **Glass-over-animating-canvas CPU spike** — measure idle CPU: scene alone vs scene + 4 glass surfaces. Marginal re-blur cost must fit inside the <10% total idle floor (target ≤2–3% marginal). **This is the milestone's re-scope trigger**: if the cost can't be tuned under the floor, the "full glass over a permanently-animating scene" premise needs a structural rethink (glass over static-only regions), not more tuning.
 
-### Recommended Stack (STACK.md)
+## Decided vs Needs-Spike
 
-- **No new npm dependencies.** Everything achievable with Canvas2D + inline SVG + vanilla TS, extending the proven `src/lib/fig01/` pattern. Optional fallback only: a ~1-2KB simplex-noise package IF the zero-dep Milky Way scatter+gradient technique looks banded (evaluate in a spike first).
-- **Layered Canvas2D, split by update frequency:** Layer 0 starfield + Milky Way pre-rendered once to an offscreen canvas and blitted; Layer 1 camper/landscape silhouette as hand-authored SVG + CSS (never in the rAF loop); Layer 2 the only per-frame work (twinkle subset, ~dozens of fireflies, occasional constellation link-firing — reuse fig01's beam math).
-- **Deck = hand-rolled index-based state machine** mirroring fig01/interactions.ts patterns (no fullPage.js/swiper/GSAP/three.js — argued against individually); CSS scroll-snap documented as legitimate fallback if the custom controller proves fiddly on real devices.
-- Extract shared `getComputedStyle` token logic to `src/lib/shared/css-tokens.ts` for both canvas engines.
+| Lane | Decided by research | Needs spike | Verification evolution |
+|---|---|---|---|
+| IMAGERY | NOIRLab primary / ESO fallback (both CC BY 4.0); credit `Sky: NOIRLab/NSF/AURA/E. Slawik/M. Zamani, CC BY 4.0` (linked); build-time rotate/crop composite via sharp; AVIF 10-bit + WebP fallback; ~250–700KB budget; moon stays drawn | Banding pipeline (spike 1) | Histogram comb-spike test; real 8-bit display check |
+| GLASS | Recipe: white 5–10% fill + `blur(12px) saturate(150%)` + 1px top light edge; chrome variant lighter (10px/5%); token-expressed (`--glass-*`); `@supports` ladder → opaque `--panel` baseline; `prefers-reduced-transparency` additive pattern | Re-blur CPU cost (spike 2) | **verify-contrast.mjs re-architecture required**: analytic compositing cannot model a blur kernel — must sample real post-composite screenshots (CDP scaffolding already in the script) |
+| AMBIENT | Clouds: 2 pre-rendered sprite layers, wraparound blit in existing tick; parallax: CSS `translate3d` transitions (300–500ms) per panel change, compositor-only; aurora: noise-table curtains, updates every 3–5 frames, luminance capped below MW band; scintillation: waveform upgrade of the existing ~40-star subset (no count widening) | Glass-overlap cost (spike 2) | Per-system frame-cost profiling; mobile ladder: drop far cloud layer → throttle aurora → drop color nudge; NEVER drop parallax; reduced-motion always full-stop |
+| PITFALLS | 4-stage banding pipeline; LCP realistic 1.5–2.8s mobile with full-viewport AVIF (from 0.4–1.4s today) → LQIP ladder + `fetchpriority=high` + preload, dedicated Lighthouse checkpoint immediately after photo integration; photo via CSS/`<img>` for no-JS; stacking-context/backdrop-root traps enumerated | Both spikes | Carry-forward regression checklist (below) |
 
-### Expected Features (FEATURES.md)
+## Carry-forward regression list (lift into the launch phase verbatim)
 
-- **Table stakes:** progress indicator (mono index), full input parity (wheel/swipe/keys/dots — all primary, none fallback), escape hatches (working back button, per-panel deep links, no keyboard traps), first-visit affordance, reduced-motion support, full keyboard operability.
-- **Differentiators:** constellation brightens with active panel (scene reacts to navigation — the genre standout), neural links firing occasionally, URL hashes for shareability, "view classic" fallback (cheap — reuses v1 shell via progressive enhancement).
-- **Anti-features:** aggressive scroll-hijacking fighting native gestures, auto-advancing panels, motion-sickness effects, focus traps, broken back button, preloaders, 3D/WebGL.
-- **Sharpest integration risk:** keyboard-namespace collision — Fig. 01 already uses arrow-key semantics for its controls; the deck keymap must resolve against actual fig01 source during planning.
+Fig. 01 embedded 36-check audit · deck mechanics (wheel/swipe/keys/jump/hash/back-forward) · no-JS classic mode **with the photo present** · `view classic` escape hatch · case-study pages scene-free (leak gate) · sitemap 3 routes · `/#work` alias · cold-`/#fig-01` scene pause · honesty gate label sourcing · single-rAF counts · zero-hex (new `--glass-*`/photo tokens live in tokens.css) · contrast ≥4.5:1 worst-case (new screenshot-sampled mode) · idle <10% CPU · reduced-motion full stop · Lighthouse ≥90 ×4 live both presets.
 
-### Architecture Approach (ARCHITECTURE.md — HIGH confidence, read shipped source)
+## Design-phase deliberation (surfaced, not a blocker)
 
-Four load-bearing patterns:
-1. **Panel hide via `transform`, never `display:none`** — keeps Fig. 01's IntersectionObserver lifecycle valid with zero changes to must-not-regress code.
-2. **CustomEvent contract:** deck dispatches `nightsky:panel-change` on document; constellation layer and scene pause/resume subscribe. `nightsky/*` and `fig01/*` never import each other.
-3. **One active animation at a time:** ambient scene rAF pauses entirely while the Fig. 01 panel is active ("one moving thing" doctrine extended to engines).
-4. **Progressive enhancement fallback:** base CSS renders panels as the v1 scrolling stack; `.deck-active` class (added only after successful JS init) enables the deck. No /classic route, no duplicate content — the fallback is free.
+PROJECT.md locks "FULL glass system" (user choice). Precedent (NN/G's critique of Apple's Liquid Glass; ESO.org avoiding glass under body text) warns that uniform glass on text-dense surfaces fights legibility. Resolution path: the glass system may **tier within the locked direction** — paragraph-heavy panels get a higher-opacity/lower-blur variant of the same glass grammar; the screenshot-sampled 4.5:1 floor is the objective arbiter. Surfaced at roadmap approval; decided finally in the glass phase's UI spec.
 
-Components: `NightSky.astro` (canvas host) + `PanelDeck.astro` + thin `Panel.astro` slot-wrapper around UNMODIFIED v1 section components; engine in `src/lib/nightsky/{scene,deck,constellations,tokens}.ts`; constellation definitions as a typed `src/data/constellations.ts` with source-annotated labels.
+## Confidence ledger
 
-### Critical Pitfalls (PITFALLS.md — 11 mapped)
+- HIGH: ESO eso0932a license (fetched); backdrop-filter re-blur semantics (MDN + browser bugs); photo-as-`<img>` for LCP/no-JS; moon-washout physics (multiple independent astro sources); CSS-transition parallax cost model.
+- MEDIUM: NOIRLab noirlab2430b license/resolution (site bot-gated WebFetch; corroborated via 2–3 mirrors — **manual browser check of noirlab.edu/public/copyright/ required before ship**); AVIF encode numbers for dark astrophotography (reasoned, not benchmarked — spike 1 verifies); ambient budget table (estimates pending profiling).
+- LOW/unverified: Apple's specific "≤4 layers / ≤40–60px blur" Liquid Glass budget (no primary source — we use our own spike numbers instead).
+- Fetch failures logged: `apod.nasa.gov/apod/fap/lib/rights.html` (404), all `noirlab.edu` direct fetches (bot-gated).
 
-1. Scroll-hijack disorientation → all four inputs primary, transition lock, working back button
-2. Wheel-delta double-fire (trackpad) vs dead-feel (mouse) → delta accumulation + debounce, cross-device testing
-3. Focus traps between panels → `inert` on hidden panels, aria-live announcements
-4. Reduced-motion treated as "dimmer" → ambient scene must FULLY STOP to a single static frame (WCAG C39); deck transitions instant
-5. Always-on canvas battery drain → static/dynamic layer split, visibility gating, idle CPU <10% sustained
-6. TBT/LCP regression from scene init → pre-bake/chunk generation; Lighthouse gate immediately after scene phase
-7. GPU overdraw from stacked layers → minimal layer count, no full-repaint gradients per frame
-8. Text-over-starfield contrast failures → scrim gradient (~30-40%) verified at WORST-CASE brightness points, not averages
-9. SEO/deep-link loss → case studies keep distinct URLs + cold-load; all panel content stays in DOM; sitemap intact
-10. iOS edge-swipe collision → vertical swipe axis preferred; real-device testing
-11. **v1 regression vector:** Fig. 01 embedded in a hidden-until-active panel can init at 0×0 — wire re-measurement to the visibility hook; re-run the FULL v1 Fig. 01 verification checklist after embedding
+## Suggested phase shape (advisory for the roadmapper; numbering continues from 6)
 
-## Implications for Roadmap
-
-Three sequential phases (continuing numbering from 4):
-
-1. **Deck Mechanics** — state machine, input parity, hash routing + case-study routing decision, focus management, Fig. 01 keymap resolution, progressive enhancement, first-visit hint. Gate: Lighthouse ≥90 with deck (no scene); real-device input testing.
-2. **Night-Sky Scene** — Milky Way spike FIRST (LOW-confidence technique), then layered engine (pre-rendered sky, SVG silhouette, fireflies), constellation graph + panel-reactive brightening via the event contract, reduced-motion full-stop. Gate: idle CPU <10%, contrast ≥4.5:1 at worst-case, Lighthouse ≥90.
-3. **Integration & Launch Polish** — Fig. 01 as panel (resize audit + full v1 re-verification), all content layered with scrims, case-study cold-load verified, sitemap/SEO intact, full Lighthouse mobile+desktop, live deploy.
-
-**Gaps to address during planning:** Milky Way spike (2-3h) early in the scene phase; constellation topology/coordinates are content decisions (honesty gate applies to labels); case-study routing architecture must be decided in Mechanics, not Integration; real iPhone/mid-tier-Android testing budgeted.
-
-## Confidence Assessment
-
-| Area | Level | Reason |
-|------|-------|--------|
-| Stack | MEDIUM | Proven v1 patterns extended; Milky Way recipe LOW (spike flagged) |
-| Features | MEDIUM | NN/g + WCAG cross-corroborated table stakes/anti-features |
-| Architecture | HIGH | Read actual shipped source; patterns reuse proven structures |
-| Pitfalls | MEDIUM | WCAG primary sources MEDIUM-HIGH; perf budgets illustrative until benchmarked |
-
-## Sources
-
-- `.planning/research/STACK.md`, `FEATURES.md`, `ARCHITECTURE.md`, `PITFALLS.md` (v2.0 versions, 2026-07-17 — each carries its own source list: NN/g scrolljacking research, W3C WAI carousel/WCAG 2.3.3/C39, MDN/web.dev canvas + wheel-event docs, WebKit/Chrome DevRel perf guidance, fullPage.js issue tracker, Awwwards-class site survey)
-- `.planning/PROJECT.md` v2.0 milestone section (user-locked vision)
-- v1.0 research corpus (design language, motion grammar, portfolio genre) remains valid background — archived in git history
+1. **Phase 7 — Real-Sky Foundation**: both spikes FIRST, then photo composite pipeline + LQIP ladder + credit line + dedicated LCP/Lighthouse checkpoint before anything compounds.
+2. **Phase 8 — Glass System**: contrast-verifier re-architecture BEFORE glass values lock, then panels/chrome glass + fallback ladder.
+3. **Phase 9 — Living Sky**: parallax → clouds → aurora → scintillation, doctrine + mobile ladder + budget re-proof.
+4. **Phase 10 — Integration & Launch**: carry-forward regression battery + real-device checklist + gated deploy (user-go precedent from v2).
 
 ---
-*Note: assembled by the orchestrator from the synthesizer's inline return (#222 self-heal — the agent fabricated a write restriction instead of writing this file).*
+*Synthesized from 4 parallel research lanes, 2026-07-18. Synthesizer agent returned content inline (Write-tool false refusal, same as v2); orchestrator wrote this file.*
