@@ -139,7 +139,11 @@ Full details: [milestones/v2.0-ROADMAP.md](milestones/v2.0-ROADMAP.md) · Phase 
   - **Carry-forward regression battery** (verbatim from research SUMMARY): the full checklist in criterion 2 above is the launch gate — every item re-passes on the composited build.
   - **Real-device checklist + gated deploy**: the user-run real-device touch + 5-min idle-CPU check precedes deploy; deploy is gated on explicit user approval (v2 precedent — replacing the live professional site is outward-facing).
 
-**Plans**: TBD
+**Plans**: 2 plans
+
+  - [ ] 10-01-PLAN.md — Launch readiness: full carry-forward regression battery re-run on the composited build (embedded Fig. 01 36-check with full ambient paused, deck mechanics, no-JS classic, case-study/SEO/leak/sitemap/alias/credit, every verifier mode + soak + local Lighthouse), OG-03 opportunistic, the decision-ready go/no-go pack — NO push
+  - [ ] 10-02-PLAN.md — Gated launch: blocking human go/no-go (never auto-resolved), then FF push (never --force) → Actions watch → live verify + live Lighthouse (FLR-01 authoritative) → FLR-01..03 + LNC-01 close-out
+
 **UI hint**: yes
 
 ## Sequencing Rationale
