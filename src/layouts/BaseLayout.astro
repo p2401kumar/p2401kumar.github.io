@@ -49,6 +49,12 @@ const {
       type="font/woff2"
       crossorigin
     />
+
+    <!-- Page-specific head injections (07-03: index.astro passes the sky
+         photo's LCP preload here; work/[slug].astro and 404.astro pass
+         nothing and are unaffected). Placed AFTER the font preloads so the
+         fonts keep first position in the preload scanner's queue. -->
+    <slot name="head" />
   </head>
   <body>
     <slot />

@@ -40,10 +40,53 @@
  * ClientRouter is in use (plain MPA navigation), so a plain load-time
  * init with a retained teardown is correct; the teardown exists for
  * symmetry with the codebase's init contract, not for a re-init path.
+ *
+ * 07-03 (IMG-01/IMG-02): the real Milky-Way photo is delivered as a plain
+ * <picture>/<img> — the FIRST child of the host, painting at the BOTTOM by
+ * DOM order (no new z-index values; 07-RESEARCH.md §4.3). It is never
+ * drawn into any canvas (Canvas2D is 8-bit — would defeat the 10-bit AVIF
+ * encode, PITFALLS.md) and renders identically with zero JS (no-JS classic
+ * mode), which is why the LQIP-to-full fade below is a pure CSS keyframe
+ * that ENDS at opacity:1 — never a load-event-gated opacity. The LQIP is
+ * read at build time from build-sky.mjs's committed output so that script
+ * stays the single source of truth (07-RESEARCH.md §4.2).
  */
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+
+// Resolved from the project root (astro build/dev's cwd), NOT
+// import.meta.url — the bundled prerender chunk relocates to
+// dist/.prerender/chunks, which breaks source-relative URL resolution.
+const LQIP = readFileSync(
+  join(process.cwd(), "public/sky/milky-way-lqip.txt"),
+  "utf8"
+).trim();
 ---
 
 <div class="nightsky-host" aria-hidden="true">
+  <div class="sky-photo" style={`background-image: url('${LQIP}')`}>
+    <picture>
+      <source
+        type="image/avif"
+        srcset="/sky/milky-way-1920.avif 1920w, /sky/milky-way-2560.avif 2560w"
+        sizes="100vw"
+      />
+      <source
+        type="image/webp"
+        srcset="/sky/milky-way-1920.webp 1920w, /sky/milky-way-2560.webp 2560w"
+        sizes="100vw"
+      />
+      <img
+        src="/sky/milky-way-1920.avif"
+        alt=""
+        role="presentation"
+        fetchpriority="high"
+        loading="eager"
+        decoding="async"
+      />
+    </picture>
+  </div>
+
   <canvas id="nightsky-canvas"></canvas>
 
   <div class="camper">
@@ -84,6 +127,86 @@
     inset: 0;
     z-index: -1;
     pointer-events: none;
+  }
+
+  /* 07-03 photo delivery — all sizing present before first paint (never
+     JS-injected): the host is position:fixed and never in flow, so the
+     photo's box is structurally zero-CLS (07-RESEARCH.md §4.2). The LQIP
+     data URI paints as this wrapper's background the instant HTML arrives;
+     background-color var(--bg) is the failed-load degradation (plain --bg,
+     never a broken-image glyph — 07-UI-SPEC error-state). */
+  .sky-photo {
+    background-color: var(--bg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .sky-photo,
+  .sky-photo picture,
+  .sky-photo img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  .sky-photo img {
+    object-fit: cover;
+    /* Reference desktop tier (1024–1799px): band core lands in the right
+       margin per the 07-UI-SPEC placement table. */
+    object-position: 72% 38%;
+    /* LQIP-to-full fade — a NO-JS-SAFE CSS keyframe (400ms, deck.css's own
+       cubic-bezier(0.16,1,0.3,1)) that ENDS at opacity:1, so the photo is
+       fully visible without any script (IMG-02 hard gate). The LQIP
+       wrapper background sits behind it throughout. If this fade ever
+       regresses LCP past budget at the 07-04 checkpoint, the fade yields
+       (fallback: LQIP background with no fade — 07-RESEARCH.md §4.2). */
+    animation: sky-photo-fade 400ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  @keyframes sky-photo-fade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* Object-position responsive ladder (07-UI-SPEC), single master served
+     via object-fit:cover. NOTE — the <640px tier deliberately deviates
+     from the UI-SPEC's 12% 25%: the committed winner master (A-core-t20,
+     07-SPIKE-BANDING.md) carries band glow in its upper-left; its genuinely
+     quiet window is the LOWER-left (seam-faded) region, so the narrow tier
+     anchors at 10% 70% instead (Rule 2 deviation, measured rationale in
+     the spike's "Mobile object-position note"). */
+  @media (max-width: 639px) {
+    .sky-photo img {
+      object-position: 10% 70%;
+    }
+  }
+
+  @media (min-width: 640px) and (max-width: 1023px) {
+    .sky-photo img {
+      object-position: 55% 32%;
+    }
+  }
+
+  @media (min-width: 1800px) {
+    .sky-photo img {
+      object-position: 78% 34%;
+    }
+  }
+
+  /* Reduced motion: stop, don't dampen (07-UI-SPEC / PITFALLS.md Pitfall
+     4) — the photo appears instantly at full opacity, no fade. */
+  @media (prefers-reduced-motion: reduce) {
+    .sky-photo img {
+      animation: none;
+      opacity: 1;
+    }
   }
 
   #nightsky-canvas {
