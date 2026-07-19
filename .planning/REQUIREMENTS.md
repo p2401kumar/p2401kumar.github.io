@@ -9,9 +9,9 @@ Each maps to roadmap phases (numbering continues from Phase 7). Prior-milestone 
 
 ### Real Sky (imagery)
 
-- [ ] **IMG-01**: A composited real-astrophotography Milky Way sky (NOIRLab `noirlab2430b` primary / ESO `eso0932a` fallback, combined + rotated/cropped at build time into a checked-in master) renders full-viewport behind everything on the home page
+- [x] **IMG-01**: A composited real-astrophotography Milky Way sky (NOIRLab `noirlab2430b` primary / ESO `eso0932a` fallback, combined + rotated/cropped at build time into a checked-in master) renders full-viewport behind everything on the home page
 - [ ] **IMG-02**: The photo ships as a static `<img>`/CSS background — never canvas-drawn — so it is LCP-discoverable (preload + `fetchpriority=high` + LQIP ladder, no CLS) and present in the no-JS classic mode
-- [ ] **IMG-03**: Encode pipeline (AVIF 10-bit 4:4:4 + WebP fallback) produces no visible banding on an 8-bit display, proven by the banding spike (histogram comb-spike test + eyeball) before integration
+- [x] **IMG-03**: Encode pipeline (AVIF 10-bit 4:4:4 + WebP fallback) produces no visible banding on an 8-bit display, proven by the banding spike (histogram comb-spike test + eyeball) before integration
 - [ ] **IMG-04**: A photo credit line renders in the footer/colophon — exact attribution text with source link, CC BY 4.0 compliant; license page manually verified in a browser before ship
 - [ ] **IMG-05**: The authored overlay survives on the real sky: career constellations with panel-reactive brightening, meteors, and the drawn crescent moon (photo moon rejected on physics — recorded decision)
 
@@ -65,9 +65,9 @@ Each requirement maps to the phase that **completes** it. FLR-01's LCP checkpoin
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| IMG-01 | Phase 7 | Pending |
+| IMG-01 | Phase 7 | Complete |
 | IMG-02 | Phase 7 | Pending |
-| IMG-03 | Phase 7 | Pending |
+| IMG-03 | Phase 7 | Complete |
 | IMG-04 | Phase 7 | Pending |
 | IMG-05 | Phase 7 | Pending |
 | GLS-01 | Phase 8 | Pending |

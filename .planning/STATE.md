@@ -2,18 +2,18 @@
 gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Real Sky
-current_phase: 07
+current_phase: 7
 current_phase_name: Real-Sky Foundation
 status: ready_to_plan
 stopped_at: v3.0 roadmap created
-last_updated: "2026-07-18T10:30:00.000Z"
-last_activity: 2026-07-18
-last_activity_desc: v3.0 Real Sky roadmap created — 18 requirements mapped to phases 7-10 (coarse, spike-first)
+last_updated: "2026-07-19T04:29:28.245Z"
+last_activity: 2026-07-19
+last_activity_desc: "07-01 executed: build-sky.mjs + verify-banding.mjs + 5 banding-free sky masters committed (winner A-core-t20)"
 progress:
   total_phases: 4
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
+  total_plans: 4
+  completed_plans: 1
   percent: 0
 ---
 
@@ -28,10 +28,10 @@ See: .planning/PROJECT.md (updated 2026-07-18)
 
 ## Current Position
 
-Phase: 7 (Real-Sky Foundation) — not started
-Plan: — (roadmap created, planning pending)
-Status: ready_to_plan — v3.0 roadmap created, 18/18 requirements mapped
-Last activity: 2026-07-18 — v3.0 Real Sky roadmap created (phases 7-10); next: `/gsd-plan-phase 7`
+Phase: 7 (Real-Sky Foundation) — executing
+Plan: 2 of 4 (07-01 Spike 1 banding COMPLETE — masters committed; next: 07-02 glass spike)
+Status: executing — Spike 1 PASS (banding gate + eyeball evidence); 07-02/07-03/07-04 remain
+Last activity: 2026-07-19 — 07-01 executed: build-sky.mjs + verify-banding.mjs + 5 banding-free sky masters committed (winner A-core-t20)
 
 ## Performance Metrics
 
@@ -96,6 +96,7 @@ Last activity: 2026-07-18 — v3.0 Real Sky roadmap created (phases 7-10); next:
 | Phase 06 P02 | ~50 min | 2 tasks | 5 files |
 
 </details>
+| Phase 07 P01 | 35m | 3 tasks | 23 files |
 
 ## Accumulated Context
 
@@ -162,6 +163,10 @@ Recent decisions affecting current work:
 - [Phase 06]: 06-01: headless focus-event gap fixed via CDP focus emulation in audit tooling only — product code untouched
 - [Phase 06]: 06-02: Fix-then-launch — both 06-01 fix-forward items fixed and battery re-run green before the deploy, per the user's contingent approval (Fix 2 edges, then launch)
 - [Phase 06]: 06-02: Fix B pause seed reads DOM state (html.deck-active + active panel data-panel-id) at first Layer-0 adoption — timing-safe, zero deck imports
+- [Phase 07]: 07-01 winner crop A-core-t20: NOIRLab core anchor (2050,1040), 20deg clockwise, core at frame (0.84,0.58) — All 3 candidates passed the banding gate; A alone puts the true galactic core in the UI-SPEC core zone with a quiet left margin
+- [Phase 07]: 07-01 saturation deviation: bulk sky graded to hue 218deg / S~31% HSL vs UI-SPEC <=15% — The grading target tokens themselves are S 33-37% HSL; <=15% is unreachable while matching the token family — intent (no clashing hue patches) honored
+- [Phase 07]: 07-01 integration note: mobile object-position should target ~10% 70%, not 12% 25% — The committed master's upper-left carries band glow; the quiet region is the lower-left seam-faded zone
+- [Phase 07]: 07-01 Task 3 eyeball checkpoint auto-resolved under /gsd-autonomous — Committed encode + histogram evidence; objective gate held hard; async user veto available (rerun build-sky.mjs to swap masters)
 
 ### Pending Todos
 
@@ -192,7 +197,7 @@ Items acknowledged and carried forward:
 
 ## Session Continuity
 
-Last session: 2026-07-18T10:30:00.000Z
+Last session: 2026-07-19T04:27:44.492Z
 Stopped at: v3.0 roadmap created — phases 7-10 mapped (18/18 requirements), ready to plan Phase 7
 Resume file: None
 
