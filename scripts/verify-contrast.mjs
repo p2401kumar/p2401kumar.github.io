@@ -1345,9 +1345,365 @@ async function cdpMain(args) {
   console.log(JSON.stringify(report, null, 2));
 }
 
-// Reserved flag (08-01 Task 1) — the full gate mode lands in Task 2.
-async function cdpScreenshotMain() {
-  throw new Error("--cdp-screenshot is reserved but not yet implemented (08-01 Task 2)");
+// ---------------------------------------------------------------------------
+// --cdp-screenshot (08-01 Task 2) — THE Phase-8 contrast gate.
+//
+// DPR1 IS MANDATORY here (forceDpr1 before navigation — see the doctrine
+// block above captureAndDecode). This mode — not the analytic --cdp — is
+// THE contrast gate for the rest of Phase 8: analytic per-pixel compositing
+// is exact for flat-alpha layers but cannot represent a backdrop-filter
+// blur kernel; only the browser's own composited screenshot can.
+//
+// Scope (08-RESEARCH.md Pitfall 3): all 7 PANELS entries PLUS <header>,
+// <footer>, and #deck-index — three fixed chrome surfaces that are
+// siblings of .deck and were NEVER visited by samplePageOnce's
+// panel-scoped query. Sampled once while hero is active (they are
+// position:fixed and identical regardless of active panel).
+//
+// Tall-panel internal-scroll sweep (08-RESEARCH.md Pitfall 5): .panel is
+// overflow:auto and deck.ts never resets scrollTop, while
+// Page.captureScreenshot sees ONE viewport frame — so any panel with
+// scrollHeight > clientHeight is swept across scrollTop offsets
+// (step = clientHeight), re-discovering rects and unioning worst-case
+// results across all offsets. Panels that fit record "no internal scroll
+// needed" instead.
+// ---------------------------------------------------------------------------
+
+/**
+ * In-page geometry-only text-region discovery — factored out of
+ * samplePageOnce(): IDENTICAL text extraction, ancestor-opaque-background
+ * walk, and Range-based per-line glyph-run rect logic, but it STOPS before
+ * any getImageData call. Pixels come from the Node-side screenshot decode.
+ * Serialized with .toString() into the page — browser globals only.
+ *
+ * Element-list scope note (Rule 2 widening): the original h1..span list
+ * plus `b` and `div` — the header identity line is a direct-text <div>
+ * with a <b> child (SiteHeader.astro), neither of which the original
+ * panel-scoped list ever needed. The direct-text-node filter below keeps
+ * container-only divs out exactly as before.
+ */
+function discoverTextRegions(rootSpecs) {
+  // rootSpecs: [{ selector, panel }]
+  const parseCssColor = (str) => {
+    const m = str.match(/rgba?\(([\d.]+)[, ]+([\d.]+)[, ]+([\d.]+)(?:[,/ ]+([\d.]+))?\)/);
+    if (!m) return null;
+    return { r: +m[1], g: +m[2], b: +m[3], a: m[4] === undefined ? 1 : +m[4] };
+  };
+  const out = [];
+  const seen = new Set();
+  for (const spec of rootSpecs) {
+    const root = document.querySelector(spec.selector);
+    if (!root) {
+      out.push({ panel: spec.panel, error: "root not found: " + spec.selector });
+      continue;
+    }
+    const els = root.querySelectorAll(
+      "h1,h2,h3,h4,p,li,a,dt,dd,small,strong,em,td,th,figcaption,blockquote,button,time,code,span,b,div"
+    );
+    for (const el of els) {
+      const text = (el.childNodes.length
+        ? Array.from(el.childNodes)
+            .filter((n) => n.nodeType === 3)
+            .map((n) => n.textContent)
+            .join("")
+        : el.textContent
+      ).trim();
+      if (!text) continue;
+      const cs = getComputedStyle(el);
+      if (cs.visibility === "hidden" || cs.display === "none" || +cs.opacity === 0) continue;
+
+      let node = el;
+      let overSky = true;
+      while (node && node !== document.body) {
+        const bg = parseCssColor(getComputedStyle(node).backgroundColor || "");
+        if (bg && bg.a >= 0.99) {
+          overSky = false;
+          break;
+        }
+        node = node.parentElement;
+      }
+
+      const lineRects = [];
+      for (const n of el.childNodes) {
+        if (n.nodeType !== 3 || !n.textContent.trim()) continue;
+        const range = document.createRange();
+        range.selectNodeContents(n);
+        for (const lr of range.getClientRects()) {
+          const lx0 = Math.max(0, Math.floor(lr.left));
+          const ly0 = Math.max(0, Math.floor(lr.top));
+          const lx1 = Math.min(window.innerWidth, Math.ceil(lr.right));
+          const ly1 = Math.min(window.innerHeight, Math.ceil(lr.bottom));
+          if (lx1 - lx0 >= 2 && ly1 - ly0 >= 2) lineRects.push({ x0: lx0, y0: ly0, x1: lx1, y1: ly1 });
+        }
+      }
+      if (!lineRects.length) continue;
+      const x0 = Math.min(...lineRects.map((r) => r.x0));
+      const y0 = Math.min(...lineRects.map((r) => r.y0));
+      const x1 = Math.max(...lineRects.map((r) => r.x1));
+      const y1 = Math.max(...lineRects.map((r) => r.y1));
+
+      const key = spec.panel + ":" + el.tagName + ":" + x0 + "," + y0 + "," + x1 + "," + y1 + ":" + text.slice(0, 24);
+      if (seen.has(key)) continue;
+      seen.add(key);
+
+      const fontSize = parseFloat(cs.fontSize);
+      const fontWeight = parseInt(cs.fontWeight, 10) || 400;
+      const isLarge = fontSize >= 24 || (fontSize >= 18.66 && fontWeight >= 700);
+      out.push({
+        panel: spec.panel,
+        tag: el.tagName.toLowerCase(),
+        text: text.slice(0, 40),
+        rect: { x0, y0, x1, y1 },
+        lineRects,
+        overSky,
+        fontSize,
+        fontWeight,
+        isLarge,
+        threshold: isLarge ? 3 : 4.5,
+        ownColor: parseCssColor(cs.color),
+        ownColorCss: cs.color,
+      });
+    }
+  }
+  return out;
+}
+
+function buildDiscoverySource() {
+  return (
+    discoverTextRegions.toString() +
+    "\nwindow.__discoverTextRegions = discoverTextRegions;" +
+    '\n"discovery-installed";'
+  );
+}
+
+async function cdpScreenshotMain(args) {
+  const url = argValue(args, "--url") || "http://localhost:4321/";
+  const width = parseInt(argValue(args, "--width") || "1440", 10);
+  const height = parseInt(argValue(args, "--height") || "900", 10);
+  const { ink } = readTokens();
+  const inkL = relativeLuminance(ink.r, ink.g, ink.b);
+
+  const { proc, port, profile } = await launchChrome(width, height);
+  let report;
+  let anyFailing = false;
+  try {
+    const cdp = await connectCdp(port);
+    await cdp.send("Page.enable");
+    // DPR1 MANDATORY — before navigation (captureAndDecode enforces 1:1).
+    await forceDpr1(cdp, width, height);
+    await cdp.send("Page.navigate", { url });
+
+    // Same readiness contract as the analytic mode: decoded photo + lit
+    // moon pixel (the final Layer-0 work unit).
+    let ready = false;
+    for (let i = 0; i < 120; i++) {
+      await sleep(250);
+      try {
+        ready = await cdp.evaluate(READY_PROBE);
+        if (ready) break;
+      } catch {
+        /* page still loading */
+      }
+    }
+    if (!ready) throw new Error("scene never painted (Layer 0 not adopted within 30s)");
+
+    await cdp.evaluate(buildDiscoverySource());
+
+    report = {
+      url,
+      viewport: { width, height },
+      mode: "screenshot",
+      dpr: 1,
+      startedAt: new Date().toISOString(),
+      panels: [],
+    };
+
+    // One settled position: discover rects (real colors), hide glyphs,
+    // capture+decode, restore glyphs, scan every line rect Node-side with
+    // the SAME selftested WCAG helpers, tracking per-region minima.
+    const sampleRoots = async (rootSpecs, byKey, offset) => {
+      const regions = await cdp.evaluate(
+        `window.__discoverTextRegions(${JSON.stringify(rootSpecs)})`
+      );
+      await cdp.evaluate(HIDE_TEXT_EXPR);
+      const frame = await captureAndDecode(cdp, width, height);
+      await cdp.evaluate(SHOW_TEXT_EXPR);
+      for (const r of regions) {
+        if (r.error) {
+          const k = `${r.panel}|error|${r.error}`;
+          if (!byKey.has(k)) byKey.set(k, r);
+          continue;
+        }
+        const ownL = r.ownColor
+          ? relativeLuminance(r.ownColor.r, r.ownColor.g, r.ownColor.b)
+          : inkL;
+        let worstInk = Infinity;
+        let worstOwn = Infinity;
+        let worstPixel = null;
+        for (const lr of r.lineRects) {
+          const sub = extractSubImage(frame, lr.x0, lr.y0, lr.x1, lr.y1);
+          if (!sub) continue;
+          const scanInk = worstCaseContrastInRegion(sub, inkL);
+          if (scanInk.worst < worstInk) {
+            worstInk = scanInk.worst;
+            worstPixel = {
+              vx: lr.x0 + scanInk.worstPixel.x,
+              vy: lr.y0 + scanInk.worstPixel.y,
+              rgb: [scanInk.worstPixel.r, scanInk.worstPixel.g, scanInk.worstPixel.b],
+              scrollOffset: offset,
+            };
+          }
+          const scanOwn = worstCaseContrastInRegion(sub, ownL);
+          if (scanOwn.worst < worstOwn) worstOwn = scanOwn.worst;
+        }
+        if (worstPixel === null) continue; // fully clipped at this offset
+        const entry = {
+          panel: r.panel,
+          tag: r.tag,
+          text: r.text,
+          rect: { x: r.rect.x0, y: r.rect.y0, w: r.rect.x1 - r.rect.x0, h: r.rect.y1 - r.rect.y0 },
+          overSky: r.overSky,
+          fontSize: r.fontSize,
+          fontWeight: r.fontWeight,
+          isLarge: r.isLarge,
+          threshold: r.threshold,
+          ownColor: r.ownColorCss,
+          worstVsInk: +worstInk.toFixed(3),
+          worstVsOwnColor: +worstOwn.toFixed(3),
+          worstPixel,
+        };
+        const k = `${r.panel}|${r.tag}|${r.text}|${r.rect.x0}`;
+        const prev = byKey.get(k);
+        if (!prev || entry.worstVsInk < prev.worstVsInk) {
+          if (prev && prev.worstVsOwnColor < entry.worstVsOwnColor)
+            entry.worstVsOwnColor = prev.worstVsOwnColor;
+          byKey.set(k, entry);
+        } else if (entry.worstVsOwnColor < prev.worstVsOwnColor) {
+          prev.worstVsOwnColor = entry.worstVsOwnColor;
+        }
+      }
+    };
+
+    const pushPanelEntry = (id, byKey, sampledOffsets, scrollInfo, activePanelSeen) => {
+      const regions = Array.from(byKey.values()).filter((r) => !r.error);
+      const overSkyRegions = regions.filter((r) => r.overSky);
+      const notOverSky = regions.filter((r) => !r.overSky);
+      const worst = overSkyRegions.reduce(
+        (acc, r) => (r.worstVsInk < acc ? r.worstVsInk : acc),
+        Infinity
+      );
+      const failing = overSkyRegions
+        .filter((r) => r.worstVsInk < r.threshold)
+        .sort((a, b) => a.worstVsInk - b.worstVsInk);
+      if (failing.length) anyFailing = true;
+      report.panels.push({
+        panel: id,
+        activePanelSeen,
+        regionCount: regions.length,
+        overSkyCount: overSkyRegions.length,
+        worstVsInk: worst === Infinity ? null : +worst.toFixed(3),
+        sampled_offsets: sampledOffsets,
+        scroll: scrollInfo,
+        failing,
+        regions: overSkyRegions.sort((a, b) => a.worstVsInk - b.worstVsInk),
+        // Regions behind an opaque DOM background (e.g. today's opaque
+        // jump-index pill) still get REAL screenshot pixels — measured and
+        // recorded for the baseline, but excluded from the over-sky gate
+        // exactly like the analytic mode excludes them.
+        notOverSky: notOverSky.sort((a, b) => a.worstVsInk - b.worstVsInk),
+      });
+      process.stderr.write(
+        `panel ${id}: ${overSkyRegions.length} over-sky text regions, worst vs --ink = ${
+          worst === Infinity ? "n/a" : worst.toFixed(2)
+        }${failing.length ? ` — ${failing.length} FAILING` : ""}\n`
+      );
+    };
+
+    for (const id of PANELS) {
+      await cdp.evaluate(`location.hash = ${JSON.stringify("#" + id)}; "nav";`);
+      await sleep(800); // 420ms transition lock + settle
+      const sm = await cdp.evaluate(
+        `(() => { const p = document.querySelector('.panel[data-state="active"]');
+           return p ? { scrollHeight: p.scrollHeight, clientHeight: p.clientHeight,
+                        active: p.getAttribute("data-panel-id") || p.id || "?" } : null; })()`
+      );
+      const offsets = [0];
+      if (sm && sm.scrollHeight > sm.clientHeight) {
+        const step = sm.clientHeight;
+        const max = sm.scrollHeight - sm.clientHeight;
+        for (let top = step; top < max + step; top += step) offsets.push(Math.min(top, max));
+        for (let i = offsets.length - 1; i > 0; i--)
+          if (offsets[i] === offsets[i - 1]) offsets.splice(i, 1);
+      }
+      const byKey = new Map();
+      const seenOffsets = [];
+      for (const off of offsets) {
+        const applied = await cdp.evaluate(
+          `(() => { const p = document.querySelector('.panel[data-state="active"]');
+             if (!p) return -1; p.scrollTop = ${off};
+             return new Promise(r => requestAnimationFrame(() => requestAnimationFrame(() => r(p.scrollTop)))); })()`
+        );
+        seenOffsets.push(typeof applied === "number" ? Math.round(applied) : off);
+        await sampleRoots([{ selector: '.panel[data-state="active"]', panel: id }], byKey, off);
+      }
+      await cdp.evaluate(
+        `(() => { const p = document.querySelector('.panel[data-state="active"]'); if (p) p.scrollTop = 0; return true; })()`
+      );
+      pushPanelEntry(
+        id,
+        byKey,
+        seenOffsets,
+        sm
+          ? {
+              scrollHeight: sm.scrollHeight,
+              clientHeight: sm.clientHeight,
+              swept: seenOffsets.length > 1,
+              note:
+                sm.scrollHeight > sm.clientHeight
+                  ? "internal-scroll sweep fired"
+                  : `no internal scroll needed at ${width}x${height}`,
+            }
+          : null,
+        sm?.active
+      );
+    }
+
+    // Chrome surfaces — once, while hero is active. header/footer/
+    // #deck-index are position:fixed siblings of .deck, identical
+    // regardless of active panel; NEVER visited by samplePageOnce's
+    // panel-scoped query (REQUIRED scope extension, not an extra).
+    await cdp.evaluate(`location.hash = "#hero"; "nav";`);
+    await sleep(800);
+    const chromeSpecs = [
+      { selector: "header", panel: "header" },
+      { selector: "footer", panel: "footer" },
+      { selector: "#deck-index", panel: "jump-index" },
+    ];
+    const chromeByKey = new Map();
+    await sampleRoots(chromeSpecs, chromeByKey, 0);
+    for (const spec of chromeSpecs) {
+      const byKey = new Map();
+      for (const [k, v] of chromeByKey) if (v.panel === spec.panel) byKey.set(k, v);
+      pushPanelEntry(spec.panel, byKey, [0], null, "hero");
+    }
+  } finally {
+    proc.kill();
+    await sleep(300);
+    try {
+      rmSync(profile, { recursive: true, force: true });
+    } catch {
+      /* best-effort tmp cleanup */
+    }
+  }
+
+  console.log(JSON.stringify(report, null, 2));
+  if (anyFailing) {
+    console.error(
+      `CONTRAST GATE FAIL at ${width}x${height} (screenshot mode): over-sky region(s) below threshold — see failing[] entries.`
+    );
+    process.exit(1);
+  }
+  console.error(`contrast gate PASS at ${width}x${height} (screenshot mode, DPR1)`);
 }
 
 // ---------------------------------------------------------------------------
