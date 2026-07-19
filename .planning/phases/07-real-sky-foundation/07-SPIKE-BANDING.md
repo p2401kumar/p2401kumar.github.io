@@ -3,6 +3,8 @@
 **Date:** 2026-07-19
 **Verdict: PASS** — the committed encode recipe produces no detectable banding (histogram comb-spike gate) and no visible banding in the eyeball evidence. The recipe below is **authoritative**: `scripts/build-sky.mjs` bakes exactly these constants; re-running it reproduces the committed masters byte-for-byte-equivalent output.
 
+> **07-03 revision (2026-07-19):** the column vignette was widened after the 07-03 integration contrast gate failed at 1280×800 (worst text pixel 4.06:1 < 4.5 — the original half-width mapped only the 1440 reference tier, reaching 413px of full darkening at 1280 where the fixed 440px column half needs full coverage). New geometry: half-width **0.234043** master-frac (= max column fraction across the 1.6:1 check tiers, 440px @1280), ramp **0.042553** (= 80px @1280), sized exactly to the max-tier column+ramp edge (outer window-frac 0.90625) so the galactic core keeps its margin-side brightness (mwPeak moved only 0.4716→0.4695 @1280, 0.4781→0.4748 @1440). Derivation at `VIGNETTE_HALF_FRAC` in build-sky.mjs. The tables below are updated to the re-baked masters; every other recipe constant is unchanged.
+
 ## Source integrity (T-07-01)
 
 | Field | Value |
@@ -21,7 +23,7 @@
 | Core frame placement | frame fraction (0.84, 0.58) → reference-tier window x≈0.90 (inside the UI-SPEC core zone x:0.80–0.98) |
 | Frame (native) | **987×420** (2.35:1 letterbox), extract bbox [1183,753 1080×741], all distortion-check corners inside safe rows y=550–1450 (bottom pair relaxed to the 0.90 frame line — hidden behind ≥92%-opaque seam) |
 | Grade | saturation ×0.35 → tint `#93a7cf` → per-channel linear map (measured p0.5 dark floor [10,13,19] → `--sky-zenith` (5,7,10)) → midtone pull-down ×0.80 anchored on zenith |
-| Column vignette | SKY-05 governor geometry through the cover map: center 0.5702 of width, half-width 0.2194, smoothstep ramp 0.0378 (= 464px + 80px at 1440×900, object-position 72%), darken α=0.88 toward `#05070a` (texture ×0.12 — governor parity) |
+| Column vignette | SKY-05 governor geometry through the cover map: center 0.5702 of width, half-width **0.2340**, smoothstep ramp **0.0426** (= 440px column half + 80px ramp at 1280×800 — the binding 1.6:1 check tier; 495px + 90px at 1440×900; object-position 72%), darken α=0.88 toward `#05070a` (texture ×0.12 — governor parity). *07-03 widening; originally 0.2194/0.0378 (1440-reference-only mapping)* |
 | Seam ramp | vertical smoothstep to `#0f1216`: pure photo 0–0.72, ramp 0.72–0.94, solid 0.94–1.0 |
 | Normalize | `.toColorspace('srgb')` before every encode (ICC pitfall 4) |
 | Grain | deterministic ±1.5/channel (mulberry32, seeded per width), applied **after** resize, before encode |
@@ -31,11 +33,13 @@
 
 | File | Bytes | KB |
 |---|---|---|
-| `public/sky/milky-way-2560.avif` | 82,960 | 81.0 |
-| `public/sky/milky-way-1920.avif` | 59,908 | 58.5 |
-| `public/sky/milky-way-2560.webp` | 398,536 | 389.2 |
-| `public/sky/milky-way-1920.webp` | 232,518 | 227.1 |
-| `public/sky/milky-way-lqip.txt` | 106 raw / 167-char data URI | — |
+| `public/sky/milky-way-2560.avif` | 79,329 | 77.5 |
+| `public/sky/milky-way-1920.avif` | 57,026 | 55.7 |
+| `public/sky/milky-way-2560.webp` | 394,950 | 385.7 |
+| `public/sky/milky-way-1920.webp` | 230,566 | 225.2 |
+| `public/sky/milky-way-lqip.txt` | 98 raw / 155-char data URI | — |
+
+*(07-03 re-bake — slightly smaller than the 07-01 originals: the wider vignette increases the dark area.)*
 
 All inside the research byte budget (250–450KB at 1920w); AVIF far under it.
 
@@ -54,10 +58,12 @@ All inside the research byte budget (250–450KB at 1920w); AVIF far under it.
 
 | File | top-dark-sky | seam-ramp |
 |---|---|---|
-| milky-way-2560.avif | runs=1 gaps=0 (64/64 bins) | runs=1 gaps=0 (64/64) |
-| milky-way-1920.avif | runs=2 gaps=1 (63/64) | runs=1 gaps=0 (64/64) |
-| milky-way-2560.webp | runs=1 gaps=0 (64/64) | runs=1 gaps=0 (64/64) |
-| milky-way-1920.webp | runs=2 gaps=1 (63/64) | runs=1 gaps=0 (64/64) |
+| milky-way-2560.avif | runs=1 gaps=0 (61/61 bins) | runs=1 gaps=0 (64/64) |
+| milky-way-1920.avif | runs=1 gaps=0 (62/62) | runs=1 gaps=0 (64/64) |
+| milky-way-2560.webp | runs=1 gaps=0 (61/61) | runs=1 gaps=0 (64/64) |
+| milky-way-1920.webp | runs=1 gaps=0 (60/60) | runs=1 gaps=0 (64/64) |
+
+*(07-03 re-bake — improved over the 07-01 originals, whose 1920 tiers scanned runs=2 gaps=1 on top-dark-sky; the widened vignette's new dark-gradient area introduced no comb-spike fracture.)*
 
 ### Runner-up candidates (same encode ladder, scanned via `--winner` override)
 

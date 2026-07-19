@@ -34,9 +34,11 @@
 //      then per-channel linear black-point mapping so the measured dark-sky
 //      floor lands on --sky-zenith (5,7,10) +/-4
 //   4. column vignette: baked darken toward --sky-zenith with the SKY-05
-//      governor's geometry (half-width 464px + 80px smoothstep ramp at the
-//      1440x900 reference), mapped through the object-fit:cover window at
-//      the 1024-1799px tier (object-position 72%)
+//      governor's geometry sized to the MAX column viewport-fraction across
+//      the 1.6:1 contrast-check tiers (440px column half + 80px ramp at
+//      1280x800 — the binding tier), mapped through the object-fit:cover
+//      window at the 1024-1799px tier (object-position 72%). See the
+//      derivation at VIGNETTE_HALF_FRAC (07-03 widening).
 //   5. seam ramp: vertical blend to --bg, stops 0..0.72 photo / 0.72..0.94
 //      ramp / 0.94..1.0 solid (07-UI-SPEC Seam Contract)
 //   6. normalize to srgb, resize 2560w + 1920w, add light deterministic
@@ -99,17 +101,34 @@ const DARK_PCT = 0.005;
 const MIDTONE_SCALE = 0.8;
 
 // Column vignette — SKY-05 governor geometry mapped into master space.
-// Reference tier: 1440x900 viewport, object-fit:cover, object-position 72%.
-// Master is 2.35:1 (wider than 1.6:1) so cover scales by height: the visible
-// window is (1.6/2.35)=0.68085 of master width, its left edge sits at
-// 0.72*(1-0.68085)=0.229787. Viewport px -> master px scale = masterH/900,
-// so 464px half-width => 464/(900*2.35)=0.219385 of master WIDTH, and the
-// 80px ramp => 0.037825. Center = window center = 0.570213 of master width.
+// Both contrast-check tiers (1280x800, 1440x900) are 1.6:1, so they share
+// ONE cover window: master is 2.35:1 (wider than 1.6:1), cover scales by
+// height, the visible window is (1.6/2.35)=0.680851 of master width and its
+// left edge sits at 0.72*(1-0.680851)=0.229787 (object-position 72%).
+// window-frac -> master-frac therefore multiplies by 0.680851; center =
+// window center = 0.570213 of master width.
+//
+// 07-03 widening (1280x800 contrast-gate fix): full darkening must cover the
+// content column at EVERY check tier, so the half-width is the MAX column
+// viewport-fraction across the tiers. The column is fixed CSS px (deck.css /
+// scene.ts contentColumnEdges: half = min(880, W - 2*32)/2 = 440px at both
+// widths), so the fraction is binding at the NARROWEST tier:
+//   half = max(440/1280, 440/1440) = 0.34375 window-frac
+//        -> 0.34375 * 0.680851 = 0.234043 master-frac
+//   ramp = 80/1280 = 0.0625 window-frac -> 0.042553 master-frac
+// Sized EXACTLY to the max-tier column+ramp edge (outer edge window-frac
+// 0.5 + 0.34375 + 0.0625 = 0.90625) and no further: the galactic core's
+// brightest pixels near window x~0.90 catch only the ~0.02-alpha ramp tail,
+// preserving the margin-side vividness — the same dim-under-column /
+// vivid-margin parity the procedural SKY-05 governor enforced.
+// (Superseded 07-01 values mapped only the 1440 reference: HALF 0.219385
+// = 464px@1440 but just 413px@1280, so the 1280 column edge sat in the
+// bright ramp strip — worst text pixel 4.06:1 < 4.5 floor.)
 const WIN_LEFT_FRAC = 0.229787; // reference-tier cover window left edge
-const WIN_WIDTH_FRAC = 0.680851; // reference-tier cover window width
+const WIN_WIDTH_FRAC = 0.680851; // 1.6:1 cover window width (both check tiers)
 const VIGNETTE_CENTER_FRAC = 0.570213;
-const VIGNETTE_HALF_FRAC = 0.219385;
-const VIGNETTE_RAMP_FRAC = 0.037825;
+const VIGNETTE_HALF_FRAC = 0.234043;
+const VIGNETTE_RAMP_FRAC = 0.042553;
 const VIGNETTE_ALPHA = 0.88; // texture x0.12 inside the column (governor parity)
 
 // Seam ramp (07-UI-SPEC Seam Contract)
