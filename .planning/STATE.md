@@ -5,16 +5,16 @@ milestone_name: Real Sky
 current_phase: 9
 current_phase_name: Living Sky
 status: in_progress
-stopped_at: "Completed 09-01-PLAN.md — clouds + parallax + scintillation live; next: 09-02 (aurora)"
-last_updated: "2026-07-19T20:02:01.955Z"
+stopped_at: "Completed 09-02-PLAN.md — aurora live + --aurora luminance gate green both viewports; next: 09-03 (mobile ladder + closing battery)"
+last_updated: "2026-07-19T20:30:55.748Z"
 last_activity: 2026-07-19
-last_activity_desc: "09-01 executed: idle-queue extraction + clouds + parallax + scintillation (AMB-01/02/04)"
+last_activity_desc: "09-02 executed: --aurora token + aurora module + luminance gate (AMB-03)"
 progress:
   total_phases: 4
   completed_phases: 2
   total_plans: 10
-  completed_plans: 8
-  percent: 50
+  completed_plans: 9
+  percent: 90
 ---
 
 # Project State
@@ -28,13 +28,14 @@ See: .planning/PROJECT.md (updated 2026-07-18)
 
 ## Current Position
 
-Phase: 9 (Living Sky) — IN PROGRESS (1/3 plans) — next: execute 09-02 (aurora)
+Phase: 9 (Living Sky) — IN PROGRESS (2/3 plans) — next: execute 09-03 (mobile ladder + closing battery)
+Plan: 09-02 COMPLETE — --aurora token + 3-curtain breathing aurora (AMB-03) over the moon / before clouds; --aurora full-cycle luminance gate PASS both viewports (0.1018/0.0384 << mwPeak 0.4748/0.4695), --moon + --cdp-screenshot + --selftest all green, single-rAF held (scene 2 / aurora 0), reduced-motion still byte-deterministic
 Plan: 09-01 COMPLETE — idle-queue extraction + two column-governed cloud layers + camper/cloud parallax + 2-oscillator scintillation (AMB-01/02/04); contrast gate PASS both viewports, canvas never transformed, single-rAF held (scene 2 / new modules 0)
 Prior phase: 8 (Glass System) — COMPLETE (3/3 plans)
 Plan: 08-03 COMPLETE — GLS-04 real-page re-proof PASS + full battery green + phase closed
 Status: GLS-01..04 all Complete. Real-page 60s idle soak (built preview, 1440×900 DPR1, same-page glass toggle via prefers-reduced-transparency emulation): total with glass **6.10% < 10%** (3.9pp headroom), 60.0fps, 0 long tasks, LayoutDuration Δ 0.000s; main-thread marginal ~0 within ±0.4pp scene noise vs Spike-2's +0.47pp projection, whole-tree cross-check +6.68pp vs the spike's +6.48pp — projection confirmed on the production page. Lighthouse mobile 99/100/100/100 + desktop 100×4, TBT 0ms both (07-04 family held). Full carried-floor battery ALL GREEN; leak gate airtight; DeckIndex-relocation smoke PASS.
 **Phase 9 budget note:** ambient animation must fit inside the ~3.9pp of main-thread headroom glass leaves (measured real-page total 6.10% under the 10% floor, software raster, 1440×900 DPR1); the screenshot-sampled `--cdp-screenshot` contrast floor (≥4.5:1, worst surface today: header 6.23) is the arbiter any ambient light source must not breach.
-Last activity: 2026-07-19 — 08-03 executed: GLS-04 re-proof + Lighthouse + battery + Phase 8 close-out
+Last activity: 2026-07-19 — 09-02 executed: --aurora token + aurora module + luminance gate (AMB-03)
 
 ## Performance Metrics
 
@@ -107,6 +108,7 @@ Last activity: 2026-07-19 — 08-03 executed: GLS-04 re-proof + Lighthouse + bat
 | Phase 08 P02 | 85min | 2 tasks | 12 files |
 | Phase 08 P03 | 25min | 3 tasks | 7 files |
 | Phase 09 P01 | 21min | 3 tasks | 6 files |
+| Phase 09 P02 | ~24 min | 3 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -199,6 +201,8 @@ Recent decisions affecting current work:
 - [Phase 09]: 09-01: column governor is a destination-in alpha stencil (1.0 margins -> 0.15 column, 80px smoothstep) applied LIVE on the reusable band buffer — clouds drift, the column stays fixed; measured canvas-alpha x-profile confirms margins ~0.03-0.04 avg vs ~0.001 under the column
 - [Phase 09]: 09-01: cloud parallax nudge mirrors the camper keyframe shape (peak at 35% of its 480ms window) on a JS cubic-bezier(0.16,1,0.3,1) evaluator — ground and mid layer read as one gesture; canvas transform verified 'none' at rest AND mid-nudge (camper at -17.98px)
 - [Phase 09]: 09-01: starfield imports { drainQueue, type WorkUnit } only (plan listed requestIdle too — unused import would fail astro check under noUnusedLocals); requestIdle stays exported from idle-queue.ts for 09-02's aurora
+- [Phase 09]: 09-02: aurora curtain layout/noise fully deterministic (jitter-free sine-sum table) — reduced-motion still proven byte-identical across captures
+- [Phase 09]: 09-02: --aurora gate erodes sub-window point features (separable min, ~7 CSS px) before peaking — raw box peak is pre-existing stars/moon; reported, never asserted
 
 ### Pending Todos
 
@@ -231,8 +235,8 @@ Items acknowledged and carried forward:
 
 ## Session Continuity
 
-Last session: 2026-07-19T20:02:01.942Z
-Stopped at: Completed 09-01-PLAN.md — clouds + parallax + scintillation live (AMB-01/02/04); next: execute 09-02 (aurora)
+Last session: 2026-07-19T20:30:15.019Z
+Stopped at: Completed 09-02-PLAN.md — aurora live (AMB-03) + --aurora gate green both viewports; next: execute 09-03 (mobile ladder + closing battery)
 Resume file: None
 
 ## Operator Next Steps
