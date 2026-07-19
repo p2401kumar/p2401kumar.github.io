@@ -87,7 +87,12 @@ Full details: [milestones/v2.0-ROADMAP.md](milestones/v2.0-ROADMAP.md) · Phase 
   - **Verifier re-architecture precondition**: `verify-contrast.mjs` must be re-architected to sample real post-composite screenshots (CDP scaffolding already present in the script) BEFORE any glass value locks — analytic compositing cannot model a blur kernel. This is a hard precondition for criterion 2.
   - **Glass budget re-proof**: measure the marginal re-blur cost against Spike 2's numbers and apply the mitigation ladder as measured; if the cost can't be tuned under the floor, this is where the milestone re-scope trigger fires.
 
-**Plans**: TBD
+**Plans**: 3 plans
+
+  - [ ] 08-01-PLAN.md — GLS-03 verifier re-architecture: --cdp-screenshot mode (CDP capture → sharp raw decode) + header/footer/jump-index scope + tall-panel scroll sweep + agreement selftest + pre-glass baseline
+  - [ ] 08-02-PLAN.md — 13 --glass-* tokens + glass application (active-panel-only scoping, body.has-sky chrome, @supports/reduced-transparency/print ladders) + the screenshot gate with tier escalation
+  - [ ] 08-03-PLAN.md — GLS-04 real-page idle-CPU re-proof + Lighthouse ≥90 ×2 + full regression battery + leak gate + GLS-01..04 close-out
+
 **UI hint**: yes
 
 ### Phase 9: Living Sky
@@ -151,7 +156,7 @@ Full details: [milestones/v2.0-ROADMAP.md](milestones/v2.0-ROADMAP.md) · Phase 
 | 5.1 Celestial Extras (INSERTED) | v2.0 | 1/1 | Complete | 2026-07-18 |
 | 6. Integration & Launch | v2.0 | 2/2 | Complete | 2026-07-18 |
 | 7. Real-Sky Foundation | v3.0 | 4/4 | Complete   | 2026-07-19 |
-| 8. Glass System | v3.0 | 0/TBD | Not started | - |
+| 8. Glass System | v3.0 | 0/3 | Not started | - |
 | 9. Living Sky | v3.0 | 0/TBD | Not started | - |
 | 10. Integration & Launch | v3.0 | 0/TBD | Not started | - |
 
