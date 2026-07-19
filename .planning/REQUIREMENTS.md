@@ -61,32 +61,34 @@ Deferred. Tracked but not in this milestone.
 
 ## Traceability
 
+Each requirement maps to the phase that **completes** it. FLR-01's LCP checkpoint additionally runs early — lifted into Phase 7's research gate immediately after photo integration — but the requirement is finally *verified live* (Lighthouse ≥90 ×4, both presets, after full integration) in Phase 10, so it is mapped there.
+
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| IMG-01 | TBD | Pending |
-| IMG-02 | TBD | Pending |
-| IMG-03 | TBD | Pending |
-| IMG-04 | TBD | Pending |
-| IMG-05 | TBD | Pending |
-| GLS-01 | TBD | Pending |
-| GLS-02 | TBD | Pending |
-| GLS-03 | TBD | Pending |
-| GLS-04 | TBD | Pending |
-| AMB-01 | TBD | Pending |
-| AMB-02 | TBD | Pending |
-| AMB-03 | TBD | Pending |
-| AMB-04 | TBD | Pending |
-| AMB-05 | TBD | Pending |
-| FLR-01 | TBD | Pending |
-| FLR-02 | TBD | Pending |
-| FLR-03 | TBD | Pending |
-| LNC-01 | TBD | Pending |
+| IMG-01 | Phase 7 | Pending |
+| IMG-02 | Phase 7 | Pending |
+| IMG-03 | Phase 7 | Pending |
+| IMG-04 | Phase 7 | Pending |
+| IMG-05 | Phase 7 | Pending |
+| GLS-01 | Phase 8 | Pending |
+| GLS-02 | Phase 8 | Pending |
+| GLS-03 | Phase 8 | Pending |
+| GLS-04 | Phase 8 | Pending |
+| AMB-01 | Phase 9 | Pending |
+| AMB-02 | Phase 9 | Pending |
+| AMB-03 | Phase 9 | Pending |
+| AMB-04 | Phase 9 | Pending |
+| AMB-05 | Phase 9 | Pending |
+| FLR-01 | Phase 10 | Pending (LCP checkpoint also gated in Phase 7) |
+| FLR-02 | Phase 10 | Pending |
+| FLR-03 | Phase 10 | Pending |
+| LNC-01 | Phase 10 | Pending |
 
 **Coverage:**
 
 - v3.0 requirements: 18 total
-- Mapped to phases: 0 (roadmap pending)
-- Unmapped: 18
+- Mapped to phases: 18 (IMG→7, GLS→8, AMB→9, FLR/LNC→10)
+- Unmapped: 0
 
 ---
-*Requirements defined: 2026-07-18 from user-locked direction + 4-lane research synthesis*
+*Requirements defined: 2026-07-18 from user-locked direction + 4-lane research synthesis · Mapped to phases 7-10: 2026-07-18*

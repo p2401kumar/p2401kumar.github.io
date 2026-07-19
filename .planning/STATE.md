@@ -1,43 +1,43 @@
 ---
 gsd_state_version: 1.0
-milestone: v2.0
-milestone_name: Night Sky
-current_phase: none
-current_phase_name: Between milestones
-status: milestone_complete
-stopped_at: v2.0 Night Sky SHIPPED + closed 2026-07-18 (tag v2.0; archives at milestones/v2.0-*); autonomous chain ended
-last_updated: "2026-07-18T08:18:03.701Z"
+milestone: v3.0
+milestone_name: Real Sky
+current_phase: 07
+current_phase_name: Real-Sky Foundation
+status: ready_to_plan
+stopped_at: v3.0 roadmap created
+last_updated: "2026-07-18T10:30:00.000Z"
 last_activity: 2026-07-18
-last_activity_desc: Completed 06-02-PLAN.md — v2.0 launched (live Lighthouse 98+100x3 / 100x4)
+last_activity_desc: v3.0 Real Sky roadmap created — 18 requirements mapped to phases 7-10 (coarse, spike-first)
 progress:
   total_phases: 4
-  completed_phases: 4
-  total_plans: 12
-  completed_plans: 12
-  percent: 100
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-07-17)
+See: .planning/PROJECT.md (updated 2026-07-18)
 
-**Core value:** Within seconds of landing, a senior engineering leader should think "this person operates at our level" — credibility delivered through demonstrated craft (a live systems demo), not adjectives. v2.0 adds: the first seconds should also be *beautiful*.
-**Current focus:** Milestone v2.0 execution COMPLETE — v2.0 Night Sky is LIVE at https://p2401kumar.github.io/
+**Core value:** Within seconds of landing, a senior engineering leader should think "this person operates at our level" — credibility delivered through demonstrated craft (a live systems demo), not adjectives. v3.0 adds: the sky becomes *real* — composited astrophotography, glass, and living atmosphere, with every floor intact.
+**Current focus:** Milestone v3.0 Real Sky — roadmap created (phases 7-10, coarse granularity); ready to plan Phase 7 (Real-Sky Foundation, spikes-first).
 
 ## Current Position
 
-Phase: 6 (Integration & Launch) — COMPLETE
-Plan: 2 of 2
-Status: Milestone execution complete — Phase 6 complete, v2.0 deployed and live-verified
-Last activity: 2026-07-18 — Completed 06-02-PLAN.md (launch: fixes + battery + deploy + live Lighthouse 98/100/100/100 mobile, 100×4 desktop)
+Phase: 7 (Real-Sky Foundation) — not started
+Plan: — (roadmap created, planning pending)
+Status: ready_to_plan — v3.0 roadmap created, 18/18 requirements mapped
+Last activity: 2026-07-18 — v3.0 Real Sky roadmap created (phases 7-10); next: `/gsd-plan-phase 7`
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed (v2.0): 0
+- Total plans completed (v3.0): 0
 - Average duration: - min
 - Total execution time: 0 hours
 
@@ -45,9 +45,10 @@ Last activity: 2026-07-18 — Completed 06-02-PLAN.md (launch: fixes + battery +
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 4 | 0 | - | - |
-| 5 | 0 | - | - |
-| 6 | 0 | - | - |
+| 7 | 0 | - | - |
+| 8 | 0 | - | - |
+| 9 | 0 | - | - |
+| 10 | 0 | - | - |
 
 **Recent Trend:**
 
@@ -77,6 +78,10 @@ Last activity: 2026-07-18 — Completed 06-02-PLAN.md (launch: fixes + battery +
 | Phase 03-case-studies-launch-polish P04 | 21min | 3 tasks | 3 files |
 
 </details>
+
+<details>
+<summary>v2.0 plan history (shipped 2026-07-18)</summary>
+
 | Phase 04 P01 | 12min | 3 tasks | 7 files |
 | Phase 04-deck-mechanics P02 | 14min | 2 tasks | 2 files |
 | Phase 04 P03 | 70min | 2 tasks | 4 files |
@@ -90,12 +95,20 @@ Last activity: 2026-07-18 — Completed 06-02-PLAN.md (launch: fixes + battery +
 | Phase 06 P01 | 24 min | 3 tasks | 12 files |
 | Phase 06 P02 | ~50 min | 2 tasks | 5 files |
 
+</details>
+
 ## Accumulated Context
 
 ### Decisions
 
 Decisions are logged in PROJECT.md Key Decisions table.
 Recent decisions affecting current work:
+
+- **[v3.0 Roadmap]**: Coarse granularity mapped v3.0's 18 requirements onto exactly the 4 research-recommended phases — Phase 7 Real-Sky Foundation (IMG-01..05), Phase 8 Glass System (GLS-01..04), Phase 9 Living Sky (AMB-01..05), Phase 10 Integration & Launch (FLR-01..03 + LNC-01). Sequence: Foundation → Glass → Ambient → Launch.
+- **[v3.0 Roadmap]**: Both empirical spikes (banding + glass-over-animating-canvas CPU) run FIRST inside Phase 7 before any pipeline/integration work (v2's spike-first pattern). The glass-CPU spike is the milestone's re-scope trigger — if the marginal re-blur cost can't tune under the <10% idle floor, "full glass over a permanently-animating scene" gets a structural rethink before glass is built.
+- **[v3.0 Roadmap]**: Glass (Phase 8) precedes Ambient (Phase 9) because the re-architected screenshot-sampling contrast verifier + the measured glass re-blur CPU budget together constrain what ambient can spend against the <10% idle floor — building ambient first would force a re-tune once glass eats the budget.
+- **[v3.0 Roadmap]**: FLR-01 mapped to Phase 10 (final live Lighthouse verification) even though its LCP checkpoint is lifted forward into Phase 7's research gate immediately after photo integration — the requirement is mapped to the phase that completes it.
+- **[v3.0 Roadmap]**: Phase 10 deploy gated on explicit user go with a documented rollback path (v2 precedent recorded in PROJECT.md Key Decisions — replacing the live professional site is outward-facing).
 
 - **[v2.0 Roadmap]**: Coarse granularity mapped v2.0's 20 requirements onto exactly the 3 research-recommended phases — Phase 4 Deck Mechanics (DECK-01..08), Phase 5 Night-Sky Scene (SKY-01..05 + CONST-01..03), Phase 6 Integration & Launch (INTG-01..04). Sequence is Mechanics → Scene → Integration: the panel-cycling interaction model must be bulletproof before visual content is layered on (half the pitfalls are mechanics, not aesthetics).
 - **[v2.0 Roadmap]**: Constellations grouped INTO the Scene phase (not a standalone phase) because CONST-02's panel-reactive brightening depends on the `nightsky:panel-change` event contract and shares the same canvas engine — splitting them would create a thin dependency-coupled phase.
@@ -156,9 +169,17 @@ None yet.
 
 ### Blockers/Concerns
 
-- **Milky Way visual technique (LOW confidence)**: Phase 5's pre-rendered Milky Way band recipe is the one unproven element — flagged for an early spike inside Phase 5 planning. Not a blocker to Phase 4.
-- **Fig. 01 keymap collision (integration risk)**: the deck keymap (Phase 4) must resolve against actual `src/lib/fig01/` arrow-key semantics — carry into Phase 4 planning.
-- ~~GitHub Pages hosting target~~ **RESOLVED 2026-07-15**: user root — repo `p2401kumar.github.io`, no `base` path. Old `/home` repo retirement remains a post-launch task.
+- **Milestone re-scope trigger (Phase 7 Spike 2)**: the "full glass over a permanently-animating scene" premise is gated by the glass-over-animating-canvas CPU spike. If the marginal re-blur cost can't tune under the <10% idle floor, glass scope is restructured (glass over static-only regions) before Phase 8 builds it. Empirical, decided in Phase 7.
+- **NOIRLab license (Phase 7, IMG-04)**: `noirlab2430b` license/resolution corroborated via mirrors only (site bot-gated); manual browser check of noirlab.edu/public/copyright/ required before ship — ESO `eso0932a` is the CC BY 4.0 fallback.
+
+<details>
+<summary>v2.0-era blockers (resolved)</summary>
+
+- **Milky Way visual technique (LOW confidence)**: RESOLVED — Phase 5's zero-dep scatter+gradient passed the banding bar first try; simplex-noise fallback not needed.
+- **Fig. 01 keymap collision (integration risk)**: RESOLVED — deck keymap resolved against `src/lib/fig01/` arrow-key semantics in Phase 4.
+- **GitHub Pages hosting target**: RESOLVED 2026-07-15 — user root, repo `p2401kumar.github.io`, no `base` path. Old `/home` repo retirement remains a post-launch task.
+
+</details>
 
 ## Deferred Items
 
@@ -171,11 +192,12 @@ Items acknowledged and carried forward:
 
 ## Session Continuity
 
-Last session: 2026-07-18T08:17:25.445Z
-Stopped at: Milestone execution complete — v2.0 Night Sky LIVE (Phase 6 complete, INTG-01..04 done)
+Last session: 2026-07-18T10:30:00.000Z
+Stopped at: v3.0 roadmap created — phases 7-10 mapped (18/18 requirements), ready to plan Phase 7
 Resume file: None
 
 ## Operator Next Steps
 
-- Run the real-device touch checklist + 5-min idle-CPU check against the live site (06-01-LAUNCH-READINESS.md §5–6, at your leisure — rollback documented)
-- Complete the milestone with `/gsd-complete-milestone` (archive v2.0, retire old `/home` repo per the open post-launch task)
+- Review the v3.0 roadmap (`.planning/ROADMAP.md`) — 4 phases (7-10), spike-first Phase 7, glass-before-ambient sequencing
+- Plan Phase 7 with `/gsd-plan-phase 7` — both empirical spikes (banding + glass-CPU) run FIRST inside the phase before any pipeline work
+- (Carried from v2.0 close) retire/redirect the old `p2401kumar.github.io/home` repo; run the live-site real-device touch + 5-min idle-CPU check at your leisure (06-01-LAUNCH-READINESS.md §5–6)
