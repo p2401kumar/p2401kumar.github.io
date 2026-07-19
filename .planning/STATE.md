@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Real Sky
-current_phase: 10
-current_phase_name: Integration & Launch
-status: milestone_execution_complete
-stopped_at: Completed 10-02-PLAN.md — v3.0 Real Sky LIVE (user-gated deploy, LIVE Lighthouse 100×8); milestone v3.0 execution complete
+current_phase: none
+current_phase_name: Between milestones
+status: milestone_complete
+stopped_at: v3.0 Real Sky SHIPPED + closed 2026-07-19 (tag v3.0; archives at milestones/v3.0-*); autonomous chain ended
 last_updated: "2026-07-19T23:44:17.941Z"
 last_activity: 2026-07-19
 last_activity_desc: "09-03 executed: mobile shed ladder + full closing battery + Phase 9 close-out (AMB-05)"
