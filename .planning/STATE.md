@@ -4,17 +4,17 @@ milestone: v3.0
 milestone_name: Real Sky
 current_phase: 8
 current_phase_name: Glass System
-status: executing_phase
-stopped_at: 08-02 complete (glass tokens + application + gate PASS) — next execute 08-03 (CPU re-proof + Lighthouse)
-last_updated: "2026-07-19T16:20:00.000Z"
+status: phase_complete
+stopped_at: "Completed 08-03-PLAN.md — Phase 8 complete (GLS-01..04); next: plan Phase 9 (Living Sky)"
+last_updated: "2026-07-19T18:48:59.129Z"
 last_activity: 2026-07-19
-last_activity_desc: "08-02 executed: 13 glass tokens + glass application + screenshot gate PASS both viewports (commits 943baea/a8191db/2e1d213)"
+last_activity_desc: "08-03 executed: GLS-04 re-proof + Lighthouse + battery + Phase 8 close-out"
 progress:
   total_phases: 4
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 7
   completed_plans: 7
-  percent: 25
+  percent: 50
 ---
 
 # Project State
@@ -28,10 +28,11 @@ See: .planning/PROJECT.md (updated 2026-07-18)
 
 ## Current Position
 
-Phase: 8 (Glass System) — in progress (2/3 plans complete)
-Plan: 08-02 COMPLETE — next 08-03 (real-page CPU re-proof + Lighthouse re-run)
-Status: GLS-01 + GLS-02 delivered, GLS-03 arbitration satisfied — 13 --glass-* tokens live; glass on active panels (tier-1/tier-2 per UI-SPEC starting assignment, ZERO escalations needed), header/footer (body.has-sky-scoped), jump-index pill+list; @supports/reduced-transparency/print ladders proven via CDP emulation. Screenshot gate exit 0 at BOTH true viewports; both 08-01 pre-existing failures cleared (experience 3.636→12.115 @1280, header 4.335→6.234 @1440). Two real bugs found+fixed en route: lightningcss stripping the backdrop-filter pair from dist (build.cssTarget pinned) and DeckIndex trapped under the footer glass by .deck's stacking context (relocated outside .deck).
-Last activity: 2026-07-19 — 08-02 executed: glass tokens + application + gate (commits 943baea/a8191db/2e1d213)
+Phase: 8 (Glass System) — COMPLETE (3/3 plans) — next: plan Phase 9 (Living Sky)
+Plan: 08-03 COMPLETE — GLS-04 real-page re-proof PASS + full battery green + phase closed
+Status: GLS-01..04 all Complete. Real-page 60s idle soak (built preview, 1440×900 DPR1, same-page glass toggle via prefers-reduced-transparency emulation): total with glass **6.10% < 10%** (3.9pp headroom), 60.0fps, 0 long tasks, LayoutDuration Δ 0.000s; main-thread marginal ~0 within ±0.4pp scene noise vs Spike-2's +0.47pp projection, whole-tree cross-check +6.68pp vs the spike's +6.48pp — projection confirmed on the production page. Lighthouse mobile 99/100/100/100 + desktop 100×4, TBT 0ms both (07-04 family held). Full carried-floor battery ALL GREEN; leak gate airtight; DeckIndex-relocation smoke PASS.
+**Phase 9 budget note:** ambient animation must fit inside the ~3.9pp of main-thread headroom glass leaves (measured real-page total 6.10% under the 10% floor, software raster, 1440×900 DPR1); the screenshot-sampled `--cdp-screenshot` contrast floor (≥4.5:1, worst surface today: header 6.23) is the arbiter any ambient light source must not breach.
+Last activity: 2026-07-19 — 08-03 executed: GLS-04 re-proof + Lighthouse + battery + Phase 8 close-out
 
 ## Performance Metrics
 
@@ -102,6 +103,7 @@ Last activity: 2026-07-19 — 08-02 executed: glass tokens + application + gate 
 | Phase 07 P04 | 35min | 3 tasks | 13 files |
 | Phase 08 P01 | 25min | 3 tasks | 4 files |
 | Phase 08 P02 | 85min | 2 tasks | 12 files |
+| Phase 08 P03 | 25min | 3 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -186,6 +188,10 @@ Recent decisions affecting current work:
 - [Phase 08]: 08-02: vite build.cssTarget pinned (chrome110/edge110/firefox115/safari15.4/ios15.4) — Vite 8's lightningcss minifier otherwise collapses -webkit-/standard backdrop-filter pairs to a single last-wins property in shipped CSS
 - [Phase 08]: 08-02: print strip carries !important (sole use in codebase) — Astro attribute-scoped glass rules out-specify any plain @media print rule
 - [Phase 08]: 08-02: DeckIndex relocated OUTSIDE .deck (PanelDeck.astro) + deck.ts hooks document-scoped — .deck's fixed z-1 stacking context trapped the z-21 pill/hint/links beneath the z-20 footer, whose new glass blurred them into its backdrop (gate architecturally blind to glyph smearing; caught by visual evidence)
+- [Phase 08]: 08-03: GLS-04 real-page re-proof PASS — total 6.10% < 10% (3.9pp headroom), 60.0fps, 0 long tasks, LayoutDuration 0.000s; main-thread marginal ~0 within ±0.4pp scene noise vs Spike-2's +0.47pp; whole-tree cross-check +6.68pp vs the spike's +6.48pp — projection confirmed on the production page, mitigation ladder untouched
+- [Phase 08]: 08-03: Lighthouse held the 07-04 family with glass live — mobile 99/100/100/100, desktop 100x4, TBT 0ms both presets (glass adds compositing, zero JS)
+- [Phase 08]: 08-03: leak-gate assertion made boundary-correct — work/404 has-sky asserted on body tags with per-occurrence backdrop-filter accounting (file-wide grep counts unmatched inlined body.has-sky selector text, not a leak)
+- [Phase 08]: Phase 8 closed — screenshot-sampled --cdp-screenshot is THE contrast gate going forward (worst surface: header 6.23 @1440); scrim stayed 0.38 (KEEP held through glass); active-panel-only scoping held the 4-surface idle budget; 13 --glass-* token values + tier assignments locked gate-certified in 08-02
 
 ### Pending Todos
 
@@ -218,13 +224,14 @@ Items acknowledged and carried forward:
 
 ## Session Continuity
 
-Last session: 2026-07-19T16:20:00.000Z
-Stopped at: Completed 08-02-PLAN.md (glass tokens + application + gate)
+Last session: 2026-07-19T18:48:59.115Z
+Stopped at: Completed 08-03-PLAN.md — Phase 8 complete (GLS-01..04); next: plan Phase 9 (Living Sky)
 Resume file: None
 
 ## Operator Next Steps
 
 - Phase 7 is closed — review the visual sign-off evidence at your leisure (`.planning/phases/07-real-sky-foundation/07-04-visual-signoff.md` + `integration-evidence/07-04-*.png`); async veto stays open until the Phase 10 deploy (re-run build-sky.mjs / adjust object-position to revise)
-- Execute 08-03 (GLS-04: 60s real-page CPU idle soak + Lighthouse both presets ≥90 with glass live) — glass evidence for review at `.planning/phases/08-glass-system/glass-evidence/` and the gate record at `08-02-glass-gate.md`
+- Phase 8 is closed (GLS-01..04 Complete) — review at your leisure: the glass gate record (`08-02-glass-gate.md` + `glass-evidence/`) and the GLS-04 re-proof (`.planning/phases/08-glass-system/08-03-glass-reproof.md`: 6.10% total idle, Lighthouse 99+100×7, battery + leak gate green); async veto stays open until the Phase 10 deploy
+- Next: plan Phase 9 (Living Sky) — ambient budget is the ~3.9pp of main-thread headroom glass leaves under the 10% floor; the `--cdp-screenshot` contrast gate (worst surface: header 6.23) is the arbiter for any ambient light source
 - Before the Phase 10 ship: manually browser-verify the NOIRLab license page (noirlab.edu/public/copyright/) — the IMG-04 "before ship" clause (STATE blocker)
 - (Carried from v2.0 close) retire/redirect the old `p2401kumar.github.io/home` repo; run the live-site real-device touch + 5-min idle-CPU check at your leisure (06-01-LAUNCH-READINESS.md §5–6)
