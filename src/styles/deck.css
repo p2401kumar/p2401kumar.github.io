@@ -172,3 +172,77 @@ html.deck-active .panel:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: -2px;
 }
+
+/* 8. Glass system (Phase 8, GLS-01/GLS-02) — ADDITIVE enhancement only.
+   Attaches EXCLUSIVELY to .panel[data-state="active"] (deck) and
+   html.classic-active .panel (classic) — NEVER the bare .panel selector
+   (inactive panels are opacity:0, never display:none — a bare selector
+   would blur 7 surfaces instead of the measured 4, 08-RESEARCH.md
+   Pitfall 1) and never a descendant of .panel (backdrop-root trap,
+   Pitfall 2 — .panel's own transient opacity<1 during the 420ms
+   transition would clip a child filter's backdrop sampling scope).
+
+   The fill is written as background-COLOR (longhand), not the background
+   shorthand: in classic mode the SKY-05 scrim gradient lives on
+   html.classic-active .panel's background (section 7 above) and the
+   shorthand would reset it — 08-UI-SPEC.md's Scrim Interaction locks the
+   scrim as KEPT in both modes. The color layer paints below the gradient,
+   so classic gets scrim + glass fill; deck panels (no background today)
+   are unaffected by the longhand choice.
+
+   Degradation (08-UI-SPEC.md Degradation Appearances): no fallback rule
+   is declared on purpose — with @supports absent or
+   prefers-reduced-transparency:reduce, NO rule below matches and panels
+   render exactly as today (transparent, scrim-only). No --glass-fallback-bg
+   token exists. */
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  @media (prefers-reduced-transparency: no-preference) {
+    /* Tier-1 "optical" (hero, fig-01 wrapper, systems, contact — and the
+       base every panel starts from; tier-2 overrides below). */
+    html.deck-active .panel[data-state="active"],
+    html.classic-active .panel {
+      background-color: var(--glass-bg);
+      -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness));
+      backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness));
+      border-top: 1px solid var(--glass-edge);
+    }
+
+    /* Tier-2 "protected" (experience, patents, skills — dense prose):
+       translucent --panel fill, functions as a supplemental scrim. Keyed
+       by data-panel-id (unconditional on Panel.astro in BOTH modes) so
+       tier assignment resolves identically in deck and classic. Shares
+       --glass-edge (no per-tier edge variant). */
+    html.deck-active .panel[data-state="active"][data-panel-id="experience"],
+    html.deck-active .panel[data-state="active"][data-panel-id="patents"],
+    html.deck-active .panel[data-state="active"][data-panel-id="skills"],
+    html.classic-active .panel[data-panel-id="experience"],
+    html.classic-active .panel[data-panel-id="patents"],
+    html.classic-active .panel[data-panel-id="skills"] {
+      background-color: var(--glass-bg-2);
+      -webkit-backdrop-filter: blur(var(--glass-blur-2)) saturate(var(--glass-saturate-2)) brightness(var(--glass-brightness-2));
+      backdrop-filter: blur(var(--glass-blur-2)) saturate(var(--glass-saturate-2)) brightness(var(--glass-brightness-2));
+    }
+  }
+}
+
+/* 9. Print — strip every glass property (GLS-02: print sane, solid, no
+   filters). deck.css is a plain global stylesheet, so the unscoped chrome
+   selectors below reach header/footer/jump-index too. !important is
+   required (sole use in the codebase): the glass rules above/in the
+   component <style> blocks carry higher specificity (state-qualified
+   selectors + Astro's [data-astro-cid-*] attribute scoping), so a plain
+   low-specificity print rule would silently lose the cascade and strip
+   nothing. Print-only terminal state — no cascade participant should ever
+   beat it. */
+@media print {
+  .panel,
+  header,
+  footer,
+  .deck-index-toggle,
+  .deck-jump {
+    background: none !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    border-top: none !important;
+  }
+}

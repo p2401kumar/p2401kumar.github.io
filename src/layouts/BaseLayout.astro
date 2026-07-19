@@ -18,11 +18,17 @@ import SEO from "../components/SEO.astro";
 interface Props {
   title?: string;
   description?: string;
+  /** Phase 8 (GLS-01): pages rendering the night-sky scene pass hasSky to
+   *  emit body.has-sky — the class that gates ALL shared-chrome glass
+   *  (SiteHeader/SiteFooter). /work/* and /404 pass nothing, so their
+   *  chrome renders exactly as today — zero-leak by construction. */
+  hasSky?: boolean;
 }
 
 const {
   title = "Prateek Kumar — distributed systems, cloud, applied ai",
   description = "SDE 2 at Microsoft, on Azure's data platform. Previously cellularized DynamoDB's US-EAST-1 region at AWS and built the SmartThings notifications platform at Samsung.",
+  hasSky = false,
 } = Astro.props;
 ---
 
@@ -56,7 +62,7 @@ const {
          fonts keep first position in the preload scanner's queue. -->
     <slot name="head" />
   </head>
-  <body>
+  <body class={hasSky ? "has-sky" : undefined}>
     <slot />
   </body>
 </html>

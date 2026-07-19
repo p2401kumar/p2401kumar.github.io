@@ -54,4 +54,21 @@ import { profile } from "../data/profile";
   nav a:hover {
     color: var(--ink);
   }
+
+  /* Glass chrome (Phase 8, GLS-01) — home-scoped under body.has-sky
+     (08-RESEARCH.md Pattern 2): /work/* and /404 never set the class, so
+     NO rule below matches there and the header renders exactly as today
+     (it has no background property at all — true zero visual diff, not a
+     solid fallback). Same reasoning covers @supports-absent and
+     prefers-reduced-transparency:reduce: no rule matches, today's look. */
+  @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+    @media (prefers-reduced-transparency: no-preference) {
+      body.has-sky header {
+        background: var(--glass-bg-chrome);
+        -webkit-backdrop-filter: blur(var(--glass-blur-chrome)) saturate(var(--glass-saturate-chrome)) brightness(var(--glass-brightness-chrome));
+        backdrop-filter: blur(var(--glass-blur-chrome)) saturate(var(--glass-saturate-chrome)) brightness(var(--glass-brightness-chrome));
+        border-top: 1px solid var(--glass-edge);
+      }
+    }
+  }
 </style>

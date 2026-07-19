@@ -47,4 +47,38 @@
   --sky-horizon:#141a2c;
   --milkyway:#cfd9f2;
   --star:#eef2fa;
+
+  /* Glass system (Milestone v3.0 Phase 8) — shared by panels, header/footer,
+     jump index. Two elevation levels (chrome, panel) x two panel tiers
+     (tier-1 optical / tier-2 protected) — see 08-UI-SPEC.md for the full
+     grammar, per-surface map, and the contrast math behind every number
+     below. Blur ceiling is 16px (Spike-2, 07-SPIKE-GLASS.md) — nothing here
+     uses it; it is a limit for future adjustment, not a value to consume.
+     Do not add a --glass-blur-ceiling token for it. */
+
+  /* Tier-1 panel (hero, systems, contact, fig-01 wrapper) — "optical" */
+  --glass-bg:               rgb(255 255 255 / 0.06);
+  --glass-blur:              12px;
+  --glass-saturate:          150%;
+  --glass-brightness:        0.90;   /* load-bearing: compensates the white
+                                         fill's lightening effect — see
+                                         Tiering Assignment math */
+
+  /* Chrome (header, footer, jump-index pill + list) — lighter, always-visible */
+  --glass-bg-chrome:         rgb(255 255 255 / 0.05);
+  --glass-blur-chrome:       10px;
+  --glass-saturate-chrome:   140%;
+  --glass-brightness-chrome: 0.92;
+
+  /* Tier-2 panel (experience, patents, skills) — "protected": a translucent
+     --panel, not white; functions as a supplemental scrim, not decoration */
+  --glass-bg-2:              rgb(15 18 23 / 0.55);
+  --glass-blur-2:            10px;
+  --glass-saturate-2:        130%;
+  --glass-brightness-2:      0.96;
+
+  /* Shared across every glass surface */
+  --glass-edge:              rgb(255 255 255 / 0.10);  /* 1px top light edge,
+                                                            border-top only,
+                                                            never wraps corners */
 }

@@ -218,4 +218,27 @@ const initialCount = `01 / ${total}`;
       padding: 12px 12px;
     }
   }
+
+  /* Glass chrome (Phase 8, GLS-01) — the jewel-like reference surface.
+     Needs NO body.has-sky scope: DeckIndex renders only on index.astro
+     (imported exclusively by PanelDeck), so it structurally cannot leak
+     to /work/* or /404. The unconditional base rules above (background
+     var(--bg) + border var(--hair2)) ARE the @supports-absent /
+     reduced-transparency fallback — today's pill look. The override below
+     replaces only the fill and the TOP border (glass light edge); the
+     existing hairline stays on the other three sides, and the 6px
+     border-radius rounds the top edge natively. One rule covers the
+     desktop popover AND the max-width:640px mobile sheet — the media
+     query above changes position only, not these surfaces' identity. */
+  @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+    @media (prefers-reduced-transparency: no-preference) {
+      .deck-index-toggle,
+      .deck-jump {
+        background: var(--glass-bg-chrome);
+        -webkit-backdrop-filter: blur(var(--glass-blur-chrome)) saturate(var(--glass-saturate-chrome)) brightness(var(--glass-brightness-chrome));
+        backdrop-filter: blur(var(--glass-blur-chrome)) saturate(var(--glass-saturate-chrome)) brightness(var(--glass-brightness-chrome));
+        border-top: 1px solid var(--glass-edge);
+      }
+    }
+  }
 </style>

@@ -107,4 +107,21 @@
     color: var(--ink);
     border-color: var(--accent);
   }
+
+  /* Glass chrome (Phase 8, GLS-01) — home-scoped under body.has-sky
+     (08-RESEARCH.md Pattern 2): /work/* and /404 never set the class, so
+     no rule below matches there and the footer renders exactly as today.
+     Same for @supports-absent / prefers-reduced-transparency:reduce.
+     border-top swaps the resting --hair hairline for the shared glass
+     light edge on the sky page only. */
+  @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+    @media (prefers-reduced-transparency: no-preference) {
+      body.has-sky footer {
+        background: var(--glass-bg-chrome);
+        -webkit-backdrop-filter: blur(var(--glass-blur-chrome)) saturate(var(--glass-saturate-chrome)) brightness(var(--glass-brightness-chrome));
+        backdrop-filter: blur(var(--glass-blur-chrome)) saturate(var(--glass-saturate-chrome)) brightness(var(--glass-brightness-chrome));
+        border-top: 1px solid var(--glass-edge);
+      }
+    }
+  }
 </style>

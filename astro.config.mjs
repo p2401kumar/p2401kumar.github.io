@@ -17,6 +17,22 @@ export default defineConfig({
     }),
   ],
   vite: {
+    build: {
+      // Phase 8 (GLS-01/GLS-02): explicit CSS browser targets. Vite 8
+      // minifies CSS with lightningcss and passes it
+      // `convertTargets(build.cssTarget)` — WITHOUT explicit targets it
+      // collapses a `-webkit-backdrop-filter` + `backdrop-filter` pair to
+      // a single property (last declaration wins), silently stripping
+      // either the Safari-required prefix or the standard property from
+      // the shipped CSS (08-RESEARCH.md Pitfall 6). With Safari-inclusive
+      // targets it emits BOTH. Floor set: Safari/iOS 15.4 (needs the
+      // -webkit- prefix until Safari 18), Firefox 115 ESR (standard
+      // property only — the prefix alone would break it), Chrome/Edge 110.
+      // NOTE: `css.lightningcss.targets` is NOT honored by the minify
+      // pass (vite minifyCSS overrides it with cssTarget) — this is the
+      // correct knob.
+      cssTarget: ['chrome110', 'edge110', 'firefox115', 'safari15.4', 'ios15.4'],
+    },
     plugins: [
       // Generates metrics-matched fallback @font-face rules
       // (size-adjust/ascent-override/descent-override) for the two
