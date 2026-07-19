@@ -66,11 +66,15 @@ const initialCount = `01 / ${total}`;
     display: none;
   }
 
+  /* Fixed-chrome bottom offsets: 07-04's 2-line footer (CC BY 4.0 credit
+     line) grew the fixed footer 24px taller (107.5px -> 131.5px measured),
+     so the index pill / hint / mode links each moved up 24px (58->82,
+     96->120) to keep the same clearance above the status row. */
   html.deck-active .deck-index {
     display: block;
     position: fixed;
     right: clamp(18px, 4vw, 32px);
-    bottom: 58px;
+    bottom: 82px;
     z-index: 21;
   }
 
@@ -154,7 +158,7 @@ const initialCount = `01 / ${total}`;
     display: block;
     position: fixed;
     right: clamp(18px, 4vw, 32px);
-    bottom: 96px;
+    bottom: 120px;
     z-index: 21;
     font-family: var(--mono);
     font-size: 11px;
@@ -167,7 +171,7 @@ const initialCount = `01 / ${total}`;
     display: inline-block;
     position: fixed;
     left: clamp(18px, 4vw, 32px);
-    bottom: 58px;
+    bottom: 82px;
     z-index: 21;
     font-family: var(--mono);
     font-size: 13px;
