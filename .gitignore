@@ -22,6 +22,9 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# raw sky-source TIFF (Phase 7 — 15.6MB NOIRLab master, never committed; see scripts/build-sky.mjs)
+/sky-source/
 /PORTFOLIO-HANDOFF.md
 .gstack/
 .planning/research/.cache/
