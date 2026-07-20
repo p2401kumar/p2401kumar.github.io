@@ -162,13 +162,19 @@ const LQIP = readFileSync(
     /* Reference desktop tier (1024–1799px): band core lands in the right
        margin per the 07-UI-SPEC placement table. */
     object-position: 72% 38%;
-    /* LQIP-to-full fade — a NO-JS-SAFE CSS keyframe (400ms, deck.css's own
-       cubic-bezier(0.16,1,0.3,1)) that ENDS at opacity:1, so the photo is
-       fully visible without any script (IMG-02 hard gate). The LQIP
-       wrapper background sits behind it throughout. If this fade ever
-       regresses LCP past budget at the 07-04 checkpoint, the fade yields
-       (fallback: LQIP background with no fade — 07-RESEARCH.md §4.2). */
-    animation: sky-photo-fade 400ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    /* VISIBLE IS THE DEFAULT STATE (2026-07-19 sky-visibility fix,
+       .planning/10-UI-REVIEW.md remediation 2): base opacity 1, and the
+       LQIP-to-full fade runs 0→1 as a pure ENHANCEMENT with NO fill mode
+       — the original `both` fill made visibility depend entirely on the
+       animation reaching its end; any frozen-timeline / animation-
+       suppressed environment pinned the photo at the 0% keyframe's
+       opacity:0 indefinitely. With fill:none + base opacity:1, if the
+       animation never runs (or is stripped), the photo simply shows —
+       failure mode = visible. Same 400ms curve, identical visuals on the
+       happy path (IMG-02 hard gate still holds no-JS: keyframes are CSS,
+       and even without them the base opacity is 1). */
+    opacity: 1;
+    animation: sky-photo-fade 400ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   @keyframes sky-photo-fade {
