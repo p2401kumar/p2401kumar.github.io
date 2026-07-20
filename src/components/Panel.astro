@@ -29,5 +29,14 @@ void label;
 ---
 
 <div class="panel" data-panel-id={id} id={emitId ? id : undefined} tabindex="-1">
-  <slot />
+  {/* .panel-card — the content-card surface (2026-07-19 sky-visibility fix,
+      .planning/10-UI-REVIEW.md remediation 1a): the glass system's
+      backdrop-filter + fills attach HERE (deck.css §8), never to the
+      full-viewport .panel, so the night-sky scene renders crystal-clear in
+      the margins/strips outside the ~880px text column. Unstyled outside
+      deck.css's html.deck-active / html.classic-active scopes — the no-JS
+      page renders it as a plain pass-through <div>. */}
+  <div class="panel-card">
+    <slot />
+  </div>
 </div>

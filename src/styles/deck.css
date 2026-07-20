@@ -50,6 +50,14 @@ html.deck-active .panel {
   overflow: auto;
   display: flex;
   justify-content: center;
+  /* Content-hugging cards (2026-07-19 sky-visibility fix): the flex child
+     (.panel-card, the glass surface since the §8 rescope) must be exactly
+     as tall as its content, not stretched to the full viewport column —
+     a stretched card would sheet glass over sky the text never touches
+     (hero's short copy vs a 96px→bottom column). Text position is
+     unchanged: every section is top-anchored (no section uses height:100%
+     or vertical centering), so flex-start only shrinks the card's box. */
+  align-items: flex-start;
   padding: 96px clamp(18px, 4vw, 32px) 136px;
 }
 
@@ -173,34 +181,48 @@ html.deck-active .panel:focus-visible {
   outline-offset: -2px;
 }
 
-/* 8. Glass system (Phase 8, GLS-01/GLS-02) — ADDITIVE enhancement only.
-   Attaches EXCLUSIVELY to .panel[data-state="active"] (deck) and
-   html.classic-active .panel (classic) — NEVER the bare .panel selector
-   (inactive panels are opacity:0, never display:none — a bare selector
-   would blur 7 surfaces instead of the measured 4, 08-RESEARCH.md
-   Pitfall 1) and never a descendant of .panel (backdrop-root trap,
-   Pitfall 2 — .panel's own transient opacity<1 during the 420ms
-   transition would clip a child filter's backdrop sampling scope).
+/* 8. Glass system (Phase 8, GLS-01/GLS-02; RESCOPED 2026-07-19 by the
+   sky-visibility fix — .planning/10-UI-REVIEW.md BLOCKER) — ADDITIVE
+   enhancement only.
 
-   The fill is written as background-COLOR (longhand), not the background
-   shorthand: in classic mode the SKY-05 scrim gradient lives on
-   html.classic-active .panel's background (section 7 above) and the
-   shorthand would reset it — 08-UI-SPEC.md's Scrim Interaction locks the
-   scrim as KEPT in both modes. The color layer paints below the gradient,
-   so classic gets scrim + glass fill; deck panels (no background today)
-   are unaffected by the longhand choice.
+   RESCOPE: glass (fill + backdrop-filter + edge) attaches to the
+   CONTENT CARD (.panel-card, Panel.astro — the ~880px column surface that
+   actually holds text), NEVER the full-viewport .panel. The Phase-8
+   original put blur(12px) on .panel (inset:0) — which permanently blurred
+   100% of the sky behind the always-present active panel, erasing stars/
+   band/camper (the 10-UI-REVIEW BLOCKER). Both tiers keep their exact
+   08-02 gate-certified token recipes; only the surface shrank.
 
-   Degradation (08-UI-SPEC.md Degradation Appearances): no fallback rule
-   is declared on purpose — with @supports absent or
-   prefers-reduced-transparency:reduce, NO rule below matches and panels
-   render exactly as today (transparent, scrim-only). No --glass-fallback-bg
-   token exists. */
+   Still keyed EXCLUSIVELY on .panel[data-state="active"] (deck) so only
+   the ONE active card composites a blur pass — inactive panels' cards
+   carry no filter at all (same ≤4-simultaneous-surfaces budget as 08).
+
+   Known, accepted tradeoff (documented deviation from 08-RESEARCH.md
+   Pitfall 2's "never a descendant of .panel"): during the 420ms panel
+   opacity transition the transitioning panel (opacity<1) forms a backdrop
+   root, so the incoming card's backdrop-filter briefly samples nothing —
+   glass fades in as fill-only and the blur appears at transition end.
+   Bounded, user-triggered, invisible under prefers-reduced-motion
+   (transition:none). The alternative — full-viewport blur forever — is
+   the exact BLOCKER this rescope fixes.
+
+   The fill stays background-COLOR (longhand) for consistency with the
+   chrome rules; in classic mode the SKY-05 scrim gradient now lives alone
+   on html.classic-active .panel's background (section 7 above) — the
+   card's fill composites on top of it inside the column.
+
+   Degradation (08-UI-SPEC.md Degradation Appearances): unchanged — with
+   @supports absent or prefers-reduced-transparency:reduce, NO rule below
+   matches and cards render transparent (scrim-only). No
+   --glass-fallback-bg token exists. Fig. 01's .fig card keeps its opaque
+   var(--panel) fill (exempt — "an instrument, not a window"); its
+   .panel-card gets the tier-1 frame exactly as the 08 wrapper did. */
 @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
   @media (prefers-reduced-transparency: no-preference) {
     /* Tier-1 "optical" (hero, fig-01 wrapper, systems, contact — and the
        base every panel starts from; tier-2 overrides below). */
-    html.deck-active .panel[data-state="active"],
-    html.classic-active .panel {
+    html.deck-active .panel[data-state="active"] > .panel-card,
+    html.classic-active .panel > .panel-card {
       background-color: var(--glass-bg);
       -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness));
       backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness));
@@ -212,12 +234,12 @@ html.deck-active .panel:focus-visible {
        by data-panel-id (unconditional on Panel.astro in BOTH modes) so
        tier assignment resolves identically in deck and classic. Shares
        --glass-edge (no per-tier edge variant). */
-    html.deck-active .panel[data-state="active"][data-panel-id="experience"],
-    html.deck-active .panel[data-state="active"][data-panel-id="patents"],
-    html.deck-active .panel[data-state="active"][data-panel-id="skills"],
-    html.classic-active .panel[data-panel-id="experience"],
-    html.classic-active .panel[data-panel-id="patents"],
-    html.classic-active .panel[data-panel-id="skills"] {
+    html.deck-active .panel[data-state="active"][data-panel-id="experience"] > .panel-card,
+    html.deck-active .panel[data-state="active"][data-panel-id="patents"] > .panel-card,
+    html.deck-active .panel[data-state="active"][data-panel-id="skills"] > .panel-card,
+    html.classic-active .panel[data-panel-id="experience"] > .panel-card,
+    html.classic-active .panel[data-panel-id="patents"] > .panel-card,
+    html.classic-active .panel[data-panel-id="skills"] > .panel-card {
       background-color: var(--glass-bg-2);
       -webkit-backdrop-filter: blur(var(--glass-blur-2)) saturate(var(--glass-saturate-2)) brightness(var(--glass-brightness-2));
       backdrop-filter: blur(var(--glass-blur-2)) saturate(var(--glass-saturate-2)) brightness(var(--glass-brightness-2));
@@ -236,6 +258,7 @@ html.deck-active .panel:focus-visible {
    beat it. */
 @media print {
   .panel,
+  .panel-card,
   header,
   footer,
   .deck-index-toggle,
