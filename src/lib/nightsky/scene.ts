@@ -98,7 +98,14 @@ const FIREFLY_SPEED_MIN = 4; // CSS px/s
 const FIREFLY_SPEED_MAX = 8;
 const FIREFLY_PULSE_MIN_MS = 3000;
 const FIREFLY_PULSE_MAX_MS = 5000;
-const FIREFLY_ALPHA_MIN = 0.4;
+/** 11-02 BOLD-05: the copper fireflies must still read over the brighter
+ * 11-01 field. Lift the pulse FLOOR only (0.4 -> 0.5) so they spend less time
+ * near-invisible; the PEAK stays 0.9 deliberately — the SKY-05 contrast math
+ * (narrow-viewport fallback peak = 0.9 * FIREFLY_SAFE_ALPHA_SCALE = 0.45,
+ * still >= 4.5:1 vs --ink at zero scrim) is anchored to that ceiling and must
+ * not move. Alpha-only, no new draws; --accent copper stays the sole Layer-2
+ * accent. */
+const FIREFLY_ALPHA_MIN = 0.5;
 const FIREFLY_ALPHA_MAX = 0.9;
 /** Ground band top edge (CSS px) — the bottom-25% ground band per
  * 05-UI-SPEC.md's ambient-loop table. */

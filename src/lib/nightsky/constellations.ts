@@ -60,15 +60,20 @@ interface AlphaChannels {
 }
 
 const STATE_ALPHAS: Record<HighlightState, AlphaChannels> = {
-  // Star 0.40–0.55, link 0.12–0.20. 07-03 (real-photo backdrop): a FAINT
-  // resting halo (alpha 0.15 within the 0.12–0.18 band, radius 1.3×) so
-  // authored stars read categorically apart from the photo's real star
-  // specks — kept visibly quieter than the brightened 1.5×/0.25 halo.
-  ambient: { starMid: 0.45, starBright: 0.55, link: 0.16, halo: 0.15, haloScale: 1.3 },
-  // Star 0.85–1.00, link 0.45–0.55, halo alpha 0.20–0.30 at 1.5×.
-  brightened: { starMid: 0.88, starBright: 1, link: 0.5, halo: 0.25, haloScale: 1.5 },
-  // Star 0.25–0.35, link 0.08–0.12, no halo — deliberately recedes.
-  dimmed: { starMid: 0.27, starBright: 0.34, link: 0.1, halo: 0, haloScale: 1.3 },
+  // 11-02 BOLD-05 re-tune: the 11-01 regrade made the photo brighter + busier,
+  // so the v3.0 star/link/halo alphas (star 0.40–0.55, link 0.12–0.20) no
+  // longer read as clearly AUTHORED against it. Alphas + halo scale are bumped
+  // (this milestone supersedes the v3.0 locked bands, the same way 11-02 raised
+  // the glass blur past its old ceiling) so the lines/nodes stay legible over
+  // the busier field — still --star exclusively, still alpha-only (no new draws
+  // or composite ops). Halos stay quieter than the brightened peak so authored
+  // stars read apart from the photo's own real star specks.
+  ambient: { starMid: 0.54, starBright: 0.64, link: 0.22, halo: 0.19, haloScale: 1.4 },
+  // Brightened (active chapter): the one loud constellation.
+  brightened: { starMid: 0.92, starBright: 1, link: 0.6, halo: 0.32, haloScale: 1.6 },
+  // Dimmed (sibling chapters): still recedes, but a touch above the v3.0 floor
+  // so it doesn't vanish into the brighter photo — no halo.
+  dimmed: { starMid: 0.32, starBright: 0.4, link: 0.13, halo: 0, haloScale: 1.3 },
 };
 
 /** Brighten/dim tween duration (locked ~400ms ease-out, 05-CONTEXT.md). */
