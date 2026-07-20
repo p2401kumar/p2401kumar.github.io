@@ -1,0 +1,3477 @@
+{
+  "url": "http://localhost:4321/",
+  "viewport": {
+    "width": 1280,
+    "height": 800
+  },
+  "mode": "screenshot",
+  "dpr": 1,
+  "startedAt": "2026-07-20T19:52:57.083Z",
+  "panels": [
+    {
+      "panel": "hero",
+      "activePanelSeen": "hero",
+      "regionCount": 7,
+      "overSkyCount": 7,
+      "worstVsInk": 8.162,
+      "sampled_offsets": [
+        0
+      ],
+      "scroll": {
+        "scrollHeight": 800,
+        "clientHeight": 800,
+        "swept": false,
+        "note": "no internal scroll needed at 1280x800"
+      },
+      "failing": [],
+      "regions": [
+        {
+          "panel": "hero",
+          "tag": "em",
+          "text": "applied ai",
+          "rect": {
+            "x": 475,
+            "y": 187,
+            "w": 93,
+            "h": 14
+          },
+          "overSky": true,
+          "fontSize": 12,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(217, 145, 99)",
+          "worstVsInk": 8.162,
+          "worstVsOwnColor": 3.802,
+          "worstPixel": {
+            "vx": 567,
+            "vy": 187,
+            "rgb": [
+              67,
+              68,
+              69
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "hero",
+          "tag": "div",
+          "text": "distributed systems · cloud ·",
+          "rect": {
+            "x": 200,
+            "y": 187,
+            "w": 276,
+            "h": 14
+          },
+          "overSky": true,
+          "fontSize": 12,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(120, 129, 141)",
+          "worstVsInk": 8.562,
+          "worstVsOwnColor": 2.596,
+          "worstPixel": {
+            "vx": 410,
+            "vy": 187,
+            "rgb": [
+              63,
+              65,
+              68
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "hero",
+          "tag": "h1",
+          "text": "I build the infrastructure that intellig",
+          "rect": {
+            "x": 200,
+            "y": 220,
+            "w": 391,
+            "h": 163
+          },
+          "overSky": true,
+          "fontSize": 44,
+          "fontWeight": 500,
+          "isLarge": true,
+          "threshold": 3,
+          "ownColor": "rgb(232, 235, 239)",
+          "worstVsInk": 9.614,
+          "worstVsOwnColor": 9.614,
+          "worstPixel": {
+            "vx": 200,
+            "vy": 221,
+            "rgb": [
+              57,
+              57,
+              61
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "hero",
+          "tag": "p",
+          "text": "SDE 2 at Microsoft, on Azure's data plat",
+          "rect": {
+            "x": 200,
+            "y": 399,
+            "w": 446,
+            "h": 69
+          },
+          "overSky": true,
+          "fontSize": 15,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(170, 178, 189)",
+          "worstVsInk": 11.035,
+          "worstVsOwnColor": 6.166,
+          "worstPixel": {
+            "vx": 645,
+            "vy": 399,
+            "rgb": [
+              47,
+              48,
+              51
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "hero",
+          "tag": "a",
+          "text": "github →",
+          "rect": {
+            "x": 377,
+            "y": 493,
+            "w": 62,
+            "h": 16
+          },
+          "overSky": true,
+          "fontSize": 13,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(232, 235, 239)",
+          "worstVsInk": 12.477,
+          "worstVsOwnColor": 12.477,
+          "worstPixel": {
+            "vx": 418,
+            "vy": 506,
+            "rgb": [
+              38,
+              39,
+              43
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "hero",
+          "tag": "a",
+          "text": "résumé →",
+          "rect": {
+            "x": 200,
+            "y": 493,
+            "w": 61,
+            "h": 16
+          },
+          "overSky": true,
+          "fontSize": 13,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(232, 235, 239)",
+          "worstVsInk": 12.828,
+          "worstVsOwnColor": 12.828,
+          "worstPixel": {
+            "vx": 200,
+            "vy": 493,
+            "rgb": [
+              36,
+              37,
+              39
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "hero",
+          "tag": "a",
+          "text": "linkedin →",
+          "rect": {
+            "x": 280,
+            "y": 493,
+            "w": 78,
+            "h": 16
+          },
+          "overSky": true,
+          "fontSize": 13,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(232, 235, 239)",
+          "worstVsInk": 13.024,
+          "worstVsOwnColor": 13.024,
+          "worstPixel": {
+            "vx": 354,
+            "vy": 493,
+            "rgb": [
+              34,
+              36,
+              38
+            ],
+            "scrollOffset": 0
+          }
+        }
+      ],
+      "notOverSky": []
+    },
+    {
+      "panel": "fig-01",
+      "activePanelSeen": "fig-01",
+      "regionCount": 15,
+      "overSkyCount": 0,
+      "worstVsInk": null,
+      "sampled_offsets": [
+        0,
+        7
+      ],
+      "scroll": {
+        "scrollHeight": 807,
+        "clientHeight": 800,
+        "swept": true,
+        "note": "internal-scroll sweep fired"
+      },
+      "failing": [],
+      "regions": [],
+      "notOverSky": [
+        {
+          "panel": "fig-01",
+          "tag": "button",
+          "text": "send request",
+          "rect": {
+            "x": 846,
+            "y": 170,
+            "w": 85,
+            "h": 14
+          },
+          "overSky": false,
+          "fontSize": 11.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(170, 178, 189)",
+          "worstVsInk": 11.59,
+          "worstVsOwnColor": 6.476,
+          "worstPixel": {
+            "vx": 849,
+            "vy": 175,
+            "rgb": [
+              40,
+              45,
+              52
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "fig-01",
+          "tag": "button",
+          "text": "inject fault",
+          "rect": {
+            "x": 965,
+            "y": 170,
+            "w": 85,
+            "h": 14
+          },
+          "overSky": false,
+          "fontSize": 11.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(170, 178, 189)",
+          "worstVsInk": 11.59,
+          "worstVsOwnColor": 6.476,
+          "worstPixel": {
+            "vx": 1019,
+            "vy": 172,
+            "rgb": [
+              40,
+              45,
+              52
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "fig-01",
+          "tag": "button",
+          "text": "clients — smartthings clients · galaxy s",
+          "rect": {
+            "x": 200,
+            "y": 582,
+            "w": 245,
+            "h": 15
+          },
+          "overSky": false,
+          "fontSize": 13.3333,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(0, 0, 0)",
+          "worstVsInk": 13.052,
+          "worstVsOwnColor": 1.157,
+          "worstPixel": {
+            "vx": 200,
+            "vy": 582,
+            "rgb": [
+              30,
+              36,
+              45
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "fig-01",
+          "tag": "button",
+          "text": "elb/weight-away — auto-weight-away · 90%",
+          "rect": {
+            "x": 200,
+            "y": 582,
+            "w": 404,
+            "h": 15
+          },
+          "overSky": false,
+          "fontSize": 13.3333,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(0, 0, 0)",
+          "worstVsInk": 13.052,
+          "worstVsOwnColor": 1.157,
+          "worstPixel": {
+            "vx": 200,
+            "vy": 582,
+            "rgb": [
+              30,
+              36,
+              45
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "fig-01",
+          "tag": "button",
+          "text": "cell-0 — isolated failure domain · compu",
+          "rect": {
+            "x": 200,
+            "y": 582,
+            "w": 325,
+            "h": 15
+          },
+          "overSky": false,
+          "fontSize": 13.3333,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(0, 0, 0)",
+          "worstVsInk": 13.052,
+          "worstVsOwnColor": 1.157,
+          "worstPixel": {
+            "vx": 200,
+            "vy": 582,
+            "rgb": [
+              30,
+              36,
+              45
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "fig-01",
+          "tag": "button",
+          "text": "cell-1 — isolated failure domain · compu",
+          "rect": {
+            "x": 200,
+            "y": 582,
+            "w": 325,
+            "h": 15
+          },
+          "overSky": false,
+          "fontSize": 13.3333,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(0, 0, 0)",
+          "worstVsInk": 13.052,
+          "worstVsOwnColor": 1.157,
+          "worstPixel": {
+            "vx": 200,
+            "vy": 582,
+            "rgb": [
+              30,
+              36,
+              45
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "fig-01",
+          "tag": "button",
+          "text": "cell-2 — isolated failure domain · compu",
+          "rect": {
+            "x": 200,
+            "y": 582,
+            "w": 325,
+            "h": 15
+          },
+          "overSky": false,
+          "fontSize": 13.3333,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(0, 0, 0)",
+          "worstVsInk": 13.052,
+          "worstVsOwnColor": 1.157,
+          "worstPixel": {
+            "vx": 200,
+            "vy": 582,
+            "rgb": [
+              30,
+              36,
+              45
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "fig-01",
+          "tag": "button",
+          "text": "cell-3 — isolated failure domain · compu",
+          "rect": {
+            "x": 200,
+            "y": 582,
+            "w": 325,
+            "h": 15
+          },
+          "overSky": false,
+          "fontSize": 13.3333,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(0, 0, 0)",
+          "worstVsInk": 13.052,
+          "worstVsOwnColor": 1.157,
+          "worstPixel": {
+            "vx": 200,
+            "vy": 582,
+            "rgb": [
+              30,
+              36,
+              45
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "fig-01",
+          "tag": "button",
+          "text": "data-pipelines — durable · idempotent · ",
+          "rect": {
+            "x": 200,
+            "y": 582,
+            "w": 370,
+            "h": 15
+          },
+          "overSky": false,
+          "fontSize": 13.3333,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(0, 0, 0)",
+          "worstVsInk": 13.052,
+          "worstVsOwnColor": 1.157,
+          "worstPixel": {
+            "vx": 200,
+            "vy": 582,
+            "rgb": [
+              30,
+              36,
+              45
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "fig-01",
+          "tag": "button",
+          "text": "ml/snapshots — information-theory health",
+          "rect": {
+            "x": 200,
+            "y": 582,
+            "w": 357,
+            "h": 15
+          },
+          "overSky": false,
+          "fontSize": 13.3333,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(0, 0, 0)",
+          "worstVsInk": 13.052,
+          "worstVsOwnColor": 1.157,
+          "worstPixel": {
+            "vx": 200,
+            "vy": 582,
+            "rgb": [
+              30,
+              36,
+              45
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "fig-01",
+          "tag": "span",
+          "text": "— request path through a cellularized re",
+          "rect": {
+            "x": 268,
+            "y": 169,
+            "w": 341,
+            "h": 15
+          },
+          "overSky": false,
+          "fontSize": 12,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(120, 129, 141)",
+          "worstVsInk": 15.175,
+          "worstVsOwnColor": 4.6,
+          "worstPixel": {
+            "vx": 268,
+            "vy": 169,
+            "rgb": [
+              18,
+              22,
+              28
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "fig-01",
+          "tag": "b",
+          "text": "fig. 01",
+          "rect": {
+            "x": 217,
+            "y": 169,
+            "w": 52,
+            "h": 15
+          },
+          "overSky": false,
+          "fontSize": 12,
+          "fontWeight": 600,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(232, 235, 239)",
+          "worstVsInk": 15.175,
+          "worstVsOwnColor": 15.175,
+          "worstPixel": {
+            "vx": 217,
+            "vy": 169,
+            "rgb": [
+              18,
+              22,
+              28
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "fig-01",
+          "tag": "span",
+          "text": "· live",
+          "rect": {
+            "x": 608,
+            "y": 169,
+            "w": 46,
+            "h": 15
+          },
+          "overSky": false,
+          "fontSize": 12,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(86, 95, 107)",
+          "worstVsInk": 15.175,
+          "worstVsOwnColor": 2.804,
+          "worstPixel": {
+            "vx": 608,
+            "vy": 169,
+            "rgb": [
+              18,
+              22,
+              28
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "fig-01",
+          "tag": "div",
+          "text": "12:52:56  region healthy · 4 cells · amb",
+          "rect": {
+            "x": 217,
+            "y": 596,
+            "w": 344,
+            "h": 14
+          },
+          "overSky": false,
+          "fontSize": 11.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(120, 129, 141)",
+          "worstVsInk": 15.175,
+          "worstVsOwnColor": 4.6,
+          "worstPixel": {
+            "vx": 217,
+            "vy": 596,
+            "rgb": [
+              18,
+              22,
+              28
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "fig-01",
+          "tag": "div",
+          "text": "The pattern I shipped at AWS: isolated c",
+          "rect": {
+            "x": 217,
+            "y": 624,
+            "w": 806,
+            "h": 31
+          },
+          "overSky": false,
+          "fontSize": 11,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(86, 95, 107)",
+          "worstVsInk": 15.175,
+          "worstVsOwnColor": 2.804,
+          "worstPixel": {
+            "vx": 217,
+            "vy": 624,
+            "rgb": [
+              18,
+              22,
+              28
+            ],
+            "scrollOffset": 0
+          }
+        }
+      ]
+    },
+    {
+      "panel": "systems",
+      "activePanelSeen": "systems",
+      "regionCount": 16,
+      "overSkyCount": 16,
+      "worstVsInk": 5.224,
+      "sampled_offsets": [
+        0
+      ],
+      "scroll": {
+        "scrollHeight": 800,
+        "clientHeight": 800,
+        "swept": false,
+        "note": "no internal scroll needed at 1280x800"
+      },
+      "failing": [],
+      "regions": [
+        {
+          "panel": "systems",
+          "tag": "span",
+          "text": "+30% rel · −20% p99",
+          "rect": {
+            "x": 946,
+            "y": 311,
+            "w": 134,
+            "h": 15
+          },
+          "overSky": true,
+          "fontSize": 12,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(217, 145, 99)",
+          "worstVsInk": 5.224,
+          "worstVsOwnColor": 2.433,
+          "worstPixel": {
+            "vx": 1077,
+            "vy": 311,
+            "rgb": [
+              99,
+              96,
+              93
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "systems",
+          "tag": "span",
+          "text": "Health pipelines rarely carry enough sig",
+          "rect": {
+            "x": 282,
+            "y": 233,
+            "w": 694,
+            "h": 41
+          },
+          "overSky": true,
+          "fontSize": 13.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(120, 129, 141)",
+          "worstVsInk": 6.039,
+          "worstVsOwnColor": 1.831,
+          "worstPixel": {
+            "vx": 974,
+            "vy": 249,
+            "rgb": [
+              92,
+              86,
+              82
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "systems",
+          "tag": "span",
+          "text": "info-theory",
+          "rect": {
+            "x": 1002,
+            "y": 212,
+            "w": 78,
+            "h": 15
+          },
+          "overSky": true,
+          "fontSize": 12,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(217, 145, 99)",
+          "worstVsInk": 6.246,
+          "worstVsOwnColor": 2.909,
+          "worstPixel": {
+            "vx": 1002,
+            "vy": 225,
+            "rgb": [
+              89,
+              84,
+              81
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "systems",
+          "tag": "span",
+          "text": "90% ops automated",
+          "rect": {
+            "x": 960,
+            "y": 411,
+            "w": 120,
+            "h": 15
+          },
+          "overSky": true,
+          "fontSize": 12,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(217, 145, 99)",
+          "worstVsInk": 7.173,
+          "worstVsOwnColor": 3.341,
+          "worstPixel": {
+            "vx": 1077,
+            "vy": 411,
+            "rgb": [
+              76,
+              76,
+              77
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "systems",
+          "tag": "h2",
+          "text": "selected systems",
+          "rect": {
+            "x": 200,
+            "y": 163,
+            "w": 148,
+            "h": 14
+          },
+          "overSky": true,
+          "fontSize": 12,
+          "fontWeight": 500,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(120, 129, 141)",
+          "worstVsInk": 7.891,
+          "worstVsOwnColor": 2.392,
+          "worstPixel": {
+            "vx": 200,
+            "vy": 163,
+            "rgb": [
+              69,
+              70,
+              73
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "systems",
+          "tag": "span",
+          "text": "Compute/storage segregation into isolate",
+          "rect": {
+            "x": 282,
+            "y": 333,
+            "w": 612,
+            "h": 41
+          },
+          "overSky": true,
+          "fontSize": 13.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(120, 129, 141)",
+          "worstVsInk": 7.99,
+          "worstVsOwnColor": 2.422,
+          "worstPixel": {
+            "vx": 832,
+            "vy": 333,
+            "rgb": [
+              69,
+              69,
+              72
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "systems",
+          "tag": "span",
+          "text": "Load-balancer management that pre-alloca",
+          "rect": {
+            "x": 282,
+            "y": 433,
+            "w": 655,
+            "h": 40
+          },
+          "overSky": true,
+          "fontSize": 13.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(120, 129, 141)",
+          "worstVsInk": 8.949,
+          "worstVsOwnColor": 2.713,
+          "worstPixel": {
+            "vx": 935,
+            "vy": 433,
+            "rgb": [
+              60,
+              62,
+              67
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "systems",
+          "tag": "span",
+          "text": "patented",
+          "rect": {
+            "x": 1023,
+            "y": 511,
+            "w": 57,
+            "h": 15
+          },
+          "overSky": true,
+          "fontSize": 12,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(217, 145, 99)",
+          "worstVsInk": 8.96,
+          "worstVsOwnColor": 4.174,
+          "worstPixel": {
+            "vx": 1077,
+            "vy": 511,
+            "rgb": [
+              60,
+              62,
+              66
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "systems",
+          "tag": "span",
+          "text": "azure/health-snapshots",
+          "rect": {
+            "x": 282,
+            "y": 210,
+            "w": 175,
+            "h": 17
+          },
+          "overSky": true,
+          "fontSize": 13.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(232, 235, 239)",
+          "worstVsInk": 9.223,
+          "worstVsOwnColor": 9.223,
+          "worstPixel": {
+            "vx": 397,
+            "vy": 210,
+            "rgb": [
+              59,
+              60,
+              63
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "systems",
+          "tag": "span",
+          "text": "2025",
+          "rect": {
+            "x": 200,
+            "y": 212,
+            "w": 29,
+            "h": 15
+          },
+          "overSky": true,
+          "fontSize": 12,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(86, 95, 107)",
+          "worstVsInk": 9.335,
+          "worstVsOwnColor": 1.725,
+          "worstPixel": {
+            "vx": 200,
+            "vy": 212,
+            "rgb": [
+              59,
+              59,
+              62
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "systems",
+          "tag": "span",
+          "text": "2023",
+          "rect": {
+            "x": 200,
+            "y": 311,
+            "w": 29,
+            "h": 15
+          },
+          "overSky": true,
+          "fontSize": 12,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(86, 95, 107)",
+          "worstVsInk": 10.989,
+          "worstVsOwnColor": 2.031,
+          "worstPixel": {
+            "vx": 200,
+            "vy": 311,
+            "rgb": [
+              48,
+              48,
+              52
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "systems",
+          "tag": "span",
+          "text": "dynamodb/cellularization",
+          "rect": {
+            "x": 282,
+            "y": 309,
+            "w": 190,
+            "h": 17
+          },
+          "overSky": true,
+          "fontSize": 13.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(232, 235, 239)",
+          "worstVsInk": 11.047,
+          "worstVsOwnColor": 11.047,
+          "worstPixel": {
+            "vx": 466,
+            "vy": 309,
+            "rgb": [
+              47,
+              48,
+              50
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "systems",
+          "tag": "span",
+          "text": "Context-aware IoT controls surfaced on d",
+          "rect": {
+            "x": 282,
+            "y": 533,
+            "w": 569,
+            "h": 19
+          },
+          "overSky": true,
+          "fontSize": 13.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(120, 129, 141)",
+          "worstVsInk": 11.214,
+          "worstVsOwnColor": 3.399,
+          "worstPixel": {
+            "vx": 776,
+            "vy": 533,
+            "rgb": [
+              45,
+              47,
+              51
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "systems",
+          "tag": "span",
+          "text": "elb/auto-weight-away",
+          "rect": {
+            "x": 282,
+            "y": 409,
+            "w": 159,
+            "h": 17
+          },
+          "overSky": true,
+          "fontSize": 13.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(232, 235, 239)",
+          "worstVsInk": 12.36,
+          "worstVsOwnColor": 12.36,
+          "worstPixel": {
+            "vx": 437,
+            "vy": 409,
+            "rgb": [
+              38,
+              40,
+              43
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "systems",
+          "tag": "span",
+          "text": "iot/contextual-widget",
+          "rect": {
+            "x": 282,
+            "y": 509,
+            "w": 167,
+            "h": 17
+          },
+          "overSky": true,
+          "fontSize": 13.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(232, 235, 239)",
+          "worstVsInk": 12.477,
+          "worstVsOwnColor": 12.477,
+          "worstPixel": {
+            "vx": 406,
+            "vy": 509,
+            "rgb": [
+              38,
+              39,
+              43
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "systems",
+          "tag": "span",
+          "text": "2019",
+          "rect": {
+            "x": 200,
+            "y": 511,
+            "w": 29,
+            "h": 15
+          },
+          "overSky": true,
+          "fontSize": 12,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(86, 95, 107)",
+          "worstVsInk": 12.828,
+          "worstVsOwnColor": 2.37,
+          "worstPixel": {
+            "vx": 200,
+            "vy": 511,
+            "rgb": [
+              36,
+              37,
+              39
+            ],
+            "scrollOffset": 0
+          }
+        }
+      ],
+      "notOverSky": []
+    },
+    {
+      "panel": "experience",
+      "activePanelSeen": "experience",
+      "regionCount": 23,
+      "overSkyCount": 23,
+      "worstVsInk": 9.201,
+      "sampled_offsets": [
+        0,
+        64
+      ],
+      "scroll": {
+        "scrollHeight": 864,
+        "clientHeight": 800,
+        "swept": true,
+        "note": "internal-scroll sweep fired"
+      },
+      "failing": [],
+      "regions": [
+        {
+          "panel": "experience",
+          "tag": "span",
+          "text": "2023 — 24",
+          "rect": {
+            "x": 993,
+            "y": 314,
+            "w": 64,
+            "h": 15
+          },
+          "overSky": true,
+          "fontSize": 12,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(86, 95, 107)",
+          "worstVsInk": 9.201,
+          "worstVsOwnColor": 1.7,
+          "worstPixel": {
+            "vx": 1051,
+            "vy": 314,
+            "rgb": [
+              59,
+              60,
+              65
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "experience",
+          "tag": "li",
+          "text": "Azure's data platform: durable, idempote",
+          "rect": {
+            "x": 241,
+            "y": 171,
+            "w": 457,
+            "h": 19
+          },
+          "overSky": true,
+          "fontSize": 13.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(120, 129, 141)",
+          "worstVsInk": 9.259,
+          "worstVsOwnColor": 2.807,
+          "worstPixel": {
+            "vx": 672,
+            "vy": 171,
+            "rgb": [
+              57,
+              60,
+              65
+            ],
+            "scrollOffset": 64
+          }
+        },
+        {
+          "panel": "experience",
+          "tag": "li",
+          "text": "Cellularized DynamoDB's US-EAST-1 region",
+          "rect": {
+            "x": 241,
+            "y": 277,
+            "w": 791,
+            "h": 41
+          },
+          "overSky": true,
+          "fontSize": 13.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(120, 129, 141)",
+          "worstVsInk": 9.324,
+          "worstVsOwnColor": 2.827,
+          "worstPixel": {
+            "vx": 1027,
+            "vy": 281,
+            "rgb": [
+              59,
+              59,
+              63
+            ],
+            "scrollOffset": 64
+          }
+        },
+        {
+          "panel": "experience",
+          "tag": "li",
+          "text": "Built elb/auto-weight-away: load-balance",
+          "rect": {
+            "x": 241,
+            "y": 324,
+            "w": 809,
+            "h": 41
+          },
+          "overSky": true,
+          "fontSize": 13.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(120, 129, 141)",
+          "worstVsInk": 9.517,
+          "worstVsOwnColor": 2.885,
+          "worstPixel": {
+            "vx": 1040,
+            "vy": 324,
+            "rgb": [
+              56,
+              58,
+              63
+            ],
+            "scrollOffset": 64
+          }
+        },
+        {
+          "panel": "experience",
+          "tag": "h2",
+          "text": "experience",
+          "rect": {
+            "x": 223,
+            "y": 99,
+            "w": 92,
+            "h": 14
+          },
+          "overSky": true,
+          "fontSize": 12,
+          "fontWeight": 500,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(120, 129, 141)",
+          "worstVsInk": 9.523,
+          "worstVsOwnColor": 2.887,
+          "worstPixel": {
+            "vx": 314,
+            "vy": 99,
+            "rgb": [
+              55,
+              58,
+              65
+            ],
+            "scrollOffset": 64
+          }
+        },
+        {
+          "panel": "experience",
+          "tag": "span",
+          "text": "2024 — now",
+          "rect": {
+            "x": 986,
+            "y": 209,
+            "w": 71,
+            "h": 15
+          },
+          "overSky": true,
+          "fontSize": 12,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(86, 95, 107)",
+          "worstVsInk": 10.016,
+          "worstVsOwnColor": 1.851,
+          "worstPixel": {
+            "vx": 1003,
+            "vy": 222,
+            "rgb": [
+              55,
+              54,
+              59
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "experience",
+          "tag": "li",
+          "text": "Information-theory health snapshots driv",
+          "rect": {
+            "x": 241,
+            "y": 197,
+            "w": 438,
+            "h": 19
+          },
+          "overSky": true,
+          "fontSize": 13.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(120, 129, 141)",
+          "worstVsInk": 10.324,
+          "worstVsOwnColor": 3.13,
+          "worstPixel": {
+            "vx": 646,
+            "vy": 197,
+            "rgb": [
+              49,
+              53,
+              58
+            ],
+            "scrollOffset": 64
+          }
+        },
+        {
+          "panel": "experience",
+          "tag": "span",
+          "text": "Microsoft",
+          "rect": {
+            "x": 223,
+            "y": 143,
+            "w": 80,
+            "h": 17
+          },
+          "overSky": true,
+          "fontSize": 13.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(232, 235, 239)",
+          "worstVsInk": 10.625,
+          "worstVsOwnColor": 10.625,
+          "worstPixel": {
+            "vx": 223,
+            "vy": 143,
+            "rgb": [
+              46,
+              51,
+              59
+            ],
+            "scrollOffset": 64
+          }
+        },
+        {
+          "panel": "experience",
+          "tag": "span",
+          "text": "· SDE 2",
+          "rect": {
+            "x": 302,
+            "y": 143,
+            "w": 56,
+            "h": 17
+          },
+          "overSky": true,
+          "fontSize": 13.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(120, 129, 141)",
+          "worstVsInk": 10.934,
+          "worstVsOwnColor": 3.315,
+          "worstPixel": {
+            "vx": 354,
+            "vy": 143,
+            "rgb": [
+              45,
+              49,
+              55
+            ],
+            "scrollOffset": 64
+          }
+        },
+        {
+          "panel": "experience",
+          "tag": "span",
+          "text": "2022",
+          "rect": {
+            "x": 1028,
+            "y": 399,
+            "w": 29,
+            "h": 15
+          },
+          "overSky": true,
+          "fontSize": 12,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(86, 95, 107)",
+          "worstVsInk": 11.048,
+          "worstVsOwnColor": 2.041,
+          "worstPixel": {
+            "vx": 1056,
+            "vy": 399,
+            "rgb": [
+              45,
+              48,
+              55
+            ],
+            "scrollOffset": 64
+          }
+        },
+        {
+          "panel": "experience",
+          "tag": "span",
+          "text": "2017 — 20",
+          "rect": {
+            "x": 993,
+            "y": 505,
+            "w": 64,
+            "h": 15
+          },
+          "overSky": true,
+          "fontSize": 12,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(86, 95, 107)",
+          "worstVsInk": 12.519,
+          "worstVsOwnColor": 2.313,
+          "worstPixel": {
+            "vx": 1051,
+            "vy": 505,
+            "rgb": [
+              35,
+              39,
+              47
+            ],
+            "scrollOffset": 64
+          }
+        },
+        {
+          "panel": "experience",
+          "tag": "span",
+          "text": "AWS",
+          "rect": {
+            "x": 223,
+            "y": 312,
+            "w": 32,
+            "h": 17
+          },
+          "overSky": true,
+          "fontSize": 13.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(232, 235, 239)",
+          "worstVsInk": 13.007,
+          "worstVsOwnColor": 13.007,
+          "worstPixel": {
+            "vx": 228,
+            "vy": 312,
+            "rgb": [
+              32,
+              36,
+              44
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "experience",
+          "tag": "span",
+          "text": "· SWE",
+          "rect": {
+            "x": 254,
+            "y": 312,
+            "w": 41,
+            "h": 17
+          },
+          "overSky": true,
+          "fontSize": 13.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(120, 129, 141)",
+          "worstVsInk": 13.168,
+          "worstVsOwnColor": 3.992,
+          "worstPixel": {
+            "vx": 254,
+            "vy": 312,
+            "rgb": [
+              31,
+              35,
+              43
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "experience",
+          "tag": "li",
+          "text": "Web-MATLAB performance on low-bandwidth ",
+          "rect": {
+            "x": 241,
+            "y": 426,
+            "w": 354,
+            "h": 19
+          },
+          "overSky": true,
+          "fontSize": 13.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(120, 129, 141)",
+          "worstVsInk": 14.119,
+          "worstVsOwnColor": 4.28,
+          "worstPixel": {
+            "vx": 587,
+            "vy": 426,
+            "rgb": [
+              25,
+              29,
+              37
+            ],
+            "scrollOffset": 64
+          }
+        },
+        {
+          "panel": "experience",
+          "tag": "span",
+          "text": "· Software Engineering Intern",
+          "rect": {
+            "x": 302,
+            "y": 397,
+            "w": 230,
+            "h": 17
+          },
+          "overSky": true,
+          "fontSize": 13.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(120, 129, 141)",
+          "worstVsInk": 14.272,
+          "worstVsOwnColor": 4.326,
+          "worstPixel": {
+            "vx": 479,
+            "vy": 397,
+            "rgb": [
+              24,
+              28,
+              36
+            ],
+            "scrollOffset": 64
+          }
+        },
+        {
+          "panel": "experience",
+          "tag": "li",
+          "text": "Built multi-client RTSP streaming.",
+          "rect": {
+            "x": 241,
+            "y": 673,
+            "w": 197,
+            "h": 19
+          },
+          "overSky": true,
+          "fontSize": 13.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(120, 129, 141)",
+          "worstVsInk": 14.312,
+          "worstVsOwnColor": 4.338,
+          "worstPixel": {
+            "vx": 241,
+            "vy": 673,
+            "rgb": [
+              28,
+              27,
+              32
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "experience",
+          "tag": "li",
+          "text": "Cut the JS test suite runtime by 3 minut",
+          "rect": {
+            "x": 241,
+            "y": 516,
+            "w": 251,
+            "h": 19
+          },
+          "overSky": true,
+          "fontSize": 13.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(120, 129, 141)",
+          "worstVsInk": 14.465,
+          "worstVsOwnColor": 4.385,
+          "worstPixel": {
+            "vx": 411,
+            "vy": 516,
+            "rgb": [
+              22,
+              27,
+              34
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "experience",
+          "tag": "span",
+          "text": "Samsung",
+          "rect": {
+            "x": 223,
+            "y": 567,
+            "w": 64,
+            "h": 17
+          },
+          "overSky": true,
+          "fontSize": 13.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(232, 235, 239)",
+          "worstVsInk": 14.501,
+          "worstVsOwnColor": 14.501,
+          "worstPixel": {
+            "vx": 223,
+            "vy": 582,
+            "rgb": [
+              25,
+              26,
+              33
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "experience",
+          "tag": "li",
+          "text": "Shrank the app APK from 150MB to 90MB.",
+          "rect": {
+            "x": 241,
+            "y": 621,
+            "w": 253,
+            "h": 19
+          },
+          "overSky": true,
+          "fontSize": 13.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(120, 129, 141)",
+          "worstVsInk": 14.625,
+          "worstVsOwnColor": 4.433,
+          "worstPixel": {
+            "vx": 241,
+            "vy": 630,
+            "rgb": [
+              26,
+              25,
+              29
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "experience",
+          "tag": "li",
+          "text": "Shipped a patented contextual widget on ",
+          "rect": {
+            "x": 241,
+            "y": 647,
+            "w": 318,
+            "h": 19
+          },
+          "overSky": true,
+          "fontSize": 13.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(120, 129, 141)",
+          "worstVsInk": 14.625,
+          "worstVsOwnColor": 4.433,
+          "worstPixel": {
+            "vx": 241,
+            "vy": 647,
+            "rgb": [
+              26,
+              25,
+              29
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "experience",
+          "tag": "li",
+          "text": "Built the SmartThings notifications plat",
+          "rect": {
+            "x": 241,
+            "y": 532,
+            "w": 262,
+            "h": 19
+          },
+          "overSky": true,
+          "fontSize": 13.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(120, 129, 141)",
+          "worstVsInk": 14.707,
+          "worstVsOwnColor": 4.458,
+          "worstPixel": {
+            "vx": 407,
+            "vy": 532,
+            "rgb": [
+              21,
+              25,
+              34
+            ],
+            "scrollOffset": 64
+          }
+        },
+        {
+          "panel": "experience",
+          "tag": "span",
+          "text": "MathWorks",
+          "rect": {
+            "x": 223,
+            "y": 397,
+            "w": 80,
+            "h": 17
+          },
+          "overSky": true,
+          "fontSize": 13.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(232, 235, 239)",
+          "worstVsInk": 14.721,
+          "worstVsOwnColor": 14.721,
+          "worstPixel": {
+            "vx": 223,
+            "vy": 397,
+            "rgb": [
+              21,
+              25,
+              33
+            ],
+            "scrollOffset": 64
+          }
+        },
+        {
+          "panel": "experience",
+          "tag": "span",
+          "text": "· Senior SWE",
+          "rect": {
+            "x": 286,
+            "y": 503,
+            "w": 96,
+            "h": 17
+          },
+          "overSky": true,
+          "fontSize": 13.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(120, 129, 141)",
+          "worstVsInk": 14.866,
+          "worstVsOwnColor": 4.507,
+          "worstPixel": {
+            "vx": 377,
+            "vy": 503,
+            "rgb": [
+              20,
+              24,
+              32
+            ],
+            "scrollOffset": 64
+          }
+        }
+      ],
+      "notOverSky": []
+    },
+    {
+      "panel": "patents",
+      "activePanelSeen": "patents",
+      "regionCount": 9,
+      "overSkyCount": 9,
+      "worstVsInk": 9.042,
+      "sampled_offsets": [
+        0
+      ],
+      "scroll": {
+        "scrollHeight": 800,
+        "clientHeight": 800,
+        "swept": false,
+        "note": "no internal scroll needed at 1280x800"
+      },
+      "failing": [],
+      "regions": [
+        {
+          "panel": "patents",
+          "tag": "span",
+          "text": "2016",
+          "rect": {
+            "x": 1028,
+            "y": 284,
+            "w": 29,
+            "h": 15
+          },
+          "overSky": true,
+          "fontSize": 12,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(86, 95, 107)",
+          "worstVsInk": 9.042,
+          "worstVsOwnColor": 1.671,
+          "worstPixel": {
+            "vx": 1051,
+            "vy": 298,
+            "rgb": [
+              61,
+              61,
+              65
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "patents",
+          "tag": "span",
+          "text": "2020",
+          "rect": {
+            "x": 1028,
+            "y": 209,
+            "w": 29,
+            "h": 15
+          },
+          "overSky": true,
+          "fontSize": 12,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(86, 95, 107)",
+          "worstVsInk": 10.32,
+          "worstVsOwnColor": 1.907,
+          "worstPixel": {
+            "vx": 1028,
+            "vy": 222,
+            "rgb": [
+              53,
+              52,
+              57
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "patents",
+          "tag": "h2",
+          "text": "patents & publications",
+          "rect": {
+            "x": 223,
+            "y": 163,
+            "w": 203,
+            "h": 14
+          },
+          "overSky": true,
+          "fontSize": 12,
+          "fontWeight": 500,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(120, 129, 141)",
+          "worstVsInk": 10.72,
+          "worstVsOwnColor": 3.249,
+          "worstPixel": {
+            "vx": 413,
+            "vy": 163,
+            "rgb": [
+              47,
+              50,
+              58
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "patents",
+          "tag": "span",
+          "text": "IoT room identification via device-type ",
+          "rect": {
+            "x": 223,
+            "y": 207,
+            "w": 396,
+            "h": 17
+          },
+          "overSky": true,
+          "fontSize": 13.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(232, 235, 239)",
+          "worstVsInk": 11.207,
+          "worstVsOwnColor": 11.207,
+          "worstPixel": {
+            "vx": 610,
+            "vy": 207,
+            "rgb": [
+              44,
+              47,
+              54
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "patents",
+          "tag": "span",
+          "text": "Automated position & latch locking contr",
+          "rect": {
+            "x": 223,
+            "y": 282,
+            "w": 420,
+            "h": 17
+          },
+          "overSky": true,
+          "fontSize": 13.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(232, 235, 239)",
+          "worstVsInk": 12.813,
+          "worstVsOwnColor": 12.813,
+          "worstPixel": {
+            "vx": 640,
+            "vy": 282,
+            "rgb": [
+              34,
+              37,
+              45
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "patents",
+          "tag": "span",
+          "text": "Grade A1",
+          "rect": {
+            "x": 223,
+            "y": 230,
+            "w": 56,
+            "h": 19
+          },
+          "overSky": true,
+          "fontSize": 13.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(120, 129, 141)",
+          "worstVsInk": 13.168,
+          "worstVsOwnColor": 3.992,
+          "worstPixel": {
+            "vx": 223,
+            "vy": 230,
+            "rgb": [
+              31,
+              35,
+              43
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "patents",
+          "tag": "span",
+          "text": "Patent · IN 201631007292",
+          "rect": {
+            "x": 223,
+            "y": 305,
+            "w": 153,
+            "h": 19
+          },
+          "overSky": true,
+          "fontSize": 13.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(120, 129, 141)",
+          "worstVsInk": 14.104,
+          "worstVsOwnColor": 4.276,
+          "worstPixel": {
+            "vx": 223,
+            "vy": 305,
+            "rgb": [
+              25,
+              29,
+              38
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "patents",
+          "tag": "span",
+          "text": "~30% faster dead-code/unused-resource de",
+          "rect": {
+            "x": 223,
+            "y": 381,
+            "w": 306,
+            "h": 19
+          },
+          "overSky": true,
+          "fontSize": 13.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(120, 129, 141)",
+          "worstVsInk": 14.133,
+          "worstVsOwnColor": 4.284,
+          "worstPixel": {
+            "vx": 509,
+            "vy": 381,
+            "rgb": [
+              25,
+              29,
+              36
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "patents",
+          "tag": "span",
+          "text": "Android Lint tool optimization",
+          "rect": {
+            "x": 223,
+            "y": 357,
+            "w": 238,
+            "h": 17
+          },
+          "overSky": true,
+          "fontSize": 13.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(232, 235, 239)",
+          "worstVsInk": 14.272,
+          "worstVsOwnColor": 14.272,
+          "worstPixel": {
+            "vx": 397,
+            "vy": 357,
+            "rgb": [
+              24,
+              28,
+              36
+            ],
+            "scrollOffset": 0
+          }
+        }
+      ],
+      "notOverSky": []
+    },
+    {
+      "panel": "skills",
+      "activePanelSeen": "skills",
+      "regionCount": 29,
+      "overSkyCount": 6,
+      "worstVsInk": 9.871,
+      "sampled_offsets": [
+        0
+      ],
+      "scroll": {
+        "scrollHeight": 800,
+        "clientHeight": 800,
+        "swept": false,
+        "note": "no internal scroll needed at 1280x800"
+      },
+      "failing": [],
+      "regions": [
+        {
+          "panel": "skills",
+          "tag": "p",
+          "text": "Tools I reach for across distributed sys",
+          "rect": {
+            "x": 223,
+            "y": 192,
+            "w": 452,
+            "h": 45
+          },
+          "overSky": true,
+          "fontSize": 15,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(170, 178, 189)",
+          "worstVsInk": 9.871,
+          "worstVsOwnColor": 5.515,
+          "worstPixel": {
+            "vx": 641,
+            "vy": 192,
+            "rgb": [
+              52,
+              56,
+              61
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "skills",
+          "tag": "h2",
+          "text": "skills",
+          "rect": {
+            "x": 223,
+            "y": 163,
+            "w": 56,
+            "h": 14
+          },
+          "overSky": true,
+          "fontSize": 12,
+          "fontWeight": 500,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(120, 129, 141)",
+          "worstVsInk": 10.594,
+          "worstVsOwnColor": 3.212,
+          "worstPixel": {
+            "vx": 227,
+            "vy": 163,
+            "rgb": [
+              47,
+              51,
+              59
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "skills",
+          "tag": "span",
+          "text": "Languages",
+          "rect": {
+            "x": 223,
+            "y": 277,
+            "w": 64,
+            "h": 15
+          },
+          "overSky": true,
+          "fontSize": 12,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(86, 95, 107)",
+          "worstVsInk": 13.021,
+          "worstVsOwnColor": 2.406,
+          "worstPixel": {
+            "vx": 227,
+            "vy": 277,
+            "rgb": [
+              32,
+              36,
+              43
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "skills",
+          "tag": "span",
+          "text": "Cloud & Distributed",
+          "rect": {
+            "x": 223,
+            "y": 363,
+            "w": 134,
+            "h": 15
+          },
+          "overSky": true,
+          "fontSize": 12,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(86, 95, 107)",
+          "worstVsInk": 14.574,
+          "worstVsOwnColor": 2.693,
+          "worstPixel": {
+            "vx": 223,
+            "vy": 363,
+            "rgb": [
+              22,
+              26,
+              34
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "skills",
+          "tag": "span",
+          "text": "Mobile",
+          "rect": {
+            "x": 223,
+            "y": 535,
+            "w": 43,
+            "h": 15
+          },
+          "overSky": true,
+          "fontSize": 12,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(86, 95, 107)",
+          "worstVsInk": 14.983,
+          "worstVsOwnColor": 2.768,
+          "worstPixel": {
+            "vx": 228,
+            "vy": 548,
+            "rgb": [
+              20,
+              23,
+              31
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "skills",
+          "tag": "span",
+          "text": "Data",
+          "rect": {
+            "x": 223,
+            "y": 449,
+            "w": 29,
+            "h": 15
+          },
+          "overSky": true,
+          "fontSize": 12,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(86, 95, 107)",
+          "worstVsInk": 14.996,
+          "worstVsOwnColor": 2.771,
+          "worstPixel": {
+            "vx": 223,
+            "vy": 449,
+            "rgb": [
+              20,
+              23,
+              30
+            ],
+            "scrollOffset": 0
+          }
+        }
+      ],
+      "notOverSky": [
+        {
+          "panel": "skills",
+          "tag": "span",
+          "text": "Java",
+          "rect": {
+            "x": 233,
+            "y": 309,
+            "w": 30,
+            "h": 16
+          },
+          "overSky": false,
+          "fontSize": 12.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(232, 235, 239)",
+          "worstVsInk": 14.627,
+          "worstVsOwnColor": 14.627,
+          "worstPixel": {
+            "vx": 233,
+            "vy": 309,
+            "rgb": [
+              20,
+              26,
+              34
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "skills",
+          "tag": "span",
+          "text": "C#",
+          "rect": {
+            "x": 290,
+            "y": 309,
+            "w": 15,
+            "h": 16
+          },
+          "overSky": false,
+          "fontSize": 12.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(232, 235, 239)",
+          "worstVsInk": 14.627,
+          "worstVsOwnColor": 14.627,
+          "worstPixel": {
+            "vx": 290,
+            "vy": 309,
+            "rgb": [
+              20,
+              26,
+              34
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "skills",
+          "tag": "span",
+          "text": "Kotlin",
+          "rect": {
+            "x": 332,
+            "y": 309,
+            "w": 45,
+            "h": 16
+          },
+          "overSky": false,
+          "fontSize": 12.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(232, 235, 239)",
+          "worstVsInk": 14.627,
+          "worstVsOwnColor": 14.627,
+          "worstPixel": {
+            "vx": 332,
+            "vy": 309,
+            "rgb": [
+              20,
+              26,
+              34
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "skills",
+          "tag": "span",
+          "text": "Go",
+          "rect": {
+            "x": 404,
+            "y": 309,
+            "w": 16,
+            "h": 16
+          },
+          "overSky": false,
+          "fontSize": 12.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(232, 235, 239)",
+          "worstVsInk": 14.627,
+          "worstVsOwnColor": 14.627,
+          "worstPixel": {
+            "vx": 404,
+            "vy": 309,
+            "rgb": [
+              20,
+              26,
+              34
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "skills",
+          "tag": "span",
+          "text": "Python",
+          "rect": {
+            "x": 447,
+            "y": 309,
+            "w": 45,
+            "h": 16
+          },
+          "overSky": false,
+          "fontSize": 12.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(232, 235, 239)",
+          "worstVsInk": 14.627,
+          "worstVsOwnColor": 14.627,
+          "worstPixel": {
+            "vx": 447,
+            "vy": 309,
+            "rgb": [
+              20,
+              26,
+              34
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "skills",
+          "tag": "span",
+          "text": "JavaScript/TypeScript",
+          "rect": {
+            "x": 519,
+            "y": 309,
+            "w": 155,
+            "h": 16
+          },
+          "overSky": false,
+          "fontSize": 12.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(232, 235, 239)",
+          "worstVsInk": 14.627,
+          "worstVsOwnColor": 14.627,
+          "worstPixel": {
+            "vx": 519,
+            "vy": 309,
+            "rgb": [
+              20,
+              26,
+              34
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "skills",
+          "tag": "span",
+          "text": "AWS DynamoDB",
+          "rect": {
+            "x": 233,
+            "y": 395,
+            "w": 88,
+            "h": 16
+          },
+          "overSky": false,
+          "fontSize": 12.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(232, 235, 239)",
+          "worstVsInk": 14.627,
+          "worstVsOwnColor": 14.627,
+          "worstPixel": {
+            "vx": 233,
+            "vy": 395,
+            "rgb": [
+              20,
+              26,
+              34
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "skills",
+          "tag": "span",
+          "text": "AWS EC2",
+          "rect": {
+            "x": 348,
+            "y": 395,
+            "w": 53,
+            "h": 16
+          },
+          "overSky": false,
+          "fontSize": 12.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(232, 235, 239)",
+          "worstVsInk": 14.627,
+          "worstVsOwnColor": 14.627,
+          "worstPixel": {
+            "vx": 348,
+            "vy": 395,
+            "rgb": [
+              20,
+              26,
+              34
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "skills",
+          "tag": "span",
+          "text": "AWS ECS",
+          "rect": {
+            "x": 428,
+            "y": 395,
+            "w": 52,
+            "h": 16
+          },
+          "overSky": false,
+          "fontSize": 12.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(232, 235, 239)",
+          "worstVsInk": 14.627,
+          "worstVsOwnColor": 14.627,
+          "worstPixel": {
+            "vx": 428,
+            "vy": 395,
+            "rgb": [
+              20,
+              26,
+              34
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "skills",
+          "tag": "span",
+          "text": "AWS EKS",
+          "rect": {
+            "x": 507,
+            "y": 395,
+            "w": 52,
+            "h": 16
+          },
+          "overSky": false,
+          "fontSize": 12.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(232, 235, 239)",
+          "worstVsInk": 14.627,
+          "worstVsOwnColor": 14.627,
+          "worstPixel": {
+            "vx": 507,
+            "vy": 395,
+            "rgb": [
+              20,
+              26,
+              34
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "skills",
+          "tag": "span",
+          "text": "Azure",
+          "rect": {
+            "x": 586,
+            "y": 395,
+            "w": 38,
+            "h": 16
+          },
+          "overSky": false,
+          "fontSize": 12.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(232, 235, 239)",
+          "worstVsInk": 14.627,
+          "worstVsOwnColor": 14.627,
+          "worstPixel": {
+            "vx": 586,
+            "vy": 395,
+            "rgb": [
+              20,
+              26,
+              34
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "skills",
+          "tag": "span",
+          "text": "Kubernetes",
+          "rect": {
+            "x": 651,
+            "y": 395,
+            "w": 74,
+            "h": 16
+          },
+          "overSky": false,
+          "fontSize": 12.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(232, 235, 239)",
+          "worstVsInk": 14.627,
+          "worstVsOwnColor": 14.627,
+          "worstPixel": {
+            "vx": 651,
+            "vy": 395,
+            "rgb": [
+              20,
+              26,
+              34
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "skills",
+          "tag": "span",
+          "text": "Docker",
+          "rect": {
+            "x": 752,
+            "y": 395,
+            "w": 45,
+            "h": 16
+          },
+          "overSky": false,
+          "fontSize": 12.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(232, 235, 239)",
+          "worstVsInk": 14.627,
+          "worstVsOwnColor": 14.627,
+          "worstPixel": {
+            "vx": 752,
+            "vy": 395,
+            "rgb": [
+              20,
+              26,
+              34
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "skills",
+          "tag": "span",
+          "text": "Load balancing",
+          "rect": {
+            "x": 824,
+            "y": 395,
+            "w": 104,
+            "h": 16
+          },
+          "overSky": false,
+          "fontSize": 12.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(232, 235, 239)",
+          "worstVsInk": 14.627,
+          "worstVsOwnColor": 14.627,
+          "worstPixel": {
+            "vx": 824,
+            "vy": 395,
+            "rgb": [
+              20,
+              26,
+              34
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "skills",
+          "tag": "span",
+          "text": "Auto-scaling",
+          "rect": {
+            "x": 955,
+            "y": 395,
+            "w": 89,
+            "h": 16
+          },
+          "overSky": false,
+          "fontSize": 12.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(232, 235, 239)",
+          "worstVsInk": 14.627,
+          "worstVsOwnColor": 14.627,
+          "worstPixel": {
+            "vx": 955,
+            "vy": 395,
+            "rgb": [
+              20,
+              26,
+              34
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "skills",
+          "tag": "span",
+          "text": "DynamoDB",
+          "rect": {
+            "x": 233,
+            "y": 481,
+            "w": 59,
+            "h": 16
+          },
+          "overSky": false,
+          "fontSize": 12.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(232, 235, 239)",
+          "worstVsInk": 14.627,
+          "worstVsOwnColor": 14.627,
+          "worstPixel": {
+            "vx": 233,
+            "vy": 481,
+            "rgb": [
+              20,
+              26,
+              34
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "skills",
+          "tag": "span",
+          "text": "PostgreSQL",
+          "rect": {
+            "x": 319,
+            "y": 481,
+            "w": 74,
+            "h": 16
+          },
+          "overSky": false,
+          "fontSize": 12.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(232, 235, 239)",
+          "worstVsInk": 14.627,
+          "worstVsOwnColor": 14.627,
+          "worstPixel": {
+            "vx": 319,
+            "vy": 481,
+            "rgb": [
+              20,
+              26,
+              34
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "skills",
+          "tag": "span",
+          "text": "MySQL",
+          "rect": {
+            "x": 420,
+            "y": 481,
+            "w": 38,
+            "h": 16
+          },
+          "overSky": false,
+          "fontSize": 12.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(232, 235, 239)",
+          "worstVsInk": 14.627,
+          "worstVsOwnColor": 14.627,
+          "worstPixel": {
+            "vx": 420,
+            "vy": 481,
+            "rgb": [
+              20,
+              26,
+              34
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "skills",
+          "tag": "span",
+          "text": "Redis",
+          "rect": {
+            "x": 485,
+            "y": 481,
+            "w": 38,
+            "h": 16
+          },
+          "overSky": false,
+          "fontSize": 12.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(232, 235, 239)",
+          "worstVsInk": 14.627,
+          "worstVsOwnColor": 14.627,
+          "worstPixel": {
+            "vx": 485,
+            "vy": 481,
+            "rgb": [
+              20,
+              26,
+              34
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "skills",
+          "tag": "span",
+          "text": "Android SDK",
+          "rect": {
+            "x": 233,
+            "y": 567,
+            "w": 81,
+            "h": 16
+          },
+          "overSky": false,
+          "fontSize": 12.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(232, 235, 239)",
+          "worstVsInk": 14.627,
+          "worstVsOwnColor": 14.627,
+          "worstPixel": {
+            "vx": 233,
+            "vy": 567,
+            "rgb": [
+              20,
+              26,
+              34
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "skills",
+          "tag": "span",
+          "text": "Jetpack",
+          "rect": {
+            "x": 341,
+            "y": 567,
+            "w": 52,
+            "h": 16
+          },
+          "overSky": false,
+          "fontSize": 12.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(232, 235, 239)",
+          "worstVsInk": 14.627,
+          "worstVsOwnColor": 14.627,
+          "worstPixel": {
+            "vx": 341,
+            "vy": 567,
+            "rgb": [
+              20,
+              26,
+              34
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "skills",
+          "tag": "span",
+          "text": "Kotlin",
+          "rect": {
+            "x": 420,
+            "y": 567,
+            "w": 45,
+            "h": 16
+          },
+          "overSky": false,
+          "fontSize": 12.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(232, 235, 239)",
+          "worstVsInk": 14.627,
+          "worstVsOwnColor": 14.627,
+          "worstPixel": {
+            "vx": 420,
+            "vy": 567,
+            "rgb": [
+              20,
+              26,
+              34
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "skills",
+          "tag": "span",
+          "text": "JNI",
+          "rect": {
+            "x": 492,
+            "y": 567,
+            "w": 23,
+            "h": 16
+          },
+          "overSky": false,
+          "fontSize": 12.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(232, 235, 239)",
+          "worstVsInk": 14.627,
+          "worstVsOwnColor": 14.627,
+          "worstPixel": {
+            "vx": 492,
+            "vy": 567,
+            "rgb": [
+              20,
+              26,
+              34
+            ],
+            "scrollOffset": 0
+          }
+        }
+      ]
+    },
+    {
+      "panel": "contact",
+      "activePanelSeen": "contact",
+      "regionCount": 3,
+      "overSkyCount": 3,
+      "worstVsInk": 9.656,
+      "sampled_offsets": [
+        0
+      ],
+      "scroll": {
+        "scrollHeight": 800,
+        "clientHeight": 800,
+        "swept": false,
+        "note": "no internal scroll needed at 1280x800"
+      },
+      "failing": [],
+      "regions": [
+        {
+          "panel": "contact",
+          "tag": "h2",
+          "text": "contact",
+          "rect": {
+            "x": 200,
+            "y": 163,
+            "w": 65,
+            "h": 14
+          },
+          "overSky": true,
+          "fontSize": 12,
+          "fontWeight": 500,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(120, 129, 141)",
+          "worstVsInk": 9.656,
+          "worstVsOwnColor": 2.927,
+          "worstPixel": {
+            "vx": 200,
+            "vy": 163,
+            "rgb": [
+              56,
+              57,
+              60
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "contact",
+          "tag": "a",
+          "text": "email →",
+          "rect": {
+            "x": 200,
+            "y": 192,
+            "w": 54,
+            "h": 16
+          },
+          "overSky": true,
+          "fontSize": 13,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(232, 235, 239)",
+          "worstVsInk": 10.365,
+          "worstVsOwnColor": 10.365,
+          "worstPixel": {
+            "vx": 200,
+            "vy": 192,
+            "rgb": [
+              52,
+              52,
+              56
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "contact",
+          "tag": "a",
+          "text": "linkedin →",
+          "rect": {
+            "x": 273,
+            "y": 192,
+            "w": 77,
+            "h": 16
+          },
+          "overSky": true,
+          "fontSize": 13,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(232, 235, 239)",
+          "worstVsInk": 10.864,
+          "worstVsOwnColor": 10.864,
+          "worstPixel": {
+            "vx": 273,
+            "vy": 203,
+            "rgb": [
+              48,
+              49,
+              53
+            ],
+            "scrollOffset": 0
+          }
+        }
+      ],
+      "notOverSky": []
+    },
+    {
+      "panel": "header",
+      "activePanelSeen": "hero",
+      "regionCount": 5,
+      "overSkyCount": 5,
+      "worstVsInk": 5.316,
+      "sampled_offsets": [
+        0
+      ],
+      "scroll": null,
+      "failing": [],
+      "regions": [
+        {
+          "panel": "header",
+          "tag": "a",
+          "text": "work",
+          "rect": {
+            "x": 1111,
+            "y": 33,
+            "w": 30,
+            "h": 15
+          },
+          "overSky": true,
+          "fontSize": 12.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(120, 129, 141)",
+          "worstVsInk": 5.316,
+          "worstVsOwnColor": 1.612,
+          "worstPixel": {
+            "vx": 1111,
+            "vy": 33,
+            "rgb": [
+              97,
+              95,
+              93
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "header",
+          "tag": "a",
+          "text": "résumé",
+          "rect": {
+            "x": 1162,
+            "y": 33,
+            "w": 45,
+            "h": 15
+          },
+          "overSky": true,
+          "fontSize": 12.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(120, 129, 141)",
+          "worstVsInk": 6.333,
+          "worstVsOwnColor": 1.92,
+          "worstPixel": {
+            "vx": 1199,
+            "vy": 33,
+            "rgb": [
+              84,
+              84,
+              84
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "header",
+          "tag": "div",
+          "text": "· seattle",
+          "rect": {
+            "x": 101,
+            "y": 33,
+            "w": 79,
+            "h": 15
+          },
+          "overSky": true,
+          "fontSize": 12.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(120, 129, 141)",
+          "worstVsInk": 6.966,
+          "worstVsOwnColor": 2.112,
+          "worstPixel": {
+            "vx": 179,
+            "vy": 33,
+            "rgb": [
+              78,
+              78,
+              77
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "header",
+          "tag": "b",
+          "text": "prateek kumar",
+          "rect": {
+            "x": 0,
+            "y": 33,
+            "w": 102,
+            "h": 15
+          },
+          "overSky": true,
+          "fontSize": 12.5,
+          "fontWeight": 600,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(232, 235, 239)",
+          "worstVsInk": 8.016,
+          "worstVsOwnColor": 8.016,
+          "worstPixel": {
+            "vx": 101,
+            "vy": 33,
+            "rgb": [
+              68,
+              69,
+              72
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "header",
+          "tag": "a",
+          "text": "contact",
+          "rect": {
+            "x": 1228,
+            "y": 33,
+            "w": 52,
+            "h": 15
+          },
+          "overSky": true,
+          "fontSize": 12.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(120, 129, 141)",
+          "worstVsInk": 8.338,
+          "worstVsOwnColor": 2.528,
+          "worstPixel": {
+            "vx": 1278,
+            "vy": 46,
+            "rgb": [
+              68,
+              66,
+              67
+            ],
+            "scrollOffset": 0
+          }
+        }
+      ],
+      "notOverSky": []
+    },
+    {
+      "panel": "footer",
+      "activePanelSeen": "hero",
+      "regionCount": 5,
+      "overSkyCount": 5,
+      "worstVsInk": 14.611,
+      "sampled_offsets": [
+        0
+      ],
+      "scroll": null,
+      "failing": [],
+      "regions": [
+        {
+          "panel": "footer",
+          "tag": "span",
+          "text": "seattle 12:52",
+          "rect": {
+            "x": 1192,
+            "y": 719,
+            "w": 88,
+            "h": 15
+          },
+          "overSky": true,
+          "fontSize": 11.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(86, 95, 107)",
+          "worstVsInk": 14.611,
+          "worstVsOwnColor": 2.7,
+          "worstPixel": {
+            "vx": 1266,
+            "vy": 719,
+            "rgb": [
+              23,
+              26,
+              29
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "footer",
+          "tag": "span",
+          "text": "all systems operational",
+          "rect": {
+            "x": 13,
+            "y": 719,
+            "w": 155,
+            "h": 15
+          },
+          "overSky": true,
+          "fontSize": 11.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(86, 95, 107)",
+          "worstVsInk": 14.857,
+          "worstVsOwnColor": 2.745,
+          "worstPixel": {
+            "vx": 163,
+            "vy": 719,
+            "rgb": [
+              23,
+              24,
+              26
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "footer",
+          "tag": "p",
+          "text": "Sky: /NSF/AURA/E. Slawik/M. Zamani,",
+          "rect": {
+            "x": 0,
+            "y": 744,
+            "w": 290,
+            "h": 15
+          },
+          "overSky": true,
+          "fontSize": 11.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(86, 95, 107)",
+          "worstVsInk": 14.886,
+          "worstVsOwnColor": 2.751,
+          "worstPixel": {
+            "vx": 0,
+            "vy": 750,
+            "rgb": [
+              22,
+              24,
+              26
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "footer",
+          "tag": "a",
+          "text": "NOIRLab",
+          "rect": {
+            "x": 33,
+            "y": 744,
+            "w": 48,
+            "h": 15
+          },
+          "overSky": true,
+          "fontSize": 11.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(120, 129, 141)",
+          "worstVsInk": 14.886,
+          "worstVsOwnColor": 4.513,
+          "worstPixel": {
+            "vx": 33,
+            "vy": 754,
+            "rgb": [
+              22,
+              24,
+              26
+            ],
+            "scrollOffset": 0
+          }
+        },
+        {
+          "panel": "footer",
+          "tag": "a",
+          "text": "CC BY 4.0",
+          "rect": {
+            "x": 289,
+            "y": 744,
+            "w": 62,
+            "h": 15
+          },
+          "overSky": true,
+          "fontSize": 11.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(120, 129, 141)",
+          "worstVsInk": 14.886,
+          "worstVsOwnColor": 4.513,
+          "worstPixel": {
+            "vx": 289,
+            "vy": 754,
+            "rgb": [
+              22,
+              24,
+              26
+            ],
+            "scrollOffset": 0
+          }
+        }
+      ],
+      "notOverSky": []
+    },
+    {
+      "panel": "jump-index",
+      "activePanelSeen": "hero",
+      "regionCount": 1,
+      "overSkyCount": 1,
+      "worstVsInk": 14.001,
+      "sampled_offsets": [
+        0
+      ],
+      "scroll": null,
+      "failing": [],
+      "regions": [
+        {
+          "panel": "jump-index",
+          "tag": "span",
+          "text": "01 / 07",
+          "rect": {
+            "x": 1185,
+            "y": 697,
+            "w": 50,
+            "h": 14
+          },
+          "overSky": true,
+          "fontSize": 11.5,
+          "fontWeight": 400,
+          "isLarge": false,
+          "threshold": 4.5,
+          "ownColor": "rgb(170, 178, 189)",
+          "worstVsInk": 14.001,
+          "worstVsOwnColor": 7.823,
+          "worstPixel": {
+            "vx": 1185,
+            "vy": 697,
+            "rgb": [
+              27,
+              30,
+              33
+            ],
+            "scrollOffset": 0
+          }
+        }
+      ],
+      "notOverSky": []
+    }
+  ]
+}

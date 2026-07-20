@@ -1,7 +1,7 @@
 {
   "mode": "gate",
   "url": "http://localhost:4321/",
-  "startedAt": "2026-07-20T19:35:38.030Z",
+  "startedAt": "2026-07-20T19:56:07.135Z",
   "viewports": [
     {
       "viewport": "1440x900",
@@ -21,10 +21,10 @@
         },
         {
           "name": "aurora.maxCanvasCoverage",
-          "actual": 0.8071,
+          "actual": 0.8103,
           "floor": 0.03,
           "pass": true,
-          "note": "max over 26s breathing window (min 0.3089)"
+          "note": "max over 26s breathing window (min 0.2927)"
         },
         {
           "name": "hero.bandRange",
@@ -96,16 +96,16 @@
               "bandMean": 86.76,
               "starfieldRange": 167.9,
               "starCount": 291,
-              "camperEdge": 26.01,
-              "camperCoreWarmShift": 19.588,
-              "camperBoxWarmShift": 11.131,
-              "camperSurroundWarmShift": -3.356,
-              "camperWarmDelta": 22.944,
-              "camperCoreMean": 42.43,
-              "camperSkyAboveMean": 20.24,
-              "camperDarkDelta": -22.19,
-              "auroraMean": 24.15,
-              "auroraGreenShift": -2.1,
+              "camperEdge": 26.116,
+              "camperCoreWarmShift": 18.603,
+              "camperBoxWarmShift": 10.791,
+              "camperSurroundWarmShift": -3.461,
+              "camperWarmDelta": 22.064,
+              "camperCoreMean": 41.78,
+              "camperSkyAboveMean": 20.22,
+              "camperDarkDelta": -21.56,
+              "auroraMean": 24.02,
+              "auroraGreenShift": -2.034,
               "auroraSurroundGreenShift": 1.277,
               "regionPx": {
                 "band": 192548,
@@ -115,9 +115,9 @@
             }
           },
           "auroraWindow": {
-            "maxCanvasCoverage": 0.8071,
-            "minCanvasCoverage": 0.3089,
-            "atSample": 0,
+            "maxCanvasCoverage": 0.8103,
+            "minCanvasCoverage": 0.2927,
+            "atSample": 10,
             "samples": 13,
             "windowMs": 26000
           },
@@ -190,10 +190,10 @@
         },
         {
           "name": "aurora.maxCanvasCoverage",
-          "actual": 0.8359,
+          "actual": 0.8367,
           "floor": 0.03,
           "pass": true,
-          "note": "max over 26s breathing window (min 0.2857)"
+          "note": "max over 26s breathing window (min 0.2845)"
         },
         {
           "name": "hero.bandRange",
@@ -265,16 +265,16 @@
               "bandMean": 88.41,
               "starfieldRange": 168,
               "starCount": 246,
-              "camperEdge": 28.265,
-              "camperCoreWarmShift": 19.043,
-              "camperBoxWarmShift": 11.116,
-              "camperSurroundWarmShift": -3.521,
-              "camperWarmDelta": 22.564,
-              "camperCoreMean": 42.16,
+              "camperEdge": 28.284,
+              "camperCoreWarmShift": 19.006,
+              "camperBoxWarmShift": 11.06,
+              "camperSurroundWarmShift": -3.528,
+              "camperWarmDelta": 22.534,
+              "camperCoreMean": 42.03,
               "camperSkyAboveMean": 19.8,
-              "camperDarkDelta": -22.36,
-              "auroraMean": 22.25,
-              "auroraGreenShift": -1.664,
+              "camperDarkDelta": -22.23,
+              "auroraMean": 22.23,
+              "auroraGreenShift": -1.663,
               "auroraSurroundGreenShift": 1.19,
               "regionPx": {
                 "band": 116668,
@@ -284,8 +284,8 @@
             }
           },
           "auroraWindow": {
-            "maxCanvasCoverage": 0.8359,
-            "minCanvasCoverage": 0.2857,
+            "maxCanvasCoverage": 0.8367,
+            "minCanvasCoverage": 0.2845,
             "atSample": 0,
             "samples": 13,
             "windowMs": 26000
@@ -353,7 +353,7 @@
         },
         {
           "name": "live.starCount",
-          "actual": 123,
+          "actual": 125,
           "floor": 20,
           "pass": true
         },
@@ -381,7 +381,7 @@
           "actual": {
             "topStripRange": 125.8,
             "lowerSkyRange": 104.4,
-            "starCount": 34,
+            "starCount": 32,
             "camperEdge": null,
             "camperCoreWarmShift": null,
             "camperBoxWarmShift": null,
@@ -402,13 +402,13 @@
         },
         {
           "name": "hero.ssim",
-          "actual": 0.9998,
+          "actual": 0.9999,
           "floor": 0.9,
           "pass": true
         },
         {
           "name": "systems.ssim",
-          "actual": 0.9998,
+          "actual": 0.9999,
           "floor": 0.9,
           "pass": true
         }
@@ -425,15 +425,15 @@
             "metrics": {
               "topStripRange": 125.8,
               "lowerSkyRange": 111.1,
-              "starCount": 123,
-              "camperEdge": 25.31,
-              "camperCoreWarmShift": 18.591,
-              "camperBoxWarmShift": 7.764,
-              "camperSurroundWarmShift": -6.96,
-              "camperWarmDelta": 25.551,
-              "camperCoreMean": 51.96,
+              "starCount": 125,
+              "camperEdge": 25.372,
+              "camperCoreWarmShift": 17.958,
+              "camperBoxWarmShift": 7.596,
+              "camperSurroundWarmShift": -7.005,
+              "camperWarmDelta": 24.963,
+              "camperCoreMean": 51.43,
               "camperSkySideMean": 43.38,
-              "camperDarkDelta": -8.58,
+              "camperDarkDelta": -8.05,
               "regionPx": {
                 "topStrip": 13875,
                 "lowerSky": 38854,
@@ -465,7 +465,7 @@
             "metrics": {
               "topStripRange": 125.8,
               "lowerSkyRange": 104.4,
-              "starCount": 34,
+              "starCount": 32,
               "camperEdge": null,
               "camperCoreWarmShift": null,
               "camperBoxWarmShift": null,

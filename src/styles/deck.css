@@ -277,6 +277,26 @@ html.deck-active .panel:focus-visible {
   }
 }
 
+/* 8b. Tier-2 dense-prose breathing room (11-03 STEP-0 contrast fix). The
+   core-led recompose (11-03) leads the bright galactic core into the RIGHT
+   margin, so the sky just past a centered card's right edge is now bright.
+   The tier-2 prose panels (experience/patents/skills) have long wrapped lines
+   whose last word can sit at the card's very right edge — a pixel that is
+   OUTSIDE the glass scrim (open sky) and so cannot be held by any fill-opacity
+   escalation. A small horizontal inset keeps every glyph inside the card's
+   dark scrim interior (better typography too), holding >=4.5:1 WITHOUT
+   re-darkening the sky (the v3.0 anti-pattern) and WITHOUT touching the hero
+   (tier-1, the mockup card — untouched). Unconditional (not gated on glass
+   support) so the reduced-transparency scrim fallback insets identically. */
+html.deck-active .panel[data-panel-id="experience"] > .panel-card,
+html.deck-active .panel[data-panel-id="patents"] > .panel-card,
+html.deck-active .panel[data-panel-id="skills"] > .panel-card,
+html.classic-active .panel[data-panel-id="experience"] > .panel-card,
+html.classic-active .panel[data-panel-id="patents"] > .panel-card,
+html.classic-active .panel[data-panel-id="skills"] > .panel-card {
+  padding-inline: clamp(14px, 1.8vw, 26px);
+}
+
 /* 9. Print — strip every glass property (GLS-02: print sane, solid, no
    filters). deck.css is a plain global stylesheet, so the unscoped chrome
    selectors below reach header/footer/jump-index too. !important is

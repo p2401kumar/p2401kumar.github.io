@@ -67,20 +67,33 @@
      Exact opacities are arbitrated by 11-03's screenshot contrast gate. */
 
   /* Tier-1 panel (hero, systems, contact, fig-01 wrapper) — "optical".
-     11-02: brighter frost (0.06 -> 0.10), deeper blur (12 -> 22px), saturate
-     ~1.4, brightness LIFTED (0.90 -> 1.08) so the frost reads luminous, not
-     dimming — liquid glass over the dark quiet-left where these cards sit. */
-  --glass-bg:               rgb(255 255 255 / 0.10);
+     11-02: brighter frost (0.06 -> 0.10), deeper blur (12 -> 22px), saturate ~1.4.
+     11-03 CONTRAST ESCALATION: the 11-01 core-led sky is far brighter (band range
+     111 -> 159) and the recompose leads the bright core into the cards' RIGHT
+     portion. The 11-02 luminous LIFT (brightness 1.08 + frost 0.10) blew out
+     contrast there — the SYSTEMS panel's right-edge metric tags fell to 2.38:1.
+     FORCED escalation (the card is the scrim, NEVER re-darken the frozen sky):
+     brightness 1.08 -> 0.62 (stop lifting; net dim over the bright core) and
+     frost 0.10 -> 0.08 (white frost adds glare over the bright core). The
+     liquid-glass FORM (specular ::before + bright edge + radius + inner glow)
+     keeps it reading as glass over the dark-left where the hero sits; the hero
+     holds 7.8:1 and systems clears 5.2:1 at both check tiers. */
+  --glass-bg:               rgb(255 255 255 / 0.08);
   --glass-blur:              22px;
   --glass-saturate:          140%;
-  --glass-brightness:        1.08;
+  --glass-brightness:        0.62;
 
   /* Chrome (header, footer, jump-index pill + list) — lighter, always-visible.
-     Unchanged by 11-02 unless 11-03's contrast gate flags it. */
+     11-03 CONTRAST ESCALATION: the core-led sky is now bright at the TOP of the
+     frame (the band's upper edge), so the top-right header nav ("work/resume/
+     contact") over it fell to 3.75:1. Lowered brightness-chrome 0.92 -> 0.64 to
+     dim the backdrop under the thin chrome bar (the white fill can't scrim a
+     bright backdrop — brightness is the lever); header now holds 5.3-6.0:1. Fill
+     white alpha unchanged (0.05). Sky/grade untouched. */
   --glass-bg-chrome:         rgb(255 255 255 / 0.05);
   --glass-blur-chrome:       10px;
   --glass-saturate-chrome:   140%;
-  --glass-brightness-chrome: 0.92;
+  --glass-brightness-chrome: 0.64;
 
   /* Tier-2 panel (experience, patents, skills) — "protected": dense prose that
      still needs a scrim for light --ink/--body text over the brighter sky.
@@ -90,12 +103,17 @@
      and higher saturate, so it still darkens enough to hold text contrast but
      reads as tinted glass (shares the specular highlight, bright edge, rounded
      corners + inner glow of the shared .panel-card form), never a flat slab.
-     11-03's screenshot gate arbitrates the exact opacity; lean more opaque
-     there if any surface dips below 4.5:1 — never re-darken the sky. */
-  --glass-bg-2:              rgb(18 24 34 / 0.48);
+     11-03 CONTRAST ESCALATION over the brighter core-led sky: fill 0.48 -> 0.55
+     (more opaque smoked glass) + brightness 0.98 -> 0.82 (dim the bright core
+     behind the dense prose). Paired with a small tier-2 padding-inline in
+     deck.css §8b so long prose lines wrap INSIDE this scrim rather than at the
+     card's bright right edge (that edge pixel is open sky, outside any fill — a
+     fill bump can't hold it). experience/patents/skills all clear 9:1. Sky
+     frozen — the escalation is the card, never the grade. */
+  --glass-bg-2:              rgb(18 24 34 / 0.55);
   --glass-blur-2:            20px;
   --glass-saturate-2:        140%;
-  --glass-brightness-2:      0.98;
+  --glass-brightness-2:      0.82;
 
   /* Shared across every glass surface */
   --glass-edge:              rgb(255 255 255 / 0.28);  /* crisp bright top edge
