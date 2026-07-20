@@ -4,16 +4,17 @@ milestone: v3.1
 milestone_name: Bolder Sky
 current_phase: 11
 current_phase_name: Bolder Sky Rework
-status: planning
-stopped_at: v3.1 opened 2026-07-20 — direction locked (Galactic Core + liquid-glass card) via mockup pick; Phase 11 context written, planning next
-last_updated: "2026-07-20T04:09:03.547Z"
+status: in-progress
+stopped_at: 11-01 COMPLETE — warm+bright core-led regrade + recompose; banding gate green; nothing pushed. Next 11-02 (camper cut, liquid-glass card, overlay re-tune)
+last_updated: "2026-07-20T18:47:13.431Z"
 last_activity: 2026-07-20
-last_activity_desc: "v3.1 Bolder Sky milestone opened — UI review found the muddy/cheap/smudge/empty look; user picked the Galactic Core + liquid-glass direction from a 3-way mockup"
+last_activity_desc: "11-01 executed: sky master regraded warm+bright (desat 0.35→0.80, tint dropped, midtone LIFT, vignette removed), recomposed core-led crop + object-position ladder, masters/LQIP regenerated, banding gate re-passed green"
 progress:
   total_phases: 2
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
+  total_plans: 3
+  completed_plans: 1
+  percent: 33
 ---
 
 # Project State
@@ -27,7 +28,10 @@ See: .planning/PROJECT.md (updated 2026-07-18)
 
 ## Current Position
 
-Phase: 10 (Integration & Launch) — COMPLETE (2/2 plans) — v3.0 LIVE
+Phase: 11 (Bolder Sky Rework) — IN PROGRESS (1/3 plans)
+Plan: 11-01 COMPLETE — the murk-killing regrade + recompose. build-sky.mjs regraded to reproduce the approved Galactic-Core mockup, baked via sharp (no runtime filters): GRADE_SATURATION 0.35→0.80, the cool-slate `.tint(#93a7cf)` DROPPED (GRADE_TINT_ENABLED=false), the midtone x0.80 DARKEN replaced with a zenith-anchored midtone LIFT (per-channel power-curve LUT, MIDTONE_GAMMA 0.78 — pins the black floor on --sky-zenith, lifts mids/highs), column vignette VIGNETTE_ALPHA 0.88→0 (removed; card is the scrim now). Recomposed crop anchor coreAt [0.84,0.58]→[0.6,0.44] (core off the dead edge, leads center-right, frame grew 987×420→1053×448). NightSky.astro object-position ladder recomputed: base 72% 38%→10% 40%, ≥1800 78% 34%→3% 40%, 640-1023 55% 32%→50% 45%, <640 QUIET-CROP 10% 70%→50% 50% (mobile now shows real core presence, not the dead navy gradient). All four masters + LQIP regenerated. Banding gate re-passed FIRST try (GRAIN_AMP unchanged 1.5): --selftest clean PASS/banded FAIL, all four masters runsAboveZero=1 zeroGaps=0 64/64 bins. Before/after evidence committed under evidence/. Commits `57dbd74` (feat build-sky), `0cb9fc3` (feat ladder+masters), `2ff72f5` (test banding+evidence). NOTHING pushed — origin/main behind local. BOLD-01, BOLD-02 Complete.
+
+Prior phase: 10 (Integration & Launch) — COMPLETE (2/2 plans) — v3.0 LIVE
 Plan: 10-02 COMPLETE — the gated launch: Task 1's blocking human gate resolved by the user's explicit "Launch now" in chat (2026-07-19, after reviewing 10-01-LAUNCH-READINESS.md — recorded verbatim in 10-02-SUMMARY.md); FF push `15e6742..0dbe46f` (67 commits, never --force); Actions run 29708118111 build+deploy both success; live pages byte-identical to the 10-01-verified dist; live smoke 13/13 (scene alive at hero, glass backdrop-filter live, cold `/#fig-01` ambient frozen via Fix B seed, `/#work` alias → systems, both `/work/*` scene-free, 404, credit links 200, OG byte-identical 309,377 B); **LIVE Lighthouse 100×8** (mobile 100/100/100/100 LCP 1.5s TBT 0ms — beats the local 99 pre-flight; desktop 100×4 LCP 0.4s) recorded as FLR-01's authoritative evidence in `10-02-lighthouse-scores-live.md`. FLR-01..03 + LNC-01 Complete; ROADMAP Phase 10 + the v3.0 milestone line closed. Rollback stays available (tags v1.0/v2.0; revert `3fbbcd2..0dbe46f` + FF push).
 Plan: 10-01 COMPLETE — the complete LOCAL launch-readiness proof: embedded Fig. 01 36-check audit re-passed on the FULLY COMPOSITED page (one-active-animation with all four ambient systems frozen, cold `/#fig-01` via Fix B AND the event path); deck mechanics / no-JS classic floor / case-study+SEO surface all green; the full carry-forward battery landed inside the Phase-9 families (contrast worsts identical 15.06/15.55/15.57/6.23/13.55, aurora 0.1052/0.0386, moon 0.2374/0.2466, banding runs=1 gaps=0, soak 6.39%<10% at 60fps 0 long tasks, rAF 2/2/0x5, zero-hex 0, local Lighthouse mobile 99/100/100/100 LCP 1.9s + desktop 100x4 LCP 0.5s). OG-03 CLOSED (real 1200x630 reduced-motion capture). `10-01-LAUNCH-READINESS.md` is the decision pack: before/after heroes, 21-gate table (20 green; LIVE Lighthouse the sole deferral), rollback (revert 3fbbcd2..HEAD + FF push; tags v1.0/v2.0), real-device checklist + v3 additions, fix-forward list. NOTHING pushed — origin/main 65 commits behind, asserted.
 Phase: 9 (Living Sky) — COMPLETE (3/3 plans)
@@ -118,6 +122,7 @@ Last activity: 2026-07-19 — 09-03 executed: mobile shed ladder + full closing 
 | Phase 09 P03 | ~60min | 3 tasks | 28 files |
 | Phase 10 P01 | ~50 min | 3 tasks | 17 files |
 | Phase 10 P02 | ~25 min | 2 tasks | 5 files |
+| Phase 11 P01 | ~14 min | 3 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -222,6 +227,10 @@ Recent decisions affecting current work:
 - [Phase 10]: 10-02: launch approved by the user's explicit "Launch now" in chat (2026-07-19) after reviewing 10-01-LAUNCH-READINESS.md — the blocking gate was human-resolved, never auto-advanced; FF push 15e6742..0dbe46f (67 commits, never --force), Actions 29708118111 green, LIVE Lighthouse 100x8 (FLR-01 authoritative), live smoke 13/13 — v3.0 SHIPPED
 - [Phase 10]: 10-02: live smoke harness active-panel probe corrected from a stale .is-active selector to the product's data-state="active" marker (deck.ts:118) — instrument-only; the deployed pages are byte-identical (cmp) to the 10-01-verified local dist
 - [Phase ?]: Sky-visibility BLOCKER fixed + deployed live 2026-07-19 (user-approved redeploy); verify-visibility gate PASS on origin all 3 viewports
+- [Phase 11]: 11-01: the v3.0 murk had four coupled causes — desat ×0.35, cool-slate tint #93a7cf, midtone ×0.80 darken, column vignette α0.88 — all four reversed: desat→0.80, tint DROPPED (GRADE_TINT_ENABLED=false; reduced-desat core color + zenith-anchored black point give warm-core/cool-arm/clean-shadow without a global tint), darken→zenith-anchored midtone LIFT (MIDTONE_GAMMA 0.78), vignette→0 (card is the text scrim now, not a darkened sky)
+- [Phase 11]: 11-01: midtone LIFT uses a per-channel power-curve LUT anchored at --sky-zenith (out = Z + (255-Z)·((in-Z)/(255-Z))^gamma) rather than sharp .gamma() — sharp's gamma re-anchors to 0 and would lift the (5,7,10) dark floor to ~18 (grey shadows, banding-prone); the anchored curve pins the floor and lifts only mids/highs
+- [Phase 11]: 11-01: crop re-anchored coreAt [0.84,0.58]→[0.6,0.44] (core off the dead right edge → leads center-right with sky both sides; larger frame 1053×448). Object-position ladder is cover-window-geometry-derived: narrow/portrait tiers (<1024) are height-bound with a tiny horizontal window so op must sit ~50% to hit the core's master-x; wider tiers step op DOWN (base 10%, ≥1800 3%) to keep the core leading-right. v3.0 mobile quiet-crop 10% 70% removed
+- [Phase 11]: 11-01: banding gate re-passed on the lifted-mids regrade FIRST try with GRAIN_AMP unchanged at 1.5 (all four masters runsAboveZero=1 zeroGaps=0 64/64 bins) — no grain re-tune loop needed; the lifted-mids "new banding risk" did not materialize
 
 ### Pending Todos
 
@@ -254,8 +263,8 @@ Items acknowledged and carried forward:
 
 ## Session Continuity
 
-Last session: 2026-07-20T04:08:53.044Z
-Stopped at: Completed 10-02-PLAN.md — v3.0 Real Sky LIVE (user-gated deploy, Actions 29708118111 green, LIVE Lighthouse 100×8, smoke 13/13); milestone v3.0 execution complete — next: real-device checklist (user, at leisure) + /gsd-complete-milestone
+Last session: 2026-07-20T18:47:13.413Z
+Stopped at: Completed 11-01-PLAN.md — warm+bright core-led regrade + recompose of the sky master (murk killed: desat/tint/darken/vignette all reversed; amber core leads; mobile shows real sky; banding gate green). Nothing pushed (Phase 12 owns the gated deploy). Next: 11-02 (camper cut + warm ambient glow, liquid-glass card, overlay re-tune)
 Resume file: None
 
 ## Operator Next Steps

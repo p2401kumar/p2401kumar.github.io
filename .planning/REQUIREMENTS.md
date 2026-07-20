@@ -7,8 +7,8 @@
 
 Focused aesthetic rework of the shipped v3.0 background (engine unchanged). Direction locked via a 3-way mockup pick: **Galactic Core + liquid-glass card**. Prior milestones archived: [v1](milestones/v1.0-REQUIREMENTS.md) · [v2](milestones/v2.0-REQUIREMENTS.md) · [v3.0](milestones/v3.0-REQUIREMENTS.md).
 
-- [ ] **BOLD-01**: Sky master regraded warm + bright via `build-sky.mjs` — the real amber galactic core keeps its color, midtones lifted out of the murk, cool-warm contrast restored; no visible banding (the lifted-midtone grade re-passes the banding gate)
-- [ ] **BOLD-02**: Recomposed so the galactic core leads and the frame is filled (no dead center, no lopsided band-at-the-edge); the object-position ladder keeps real sky/core presence at 375 / 1280 / 1440 (mobile no longer reads as an empty gradient)
+- [x] **BOLD-01**: Sky master regraded warm + bright via `build-sky.mjs` — the real amber galactic core keeps its color, midtones lifted out of the murk, cool-warm contrast restored; no visible banding (the lifted-midtone grade re-passes the banding gate)
+- [x] **BOLD-02**: Recomposed so the galactic core leads and the frame is filled (no dead center, no lopsided band-at-the-edge); the object-position ladder keeps real sky/core presence at 375 / 1280 / 1440 (mobile no longer reads as an empty gradient)
 - [ ] **BOLD-03**: The camper silhouette (the "smudge") is cut; the copper brand warmth survives as a clean soft ambient glow (no hard blob), fireflies unchanged
 - [ ] **BOLD-04**: The content-card glass is reworked to read as premium liquid glass (brighter frost + specular highlight + crisp bright edge + rounded corners), not a flat gray box; both tiers read as glass while holding contrast; ladders + Fig. 01 exemption + active-panel scoping preserved; values in `tokens.css` only
 - [ ] **BOLD-05**: The drawn overlay is re-tuned to the brighter sky — constellations still read as authored, moon + aurora stay under the (now brighter) Milky-Way-core luminance ceiling, fireflies + warm glow carry copper; every v3.0 engine invariant holds (single-rAF, no `'lighter'`, canvas never CSS-transformed)
@@ -31,8 +31,8 @@ Deferred: NOTE-01 (notes), NOTE-02 (/craft), CASE-04 (3rd case study), PLAT-08 (
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| BOLD-01 | Phase 11 | Pending |
-| BOLD-02 | Phase 11 | Pending |
+| BOLD-01 | Phase 11 | Complete |
+| BOLD-02 | Phase 11 | Complete |
 | BOLD-03 | Phase 11 | Pending |
 | BOLD-04 | Phase 11 | Pending |
 | BOLD-05 | Phase 11 | Pending |
