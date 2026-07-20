@@ -1,5 +1,13 @@
 # v3.0 "Real Sky" — Retroactive UI Review (Phase 10 audit)
 
+> **STATUS UPDATE (2026-07-19): BLOCKER → FIXED-LOCALLY, pending redeploy.**
+> All three findings remediated on local main (commits 15aaf62 / 71cc35d /
+> 467d9a4) and the demanded perceptual gate shipped (8738d33,
+> `scripts/verify-visibility.mjs` — GREEN at 1440/1280/375 with both selftest
+> controls failing correctly). Full re-gate record + before/after evidence:
+> `.planning/quick/2026-07-19-sky-visibility-fix/SUMMARY.md`. The LIVE site
+> still serves the broken build — **redeploy is user-gated** (nothing pushed).
+
 **Audited:** 2026-07-19
 **Baseline:** 05/07/08 UI-SPECs + live site https://p2401kumar.github.io/
 **Evidence:** `.planning/ui-review-evidence/` (headless-Chrome captures of the LIVE site + raw-asset reference render + CDP settled-state probes)

@@ -8,7 +8,7 @@ status: milestone_complete
 stopped_at: v3.0 Real Sky SHIPPED + closed 2026-07-19 (tag v3.0; archives at milestones/v3.0-*); autonomous chain ended
 last_updated: "2026-07-19T23:44:17.941Z"
 last_activity: 2026-07-19
-last_activity_desc: "09-03 executed: mobile shed ladder + full closing battery + Phase 9 close-out (AMB-05)"
+last_activity_desc: "Quick task: sky-visibility fix — 10-UI-REVIEW BLOCKER fixed locally (glass rescoped to content cards, fade inverted, server-rendered panel states) + verify-visibility.mjs perceptual gate GREEN x3 viewports; redeploy user-gated"
 progress:
   total_phases: 4
   completed_phases: 4
@@ -260,6 +260,7 @@ Resume file: None
 
 ## Operator Next Steps
 
+- **REDEPLOY PENDING (user-gated):** the 10-UI-REVIEW sky-invisibility BLOCKER is FIXED LOCALLY (glass rescoped to content cards + fade inversion + server-rendered panel states + `verify-visibility.mjs` gate GREEN at 1440/1280/375; full record in `.planning/quick/2026-07-19-sky-visibility-fix/SUMMARY.md`) — the LIVE site still serves the broken build. Review the before/after evidence, then give the explicit go to push/redeploy (10-02 FF-push protocol).
 - **v3.0 Real Sky is LIVE at https://p2401kumar.github.io/** (shipped 2026-07-19, LIVE Lighthouse 100×8) — run the real-device touch checklist at your leisure (`10-01-LAUNCH-READINESS.md` §6: carried v2 items + 5 v3 additions — cellular photo load, iOS Safari glass, parallax feel, scroll jank, 5-min idle warmth); rollback stays one revert away (§5; tags v1.0/v2.0)
 - Archive the milestone when ready: `/gsd-complete-milestone` (phases 7–10 all complete, FLR/LNC/IMG/GLS/AMB all closed)
 - Fix-forward levers (optional, non-user-facing): aurora lateral-softening (documented in `aurora.ts`), shed-ladder far-strip battery instrument (`10-01-battery.md`)
