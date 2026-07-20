@@ -1,0 +1,10 @@
+[soak] viewport 1440x900 @dpr1 | ambient handles live
+[soak] warm-up: 15s unmeasured settle
+
+[soak] baseline: real page, reduced-motion (ambient off, glass live)
+[soak] reduced-motion matches: true | live glass surfaces: 4 | aurora-band maxAlpha: 197 | cloud-band maxAlpha: 214
+[soak] done: CPU 1.51% | task 0.905s / wall 60.0s | script 0.111s | layout 0.000s | longtasks 0 | fps 60.0 | tree CPU 5.84%
+
+[soak] ambient: real page, no-preference (ambient + glass live)
+[soak] reduced-motion matches: false | live glass surfaces: 4 | aurora-band maxAlpha: 197 | cloud-band maxAlpha: 161
+[soak] done: CPU 6.96% | task 4.177s / wall 60.0s | script 2.142s | layout 0.000s | longtasks 0 | fps 60.0 | tree CPU 49.62%
