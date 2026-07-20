@@ -8,21 +8,17 @@ A personal portfolio site for Prateek Kumar (SDE 2 at Microsoft; previously AWS 
 
 Within seconds of landing, a senior engineering leader should think "this person operates at our level" — credibility delivered through demonstrated craft (a live systems demo), not adjectives.
 
-## Current State (v3.0 shipped 2026-07-19)
+## Current State (v3.1 shipped 2026-07-20)
 
-**Live at https://p2401kumar.github.io** — the v3.0 "Real Sky" experience: a real NOIRLab Milky Way astrophotograph (composited/graded at build time, 81KB AVIF, banding-proven, CC BY 4.0 credited) behind frosted-glass content chrome (13 `--glass-*` tokens, two tiers, screenshot-verified contrast) and a living ambient scene — drifting clouds, panel-change parallax, breathing aurora, atmospheric scintillation — while the authored overlay (career constellations, meteors, drawn crescent moon) survives on the real sky. **Live Lighthouse: 100×8 (all four categories, both presets)**, LCP 1.5s mobile, idle CPU 6.39% with everything running. Case studies stay scene-free; view-classic + no-JS fall back to the v1-style page. Tags `v1.0`, `v2.0`, `v3.0`; 2021 site on `legacy-2021`.
+**Live at https://p2401kumar.github.io** — the v3.1 "Bolder Sky" rework of the v3.0 real-sky experience: the same NOIRLab Milky Way astrophotograph now regraded **warm + bright and recomposed core-led** so the amber galactic core leads in the clear right margin while the content card sits over naturally-darker sky (a build-time crop-anchor + object-position recompose, grade baked via `build-sky.mjs`, banding-proven, CC BY 4.0 credited). The card is now genuine **premium liquid glass** (specular highlight, crisp bright edge, rounded corners) that holds contrast **by the card, never by re-darkening the sky**; the "camper" smudge is cut, its copper brand warmth surviving as a clean soft ambient glow. The living ambient scene (drifting clouds, panel-change parallax, breathing aurora, scintillation) and authored overlay (career constellations, meteors, drawn crescent moon) are re-tuned to the brighter sky. **The look is guarded by `verify-visibility.mjs`** — a perceptual gate (luminance-range/structure, star counts, warm-glow presence, SSIM vs blessed stills, blur/blackout controls that must fail) run GREEN ×3 viewports on the LIVE origin (SSIM 0.9999/0.9998/0.9996). **Live Lighthouse: desktop 100×4, mobile 99/100/100/100.** Case studies stay scene-free; view-classic + no-JS fall back to the v1-style page. Tags `v1.0`, `v2.0`, `v3.0`, `v3.1`; 2021 site on `legacy-2021`.
 
-Milestone stats: 4 phases (7-10), 12 plans, all 18 v3.0 requirements complete and verified (archives: `milestones/v3.0-*`). Two empirical spikes de-risked the milestone before build (banding; glass-over-animating-canvas CPU — the re-scope trigger that never fired). Codebase: Astro 7.0.7 static; `src/lib/fig01/` + `src/lib/nightsky/` engines (one rAF each, event-name coupling only, pause machine covers all ambient); **zero new dependencies across v2 AND v3**. Deploys on push to `main` via GitHub Actions.
+Milestone stats: v3.1 = 2 phases (11 Rework, 12 Launch), 4 plans (3 rework + launch), all 6 BOLD requirements complete and verified (archives: `milestones/v3.1-*`). Engine unchanged from v3.0 — this was a focused aesthetic rework (grade/composition/glass tokens/overlay tune), not a rebuild; **still zero new dependencies across v2, v3, AND v3.1**. Codebase: Astro 7.0 static; `src/lib/fig01/` + `src/lib/nightsky/` engines (one rAF each, event-name coupling only, pause machine covers all ambient). Deploys on push to `main` via GitHub Actions.
 
-## Current Milestone: v3.1 Bolder Sky
+## Current Milestone: none (between milestones)
 
-**Trigger (user, 2026-07-20):** "The background look shit. improve it." A UI review confirmed all four counts — too dark & muddy, glass reads as a flat gray box, the camper is an unrecognizable smudge, the composition is empty & lopsided. Root of the muddiness: the v3.0 grade crushed the real amber core to cool slate and darkened the whole sky to protect (full-viewport) glass contrast — a floor-gaming that every ratio-gate rewarded.
+v3.1 Bolder Sky shipped 2026-07-20. No active milestone. The perceptual visibility gate (`verify-visibility.mjs`, built post-v3.0) now permanently guards the look on every build — it measures structure a `backdrop-filter` blur destroys, the axis every prior ratio gate was blind to, which is how v3.0 shipped a muddy/invisible sky in the first place.
 
-**Locked direction (mockup pick, 2026-07-20):** from a 3-way mockup, the user chose **Galactic Core + liquid-glass card** — a warm, bright, core-led real sky with a genuinely premium glass card (specular, bright edge, rounded). Focused aesthetic rework, engine unchanged. Phases 11 (Rework) + 12 (Launch), lean (no research fan-out). Full spec: `phases/11-bolder-sky/11-CONTEXT.md`; visual anchor: Artifact `claude.ai/code/artifact/6edcd025-d312-4178-965d-68889d4a18d5`.
-
-**Guarding the look:** v3.1 ships behind `verify-visibility.mjs` (built in the post-v3.0 fix) — a perceptual gate measuring luminance-*range*/structure, star counts, edge-detectability, SSIM vs blessed stills, with blur/blackout controls that must fail. This is the answer to how v3.0 shipped an invisible/muddy sky: the ratio gates couldn't see it; this one can.
-
-Open post-launch items: retire/redirect the old `/home` repo (tracked since v1); user real-device checklist (v3.0-phases/10-integration-launch/10-01-LAUNCH-READINESS.md §6).
+Open post-launch items: retire/redirect the old `/home` repo (tracked since v1); user real-device checklist (v3.0-phases/10-integration-launch/10-01-LAUNCH-READINESS.md §6). Deferred requirement candidates: NOTE-01/NOTE-02/CASE-04/PLAT-08, plus OG-03 (refresh the OG image to the new bolder look).
 
 Open post-launch items from v2.0 (unchanged): retire/redirect the old `/home` repo; user-run real-device touch checklist + 5-min idle-CPU check (documented in `milestones/v2.0-phases/06-integration-launch/06-01-LAUNCH-READINESS.md` §5–6).
 
@@ -47,6 +43,11 @@ Open post-launch items from v2.0 (unchanged): retire/redirect the old `/home` re
 - ✓ Full glass system: panels (2 tiers) + header/footer + jump index, 13 tokens, screenshot-sampled contrast verifier, @supports/reduced-transparency/print ladders — v3.0
 - ✓ Living sky: clouds (column-attenuated), physically-honest parallax, left-margin aurora (luminance-capped), scintillation — all in one rAF + pause machine, 6.39% idle, mobile shed ladder — v3.0
 - ✓ Floors at launch: LIVE Lighthouse 100×8, reduced-motion byte-identical still, contrast ≥4.5:1 every surface both viewports, honesty gate + attribution — v3.0
+
+- ✓ Bolder sky: warm/bright regrade keeping the real amber core, core-led recomposition (crop anchor + object-position ladder), no banding — v3.1
+- ✓ Camper smudge cut; copper warmth survives as a clean soft ambient glow; premium liquid-glass card (specular + bright edge + rounded), contrast held by the card not the sky — v3.1
+- ✓ Overlay re-tuned to the brighter sky (moon/aurora under the brighter MW-core ceiling); every v3.0 engine invariant holds (single-rAF, no `'lighter'`, canvas never CSS-transformed) — v3.1
+- ✓ The look guarded by `verify-visibility.mjs` — LIVE gate GREEN ×3 viewports (SSIM 0.9999/0.9998/0.9996), blur/blackout controls fail; live Lighthouse desktop 100×4 + mobile 99/100/100/100 — v3.1
 
 ### Active
 
@@ -111,6 +112,10 @@ Open post-launch items from v2.0 (unchanged): retire/redirect the old `/home` re
 | Contrast verifier re-architected to screenshot sampling BEFORE glass values locked | Analytic compositing cannot model a blur kernel; silent unverified floors unacceptable | ✓ Good (v3.0 — caught 2 pre-existing failures on first run) |
 | Physically-honest parallax (ground moves, sky at infinity doesn't; canvas never CSS-transformed) | Real physics + dissolves margin-math/re-blur/contrast-geometry traps simultaneously | ✓ Good (v3.0 — parallax ships, zero canvas transforms) |
 | v3 launch: "Launch now" chosen at the gate (20/21 green, no user-facing defects) | Same explicit-go doctrine; pack led with before/after heroes for a 60-second call | ✓ Good (v3.0 — live Lighthouse 100×8, 13/13 smoke) |
+| v3.1 rework fixes the muddy sky by composition + card, NEVER by re-darkening the sky | The v3.0 muddiness was floor-gaming: darkening the sky to protect glass contrast, which every ratio gate rewarded. v3.1 leads the warm core and holds contrast with the card, proven by the screenshot gate | ✓ Good (v3.1 — live gate GREEN, contrast ≥4.5 every surface, Lighthouse 99-100) |
+| Smoked-glass card over bright-frost (accepted tradeoff) | On the brighter core-led sky, a luminous/bright-frost card blew out over-core text (systems tags 2.38:1); the fix darkened the glass fill (tier-1 brightness 1.08→0.62, chrome 0.92→0.64) while keeping the liquid-glass FORM (specular/edge/radius). User reviewed the darker-card tradeoff in the before/after and accepted it | ✓ Good (v3.1 — reads as glass, not a gray box; contrast held) |
+| Perceptual visibility gate (`verify-visibility.mjs`) guards the look permanently | Every prior ratio gate improves as the sky loses structure (an invisible sky is their global optimum) — this gate measures luminance-range/structure/SSIM that a blur destroys, with blur/blackout controls that must fail | ✓ Good (v3.1 — re-blessed to the bold look, LIVE gate GREEN ×3, honesty controls trip) |
+| v3.1 deploy: "Deploy now" chosen after before/after review (user, 2026-07-20) | Same explicit-go doctrine as v1/v2/v3; user reviewed the before/after (all four complaints fixed, smoked-glass tradeoff disclosed) and gave the go | ✓ Good (v3.1 — FF push, Actions green, live gate GREEN, live-verified) |
 
 ## Evolution
 
@@ -130,4 +135,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-07-19 after v3.0 milestone completion (shipped + live-verified, Lighthouse 100×8)*
+*Last updated: 2026-07-20 after v3.1 "Bolder Sky" milestone completion (shipped + live-verified, LIVE visibility gate GREEN ×3, Lighthouse desktop 100×4 + mobile 99/100/100/100)*

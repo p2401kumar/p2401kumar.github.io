@@ -2,19 +2,20 @@
 gsd_state_version: 1.0
 milestone: v3.1
 milestone_name: Bolder Sky
-current_phase: 11
-current_phase_name: Bolder Sky Rework
-status: in-progress
-stopped_at: 11-03 COMPLETE — Phase 11 (Bolder Sky Rework) DONE (3/3 plans). STEP-0 composition fix (sky moved, not the locked card: crop coreAt-x 0.6→0.68 + object-position 10%→0% lead the core in the right margin, card over darker sky — matches mockup A). Gate battery GREEN on the bolder look: visibility re-blessed + camper metric swapped Sobel→warm-glow + range floors raised (blur still trips), --gate PASS 3 viewports + --selftest honest; contrast ≥4.5 every surface both viewports (worst systems 5.19) via card/chrome escalation (sky FROZEN); moon/aurora/banding/soak 6.96%/Lighthouse 99-100×8 all green. NOTHING pushed. Next: Phase 12 (user-gated launch/deploy of the bolder look).
-last_updated: "2026-07-20T21:15:00.000Z"
-last_activity: 2026-07-19
-last_activity_desc: "09-03 executed: mobile shed ladder + full closing battery + Phase 9 close-out (AMB-05)"
+milestone_complete: true
+current_phase: 12
+current_phase_name: Launch
+status: milestone-complete
+stopped_at: "v3.1 Bolder Sky SHIPPED + live-verified 2026-07-20. Phase 12 launch: FF push 9fc597a..2ede462 (17 commits, never --force), Actions run 29776043081 build+deploy green. LIVE verify-visibility --gate GREEN ×3 viewports on origin (SSIM 0.9999/0.9998/0.9996 — the warm core-led sky + liquid-glass card provably render live); live Lighthouse desktop 100/100/100/100 + mobile 99/100/100/100; live smoke green (homepage 200, scene/deck markup + CC BY credit intact, /#work 200, /work/* scene-free); live captures committed under v3.1-phases/11-bolder-sky/evidence/live-v31-*. User authorized 'Deploy now' 2026-07-20 after before/after review (smoked-glass tradeoff accepted). BOLD-06 Complete; all 6 BOLD requirements complete. Milestone archived to milestones/v3.1-*. Between milestones — no active work. Open post-launch: retire old /home repo; user real-device checklist; OG-03 (refresh OG to bolder look)."
+last_updated: "2026-07-20T20:45:00.000Z"
+last_activity: 2026-07-20
+last_activity_desc: "Phase 12 launch: v3.1 Bolder Sky deployed live + verified (LIVE visibility gate GREEN ×3, Lighthouse desktop 100×4 / mobile 99-100), milestone closed + archived, tagged v3.1"
 progress:
-  total_phases: 2
-  completed_phases: 1
-  total_plans: 3
-  completed_plans: 3
-  percent: 50
+  total_phases: 1
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
@@ -24,9 +25,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-18)
 
 **Core value:** Within seconds of landing, a senior engineering leader should think "this person operates at our level" — credibility delivered through demonstrated craft (a live systems demo), not adjectives. v3.0 adds: the sky becomes *real* — composited astrophotography, glass, and living atmosphere, with every floor intact.
-**Current focus:** Milestone v3.0 Real Sky — SHIPPED 2026-07-19 (all 4 phases complete, LIVE at https://p2401kumar.github.io/). Next: post-launch real-device checklist (user, at leisure) + milestone archive (/gsd-complete-milestone).
+**Current focus:** Milestone v3.1 Bolder Sky — SHIPPED + live-verified 2026-07-20 (Phases 11 Rework + 12 Launch complete, LIVE at https://p2401kumar.github.io/). **Between milestones — no active work.** Next: post-launch real-device checklist (user, at leisure); retire old /home repo; OG-03 (refresh OG image to the bolder look) — all deferred/at-leisure.
 
 ## Current Position
+
+**MILESTONE v3.1 "Bolder Sky" COMPLETE — SHIPPED 2026-07-20, LIVE-VERIFIED, ARCHIVED (milestones/v3.1-*). Between milestones.**
+
+Phase 12 (Launch) — COMPLETE: FF push `9fc597a..2ede462` (17 commits, never --force), Actions run 29776043081 build+deploy green. LIVE `verify-visibility --gate` GREEN ×3 viewports on origin (SSIM 0.9999/0.9998/0.9996 — bold sky provably renders live); live Lighthouse desktop 100/100/100/100 + mobile 99/100/100/100; live smoke green; live captures committed (`v3.1-phases/11-bolder-sky/evidence/live-v31-{desktop-1440,mobile-375}.png`). User "Deploy now" go recorded (2026-07-20, before/after reviewed, smoked-glass tradeoff accepted). Tag `v3.1` pushed. All 6 BOLD requirements complete.
 
 Phase: 11 (Bolder Sky Rework) — COMPLETE (3/3 plans)
 Plan: 11-03 COMPLETE — the gate battery + STEP-0 composition fix. STEP-0: the 11-02 result put the centered (locked) deck card OVER the bright core (eyebrow marginal); measurement proved object-position alone maxes the core at viewport ~55%, so the crop anchor was recomposed (coreAt-x 0.6→0.68, masters regenerated + banding re-passed) and the base object-position dropped 10%→0% — now the amber core with dust lanes LEADS in the clear right margin the card doesn't cover, card text over the dark quiet-left, eyebrow legible (matches approved mockup A; grade FROZEN, composition only). Task 1: verify-visibility camper assertion swapped Sobel-edge → warm-glow luminance-presence (camperWarmDelta, healthy 19.75/19.78/22.49, floors 10/10/12 — right metric for the cut silhouette's surviving glow, coverage KEPT); deterministic range floors RAISED 90/100→135/135 so a blur(12) still trips them on the brighter look (healthy 159/168, blur 119/107); re-blessed refs, --gate PASS 3 viewports (SSIM 1.0/1.0/0.9999), --selftest PASS (blur+blackout controls both FAIL). Task 2: contrast ≥4.5 every surface both viewports (worst systems 5.19/5.22) held by CARD/chrome escalation — tier-1 brightness 1.08→0.62 + bg 0.10→0.08, tier-2 0.48/0.98→0.55/0.82 + a deck.css §8b prose padding-inline (the failing pixel was OPEN SKY at the card edge), chrome brightness 0.92→0.64 — sky NEVER re-darkened (grade frozen); --moon (0.32/0.24<0.84/0.85) + --aurora (0.13/0.04) pass strictly, contrast+banding selftests green; re-blessed again after the glass finalized. Task 3: soak 6.96%<10%/60fps/0 longtasks, Lighthouse mobile 99/100/100/100 + desktop 100×4, single-rAF (scene 2/others 0/fig01 2) + zero-hex + leak-gate + no-cross-import all hold (engine untouched), before/after 1440+375 evidence committed. Commits `5dc478c` (feat composition), `e5517ca` (test gate re-bless+metric), `6a93d0a` (fix contrast escalation), `5293c75` (test budget+evidence). NOTHING pushed — origin 15 behind local. BOLD-06 Complete. Phase 11 CLOSED.
@@ -277,7 +282,7 @@ Items acknowledged and carried forward:
 
 ## Session Continuity
 
-Last session: 2026-07-20T21:15:00.000Z
+Last session: 2026-07-20T20:38:06.287Z
 Stopped at: Completed 11-03-PLAN.md + STEP-0 composition fix — Phase 11 (Bolder Sky Rework) CLOSED (3/3 plans). The bolder core-led look is proven on EVERY gate (brightness included) and reads like approved mockup A + C's glass: amber core with dust lanes leading in the right margin, card over darker sky, eyebrow legible, camper cut. Visibility re-blessed + honest (camper metric swapped Sobel→warm-glow, range floors raised so blur still trips), contrast ≥4.5 every surface both viewports via card/chrome escalation (sky FROZEN), moon/aurora/banding/soak 6.96%/Lighthouse 99-100×8 green. single-rAF/zero-hex/leak/no-cross-import hold, engine untouched. NOTHING pushed — origin 15 behind local. Before/after 1440+375 committed for the end-of-phase eyeball. Next: Phase 12 (user-gated launch/deploy of the bolder look — the FF-push protocol, user approval required).
 Resume file: None
 
