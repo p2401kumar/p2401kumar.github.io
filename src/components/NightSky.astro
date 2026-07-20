@@ -159,9 +159,14 @@ const LQIP = readFileSync(
 
   .sky-photo img {
     object-fit: cover;
-    /* Reference desktop tier (1024–1799px): band core lands in the right
-       margin per the 07-UI-SPEC placement table. */
-    object-position: 72% 38%;
+    /* Reference desktop tier (1024–1799px). 11-01 BOLD-02 recompose: the
+       regraded master (build-sky.mjs coreAt [0.6,0.44]) sits the amber
+       galactic core near master-x 0.52, so a LOW object-position keeps the
+       master's dark quiet left edge under the left-anchored glass card while
+       the warm core LEADS at viewport ~72% (mockup A: background-position
+       ~74% 42%). Wider tiers step the value DOWN (they reveal more master
+       width, pulling the core left) — see the ladder below. */
+    object-position: 10% 40%;
     /* VISIBLE IS THE DEFAULT STATE (2026-07-19 sky-visibility fix,
        .planning/10-UI-REVIEW.md remediation 2): base opacity 1, and the
        LQIP-to-full fade runs 0→1 as a pure ENHANCEMENT with NO fill mode
@@ -186,28 +191,35 @@ const LQIP = readFileSync(
     }
   }
 
-  /* Object-position responsive ladder (07-UI-SPEC), single master served
-     via object-fit:cover. NOTE — the <640px tier deliberately deviates
-     from the UI-SPEC's 12% 25%: the committed winner master (A-core-t20,
-     07-SPIKE-BANDING.md) carries band glow in its upper-left; its genuinely
-     quiet window is the LOWER-left (seam-faded) region, so the narrow tier
-     anchors at 10% 70% instead (Rule 2 deviation, measured rationale in
-     the spike's "Mobile object-position note"). */
+  /* Object-position responsive ladder (11-01 BOLD-02), single regraded master
+     served via object-fit:cover. Every tier now frames the amber core with
+     real sky/core presence — the v3.0 quiet-region crops are gone.
+
+     Narrow/portrait tiers (<1024px) are height-bound with a tiny horizontal
+     window, so the object-position must sit near the core's master-x (~0.52,
+     i.e. ~50%) to show the core at all — the v3.0 mobile crop of 10% 70%
+     landed on the empty LEFT quiet region, which is exactly why mobile read
+     as a dead navy gradient. 50% now puts the core+band down the center of
+     the tall viewport with a real starfield below (verified against the
+     visibility gate's 375w floors, re-checked in 11-03). */
   @media (max-width: 639px) {
     .sky-photo img {
-      object-position: 10% 70%;
+      object-position: 50% 50%;
     }
   }
 
   @media (min-width: 640px) and (max-width: 1023px) {
     .sky-photo img {
-      object-position: 55% 32%;
+      object-position: 50% 45%;
     }
   }
 
+  /* Ultrawide (>=1800px): reveals the most master width, so the core drifts
+     leftward — step object-position DOWN to ~3% to keep the core leading at
+     viewport ~68%. */
   @media (min-width: 1800px) {
     .sky-photo img {
-      object-position: 78% 34%;
+      object-position: 3% 40%;
     }
   }
 
