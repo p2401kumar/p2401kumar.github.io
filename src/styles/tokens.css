@@ -54,37 +54,63 @@
      it reads as a palette sibling, not a new hue family. */
   --aurora:#bfe8df;
 
-  /* Glass system (Milestone v3.0 Phase 8) — shared by panels, header/footer,
-     jump index. Two elevation levels (chrome, panel) x two panel tiers
-     (tier-1 optical / tier-2 protected) — see 08-UI-SPEC.md for the full
-     grammar, per-surface map, and the contrast math behind every number
-     below. Blur ceiling is 16px (Spike-2, 07-SPIKE-GLASS.md) — nothing here
-     uses it; it is a limit for future adjustment, not a value to consume.
-     Do not add a --glass-blur-ceiling token for it. */
+  /* Glass system (Milestone v3.0 Phase 8; RE-TUNED to PREMIUM liquid glass in
+     v3.1 Phase 11-02 BOLD-04) — shared by panels, header/footer, jump index.
+     Two elevation levels (chrome, panel) x two panel tiers (tier-1 optical /
+     tier-2 protected) — see 08-UI-SPEC.md for the original grammar + per-
+     surface map. 11-02 supersedes the v3.0 look: the flat frosted box became
+     true liquid glass (brighter frost, deeper blur, a specular highlight, a
+     crisp bright top edge, rounded corners, a faint inner glow) to match the
+     approved mockup C card over the brighter 11-01 sky. The old 16px "blur
+     ceiling" note was a v3.0 limit — this milestone raises the panel blur past
+     it deliberately (glass depth is the whole point); the ceiling is retired.
+     Exact opacities are arbitrated by 11-03's screenshot contrast gate. */
 
-  /* Tier-1 panel (hero, systems, contact, fig-01 wrapper) — "optical" */
-  --glass-bg:               rgb(255 255 255 / 0.06);
-  --glass-blur:              12px;
-  --glass-saturate:          150%;
-  --glass-brightness:        0.90;   /* load-bearing: compensates the white
-                                         fill's lightening effect — see
-                                         Tiering Assignment math */
+  /* Tier-1 panel (hero, systems, contact, fig-01 wrapper) — "optical".
+     11-02: brighter frost (0.06 -> 0.10), deeper blur (12 -> 22px), saturate
+     ~1.4, brightness LIFTED (0.90 -> 1.08) so the frost reads luminous, not
+     dimming — liquid glass over the dark quiet-left where these cards sit. */
+  --glass-bg:               rgb(255 255 255 / 0.10);
+  --glass-blur:              22px;
+  --glass-saturate:          140%;
+  --glass-brightness:        1.08;
 
-  /* Chrome (header, footer, jump-index pill + list) — lighter, always-visible */
+  /* Chrome (header, footer, jump-index pill + list) — lighter, always-visible.
+     Unchanged by 11-02 unless 11-03's contrast gate flags it. */
   --glass-bg-chrome:         rgb(255 255 255 / 0.05);
   --glass-blur-chrome:       10px;
   --glass-saturate-chrome:   140%;
   --glass-brightness-chrome: 0.92;
 
-  /* Tier-2 panel (experience, patents, skills) — "protected": a translucent
-     --panel, not white; functions as a supplemental scrim, not decoration */
-  --glass-bg-2:              rgb(15 18 23 / 0.55);
-  --glass-blur-2:            10px;
-  --glass-saturate-2:        130%;
-  --glass-brightness-2:      0.96;
+  /* Tier-2 panel (experience, patents, skills) — "protected": dense prose that
+     still needs a scrim for light --ink/--body text over the brighter sky.
+     11-02: the v3.0 dark rgb(15 18 23 / 0.55) neutral fill was the literal
+     "gray box" the user hated. Reworked into LUMINOUS SMOKED GLASS — a lighter,
+     blue-tinted translucent fill (0.55 -> 0.48) with deeper blur (10 -> 20px)
+     and higher saturate, so it still darkens enough to hold text contrast but
+     reads as tinted glass (shares the specular highlight, bright edge, rounded
+     corners + inner glow of the shared .panel-card form), never a flat slab.
+     11-03's screenshot gate arbitrates the exact opacity; lean more opaque
+     there if any surface dips below 4.5:1 — never re-darken the sky. */
+  --glass-bg-2:              rgb(18 24 34 / 0.48);
+  --glass-blur-2:            20px;
+  --glass-saturate-2:        140%;
+  --glass-brightness-2:      0.98;
 
   /* Shared across every glass surface */
-  --glass-edge:              rgb(255 255 255 / 0.10);  /* 1px top light edge,
-                                                            border-top only,
-                                                            never wraps corners */
+  --glass-edge:              rgb(255 255 255 / 0.28);  /* crisp bright top edge
+                                                            (0.10 -> 0.28, 11-02),
+                                                            border-top only, never
+                                                            wraps corners */
+
+  /* Liquid-glass form tokens (11-02 BOLD-04) — the .panel-card treatment that
+     makes both tiers read as glass. All live here (zero-hex doctrine). */
+  --glass-radius:            15px;   /* rounded card corners (~14-16px) */
+  --glass-specular:          radial-gradient(
+                               120% 82% at 14% 0%,
+                               rgb(255 255 255 / 0.11) 0%,
+                               rgb(255 255 255 / 0.045) 32%,
+                               rgb(255 255 255 / 0) 62%
+                             );      /* soft white top-left highlight (::before) */
+  --glass-inner-glow:        inset 0 0 34px 0 rgb(255 255 255 / 0.045);
 }

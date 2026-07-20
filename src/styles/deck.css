@@ -220,13 +220,43 @@ html.deck-active .panel:focus-visible {
 @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
   @media (prefers-reduced-transparency: no-preference) {
     /* Tier-1 "optical" (hero, fig-01 wrapper, systems, contact — and the
-       base every panel starts from; tier-2 overrides below). */
+       base every panel starts from; tier-2 overrides the fill/blur below,
+       but INHERITS this rule's liquid-glass form: rounded corners, the crisp
+       bright top edge, the faint inner glow, and the specular ::before). */
     html.deck-active .panel[data-state="active"] > .panel-card,
     html.classic-active .panel > .panel-card {
       background-color: var(--glass-bg);
       -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness));
       backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness));
       border-top: 1px solid var(--glass-edge);
+      /* 11-02 BOLD-04 liquid-glass form (mockup C): rounded corners + a faint
+         inner glow. `position: relative` + `isolation: isolate` guarantee a
+         stacking context in BOTH deck and classic modes so the specular
+         ::before (z-index below content) sits ON the frost, UNDER the text —
+         never covering it. */
+      border-radius: var(--glass-radius);
+      position: relative;
+      isolation: isolate;
+      box-shadow: var(--glass-inner-glow);
+    }
+
+    /* Specular highlight — a soft white radial in the card's top-left
+       (mockup C). Its box is exactly the card (inset: 0) with border-radius:
+       inherit, so the gradient is clipped to the card and can never escape;
+       pointer-events: none keeps it decorative. z-index: -1 (inside the
+       isolated context above) paints it over the frost fill but below the
+       slotted text. Present ONLY inside this @supports + reduced-transparency
+       ladder, so the reduced-transparency / no-@supports degradation stays a
+       clean scrim-only card with no glass affordances. */
+    html.deck-active .panel[data-state="active"] > .panel-card::before,
+    html.classic-active .panel > .panel-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      border-radius: inherit;
+      pointer-events: none;
+      background: var(--glass-specular);
     }
 
     /* Tier-2 "protected" (experience, patents, skills — dense prose):
@@ -259,6 +289,7 @@ html.deck-active .panel:focus-visible {
 @media print {
   .panel,
   .panel-card,
+  .panel-card::before,
   header,
   footer,
   .deck-index-toggle,
@@ -267,5 +298,6 @@ html.deck-active .panel:focus-visible {
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
     border-top: none !important;
+    box-shadow: none !important;
   }
 }
