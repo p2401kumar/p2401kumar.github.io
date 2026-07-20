@@ -14,9 +14,15 @@ Within seconds of landing, a senior engineering leader should think "this person
 
 Milestone stats: 4 phases (7-10), 12 plans, all 18 v3.0 requirements complete and verified (archives: `milestones/v3.0-*`). Two empirical spikes de-risked the milestone before build (banding; glass-over-animating-canvas CPU — the re-scope trigger that never fired). Codebase: Astro 7.0.7 static; `src/lib/fig01/` + `src/lib/nightsky/` engines (one rAF each, event-name coupling only, pause machine covers all ambient); **zero new dependencies across v2 AND v3**. Deploys on push to `main` via GitHub Actions.
 
-## Current Milestone: none (between milestones)
+## Current Milestone: v3.1 Bolder Sky
 
-v3.0 closed 2026-07-19. Backlog candidates live in Future candidates below and REQUIREMENTS.md Future Requirements. Open post-launch items: retire/redirect the old `/home` repo (tracked since v1); user-run real-device touch checklist incl. v3 additions (glass on iOS Safari, photo on cellular, parallax feel, idle warmth) — documented in `milestones/v3.0-phases/10-integration-launch/10-01-LAUNCH-READINESS.md` §6, rollback path §5.
+**Trigger (user, 2026-07-20):** "The background look shit. improve it." A UI review confirmed all four counts — too dark & muddy, glass reads as a flat gray box, the camper is an unrecognizable smudge, the composition is empty & lopsided. Root of the muddiness: the v3.0 grade crushed the real amber core to cool slate and darkened the whole sky to protect (full-viewport) glass contrast — a floor-gaming that every ratio-gate rewarded.
+
+**Locked direction (mockup pick, 2026-07-20):** from a 3-way mockup, the user chose **Galactic Core + liquid-glass card** — a warm, bright, core-led real sky with a genuinely premium glass card (specular, bright edge, rounded). Focused aesthetic rework, engine unchanged. Phases 11 (Rework) + 12 (Launch), lean (no research fan-out). Full spec: `phases/11-bolder-sky/11-CONTEXT.md`; visual anchor: Artifact `claude.ai/code/artifact/6edcd025-d312-4178-965d-68889d4a18d5`.
+
+**Guarding the look:** v3.1 ships behind `verify-visibility.mjs` (built in the post-v3.0 fix) — a perceptual gate measuring luminance-*range*/structure, star counts, edge-detectability, SSIM vs blessed stills, with blur/blackout controls that must fail. This is the answer to how v3.0 shipped an invisible/muddy sky: the ratio gates couldn't see it; this one can.
+
+Open post-launch items: retire/redirect the old `/home` repo (tracked since v1); user real-device checklist (v3.0-phases/10-integration-launch/10-01-LAUNCH-READINESS.md §6).
 
 Open post-launch items from v2.0 (unchanged): retire/redirect the old `/home` repo; user-run real-device touch checklist + 5-min idle-CPU check (documented in `milestones/v2.0-phases/06-integration-launch/06-01-LAUNCH-READINESS.md` §5–6).
 

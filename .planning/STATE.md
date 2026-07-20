@@ -1,16 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v3.0
-milestone_name: Real Sky
-current_phase: 10
-current_phase_name: Integration & Launch
-status: milestone_complete
-stopped_at: v3.0 Real Sky SHIPPED + closed 2026-07-19 (tag v3.0; archives at milestones/v3.0-*); autonomous chain ended
+milestone: v3.1
+milestone_name: Bolder Sky
+current_phase: 11
+current_phase_name: Bolder Sky Rework
+status: planning
+stopped_at: v3.1 opened 2026-07-20 — direction locked (Galactic Core + liquid-glass card) via mockup pick; Phase 11 context written, planning next
 last_updated: "2026-07-20T04:09:03.547Z"
-last_activity: 2026-07-19
-last_activity_desc: "09-03 executed: mobile shed ladder + full closing battery + Phase 9 close-out (AMB-05)"
+last_activity: 2026-07-20
+last_activity_desc: "v3.1 Bolder Sky milestone opened — UI review found the muddy/cheap/smudge/empty look; user picked the Galactic Core + liquid-glass direction from a 3-way mockup"
 progress:
-  total_phases: 0
+  total_phases: 2
   completed_phases: 0
   total_plans: 0
   completed_plans: 0

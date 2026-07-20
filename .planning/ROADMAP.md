@@ -5,7 +5,7 @@
 - ✅ **v1.0 Launch** — Phases 1-3 (shipped 2026-07-17) — [archive](milestones/v1.0-ROADMAP.md)
 - ✅ **v2.0 Night Sky** — Phases 4-6 (shipped 2026-07-18) — [archive](milestones/v2.0-ROADMAP.md)
 - ✅ **v3.0 Real Sky** — Phases 7-10 (shipped 2026-07-19) — [archive](milestones/v3.0-ROADMAP.md)
-- *(next milestone not yet defined — see backlog in REQUIREMENTS.md Future Requirements)*
+- 🎨 **v3.1 Bolder Sky (current)** — Phases 11-12 — bolder background rework (warm core-led sky + premium liquid glass), perceptual gate guarding the look
 
 ## Phases
 
@@ -44,6 +44,13 @@ Full details: [milestones/v3.0-ROADMAP.md](milestones/v3.0-ROADMAP.md) · Phase 
 
 </details>
 
+### 🎨 v3.1 Bolder Sky (Phases 11-12) — CURRENT
+
+- [ ] **Phase 11: Bolder Sky Rework** — Warm/bright regrade, core-led recomposition, camper cut, premium liquid-glass card, overlay re-tune; all local gates re-pass incl. `verify-visibility` re-blessed (BOLD-01..05 + local BOLD-06)
+- [ ] **Phase 12: Launch** — Live Lighthouse ≥90 ×4, before/after evidence, user-gated deploy (BOLD-06 live)
+
+Direction locked via a 3-way mockup: **Galactic Core + liquid-glass card**. Lean milestone — no research fan-out (direction decided + mocked). Full spec: `phases/11-bolder-sky/11-CONTEXT.md`.
+
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
@@ -59,6 +66,8 @@ Full details: [milestones/v3.0-ROADMAP.md](milestones/v3.0-ROADMAP.md) · Phase 
 | 8. Glass System | v3.0 | 3/3 | Complete | 2026-07-19 |
 | 9. Living Sky | v3.0 | 3/3 | Complete | 2026-07-19 |
 | 10. Integration & Launch | v3.0 | 2/2 | Complete | 2026-07-19 |
+| 11. Bolder Sky Rework | v3.1 | 0/TBD | Planning | - |
+| 12. Launch | v3.1 | 0/TBD | Not started | - |
 
 ---
 *Phase numbering continues from the last shipped phase in the next milestone (never restarts).*
