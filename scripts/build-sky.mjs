@@ -81,10 +81,21 @@ const SAFE_TOP = 550; // distortion-safe rows (07-RESEARCH.md section 1.3)
 const SAFE_BOTTOM = 1450;
 const SAFE_H = SAFE_BOTTOM - SAFE_TOP;
 
-// Grade: desaturate airglow/warm-core color, pull the whole frame into the
-// blue-slate hue family (07-UI-SPEC Tone Contract: hue 200-230, S <= 15%).
-const GRADE_SATURATION = 0.35;
-const GRADE_TINT = "#93a7cf"; // pale blue-slate chroma target for .tint()
+// Grade (11-01 BOLD-01 regrade — warm + bright, out of the v3.0 murk):
+// The v3.0 grade (desat x0.35 -> cool-slate tint #93a7cf -> midtone x0.80
+// darken -> heavy column vignette a0.88) killed the real amber galactic core
+// and washed the whole frame grey-blue. The rework preserves the natural
+// warm-cool contrast of the photo — the amber core keeps its gold, the arms
+// stay cool blue — by REDUCING desaturation and DROPPING the cool tint. The
+// black-point map (stage 2) still anchors the dark floor on --sky-zenith so
+// shadows stay clean; the warmth/brightness lives in the mids/highs (stage 3).
+const GRADE_SATURATION = 0.8; // was 0.35 — keep amber-core gold + cool arms
+// v3.0 cooled everything with .tint("#93a7cf"); the regrade drops the global
+// tint entirely (GRADE_TINT_ENABLED=false) so the amber core survives. The
+// per-channel black-point map to --sky-zenith already gives clean cool shadows
+// without washing the warm core cold. Kept for provenance / easy revert.
+const GRADE_TINT = "#93a7cf"; // (unused when GRADE_TINT_ENABLED=false)
+const GRADE_TINT_ENABLED = false;
 // Per-channel black-point mapping: measured dark floor -> --sky-zenith.
 const GRADE_WHITE_IN = 252;
 const GRADE_WHITE_OUT = 245;
@@ -94,11 +105,17 @@ const GRADE_WHITE_OUT = 245;
 // zenith tolerance).
 const DARK_REGION = { x0: 0.02, x1: 0.98, y0: 0.05, y1: 0.6 };
 const DARK_PCT = 0.005;
-// Mid-tone pull-down: out = k*in + (1-k)*zenith — keeps the black floor
-// anchored on --sky-zenith while pulling band glow/mids down so the photo
-// stays subordinate to the authored overlay (07-UI-SPEC Overlay Harmony)
-// and the near-horizon non-band ceiling holds under --sky-horizon.
-const MIDTONE_SCALE = 0.8;
+// Mid-tone LIFT (11-01 BOLD-01 — replaces the v3.0 MIDTONE_SCALE=0.80 darken).
+// A power curve anchored at --sky-zenith, applied per channel AFTER the
+// black-point map (stage 2):
+//   out = Z + (255-Z) * ((in-Z)/(255-Z))^MIDTONE_GAMMA   (in > Z; else out=in)
+// gamma < 1 lifts the mids and highs (brighter, warmer frame reproducing the
+// approved mockup's brightness(1.32)) while pinning in=Z -> out=Z and
+// in=255 -> out=255, so the dark floor stays clean on --sky-zenith (shadows
+// don't turn grey) and the bright core is preserved without clipping. This is
+// the NEW banding risk the verify-banding gate re-checks (11-01 T3): lifted
+// mids band more than the old crushed blacks did.
+const MIDTONE_GAMMA = 0.78; // < 1 = midtone/highlight lift
 
 // Column vignette — SKY-05 governor geometry mapped into master space.
 // Both contrast-check tiers (1280x800, 1440x900) are 1.6:1, so they share
@@ -129,7 +146,14 @@ const WIN_WIDTH_FRAC = 0.680851; // 1.6:1 cover window width (both check tiers)
 const VIGNETTE_CENTER_FRAC = 0.570213;
 const VIGNETTE_HALF_FRAC = 0.234043;
 const VIGNETTE_RAMP_FRAC = 0.042553;
-const VIGNETTE_ALPHA = 0.88; // texture x0.12 inside the column (governor parity)
+// 11-01 BOLD-01: the column vignette is REMOVED. In v3.0 it existed to protect
+// full-viewport-panel text contrast (a0.88 = texture x0.12 inside the column),
+// but glass is now card-scoped (.panel-card, post the 2026-07-19 visibility
+// fix) — the CARD is the text scrim, and the sky must read bright across the
+// whole frame (mockup A has no column darkening). Contrast is re-held by the
+// card, proven by 11-03's gate — NEVER by darkening the sky. alpha 0 makes
+// vignetteSvg a transparent no-op; the composite is skipped when alpha <= 0.
+const VIGNETTE_ALPHA = 0; // was 0.88 — column vignette removed (card is the scrim)
 
 // Seam ramp (07-UI-SPEC Seam Contract)
 const SEAM_START = 0.72;
@@ -163,7 +187,13 @@ const LQIP_OPTS = { quality: 40 };
 const CANDIDATES = [
   // A — the research heuristic's galactic-core bulge (rows ~1000-1090,
   // cols ~1670-2470): densest dust-lane texture, warm core.
-  { id: "A-core-t20", core: [2050, 1040], theta: 20, coreAt: [0.84, 0.58] },
+  // 11-01 BOLD-02 recompose: the v3.0 anchor [0.84,0.58] shoved the core to
+  // the dead right edge (little frame to its right -> lopsided, edge-crammed).
+  // Re-anchor toward center-right + higher ([0.6,0.44]) so the amber core
+  // LEADS with real sky/arm on BOTH sides and the frame fills at every tier
+  // (mockup A target: the core reads at background-position ~74% 42%). The
+  // frameLayout solver auto-fits; a more central anchor fits a LARGER frame.
+  { id: "A-core-t20", core: [2050, 1040], theta: 20, coreAt: [0.6, 0.44] },
   // B — same bulge, steeper diagonal (closer to the UI-SPEC's steep target,
   // trades a little inscribed resolution for angle).
   { id: "B-core-t28", core: [2050, 1035], theta: 28, coreAt: [0.85, 0.58] },
@@ -380,6 +410,38 @@ function mulberry32(seed) {
   };
 }
 
+// Per-channel midtone LIFT LUT anchored on --sky-zenith (see MIDTONE_GAMMA).
+// out = Z + (255-Z)*((in-Z)/(255-Z))^gamma for in > Z, else out = in.
+function buildLiftLuts(gamma) {
+  return ZENITH.map((Z) => {
+    const lut = new Uint8Array(256);
+    for (let i = 0; i < 256; i++) {
+      if (i <= Z) {
+        lut[i] = i;
+      } else {
+        const t = (i - Z) / (255 - Z);
+        const v = Z + (255 - Z) * Math.pow(t, gamma);
+        lut[i] = v < 0 ? 0 : v > 255 ? 255 : Math.round(v);
+      }
+    }
+    return lut;
+  });
+}
+
+async function liftMidtones(buf, gamma) {
+  const luts = buildLiftLuts(gamma);
+  const { data, info } = await sharp(buf).raw().toBuffer({ resolveWithObject: true });
+  const rgb = Math.min(3, info.channels);
+  for (let i = 0; i < data.length; i += info.channels) {
+    for (let ch = 0; ch < rgb; ch++) data[i + ch] = luts[ch][data[i + ch]];
+  }
+  return sharp(data, {
+    raw: { width: info.width, height: info.height, channels: info.channels },
+  })
+    .png()
+    .toBuffer();
+}
+
 async function withGrain(buf) {
   const { data, info } = await sharp(buf).raw().toBuffer({ resolveWithObject: true });
   const rnd = mulberry32(info.width * 31 + info.height);
@@ -422,12 +484,12 @@ async function composeCandidate(cand) {
     .png()
     .toBuffer();
 
-  // Grade stage 1: hue/saturation into the blue-slate family.
-  const cooled = await sharp(frame)
-    .modulate({ saturation: GRADE_SATURATION })
-    .tint(GRADE_TINT)
-    .png()
-    .toBuffer();
+  // Grade stage 1: reduce saturation (keep amber-core gold + cool arms); the
+  // v3.0 cool-slate tint is dropped (GRADE_TINT_ENABLED) so the warm core
+  // survives — the warm/cool contrast is the whole point of the rework.
+  let s1 = sharp(frame).modulate({ saturation: GRADE_SATURATION });
+  if (GRADE_TINT_ENABLED) s1 = s1.tint(GRADE_TINT);
+  const cooled = await s1.png().toBuffer();
 
   // Grade stage 2: per-channel linear black-point map -> --sky-zenith.
   const floor = await regionPercentile(cooled, DARK_REGION, DARK_PCT);
@@ -438,20 +500,18 @@ async function composeCandidate(cand) {
       .map((v) => v.toFixed(4))
       .join(",")}] b=[${b.map((v) => v.toFixed(2)).join(",")}]`,
   );
-  // Grade stage 3: mid-tone pull-down anchored on the zenith floor.
-  const k = MIDTONE_SCALE;
-  const a2 = a.map((v) => v * k);
-  const b2 = b.map((v, i) => v * k + (1 - k) * ZENITH[i]);
-  const graded = await sharp(cooled).linear(a2, b2).png().toBuffer();
+  // Apply the black-point map, then LIFT the mids/highs (power curve anchored
+  // on --sky-zenith — replaces the v3.0 midtone darken; see MIDTONE_GAMMA).
+  const mapped = await sharp(cooled).linear(a, b).png().toBuffer();
+  const graded = await liftMidtones(mapped, MIDTONE_GAMMA);
 
-  // Column vignette + seam ramp (order matters: vignette under seam).
-  return sharp(graded)
-    .composite([
-      { input: Buffer.from(vignetteSvg(g.fw, g.fh)), top: 0, left: 0 },
-      { input: Buffer.from(seamSvg(g.fw, g.fh)), top: 0, left: 0 },
-    ])
-    .png()
-    .toBuffer();
+  // Seam ramp (the column vignette is removed in 11-01: composite it only when
+  // VIGNETTE_ALPHA > 0). Order matters: vignette (if any) under seam.
+  const overlays = [];
+  if (VIGNETTE_ALPHA > 0)
+    overlays.push({ input: Buffer.from(vignetteSvg(g.fw, g.fh)), top: 0, left: 0 });
+  overlays.push({ input: Buffer.from(seamSvg(g.fw, g.fh)), top: 0, left: 0 });
+  return sharp(graded).composite(overlays).png().toBuffer();
 }
 
 // ---------------------------------------------------------------------------
