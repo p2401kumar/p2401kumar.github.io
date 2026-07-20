@@ -19,16 +19,35 @@ interface Props {
   id: string;
   label?: string;
   emitId?: boolean;
+  /**
+   * Server-rendered initial deck state (2026-07-19 sky-visibility fix,
+   * 10-UI-REVIEW warning "pre-hydration ghost flash"): the built HTML now
+   * ships data-state on every panel (hero "active", the rest "inactive")
+   * so the first paint under PanelDeck.astro's speculative pre-paint
+   * `.deck-active` add shows ONE panel instead of all 7 stacked. deck.ts's
+   * applyPanelStates keeps full runtime ownership (it overwrites these on
+   * init, synchronously, before adding .deck-active itself on non-hero
+   * deep links). Every [data-state] rule in deck.css is scoped under
+   * html.deck-active, so the no-JS/classic page ignores the attribute
+   * entirely — all content stays visible without script (DECK-07 floor).
+   */
+  initialState?: "active" | "inactive";
 }
 
-const { id, label, emitId = true } = Astro.props;
+const { id, label, emitId = true, initialState = "inactive" } = Astro.props;
 // `label` is accepted (and passed by every index.astro call site per the
 // UI-SPEC copywriting contract) but not rendered by this wrapper — the
 // manifest-driven DeckIndex.astro is the sole consumer of panel labels.
 void label;
 ---
 
-<div class="panel" data-panel-id={id} id={emitId ? id : undefined} tabindex="-1">
+<div
+  class="panel"
+  data-panel-id={id}
+  id={emitId ? id : undefined}
+  tabindex="-1"
+  data-state={initialState}
+>
   {/* .panel-card — the content-card surface (2026-07-19 sky-visibility fix,
       .planning/10-UI-REVIEW.md remediation 1a): the glass system's
       backdrop-filter + fills attach HERE (deck.css §8), never to the

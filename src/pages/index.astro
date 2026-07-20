@@ -38,7 +38,11 @@ import SiteFooter from "../components/SiteFooter.astro";
     <NightSky />
     <SiteHeader />
     <PanelDeck>
-      <Panel id="hero" label="hero">
+      {/* hero ships data-state="active" in the built HTML (the rest default
+          to "inactive") — kills the pre-hydration ghost flash of all 7
+          panels stacked under the speculative pre-paint .deck-active add.
+          deck.ts re-resolves states synchronously at init for deep links. */}
+      <Panel id="hero" label="hero" initialState="active">
         <Hero />
       </Panel>
       <Panel id="fig-01" label="fig. 01">
