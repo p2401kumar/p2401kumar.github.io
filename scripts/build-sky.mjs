@@ -189,11 +189,19 @@ const CANDIDATES = [
   // cols ~1670-2470): densest dust-lane texture, warm core.
   // 11-01 BOLD-02 recompose: the v3.0 anchor [0.84,0.58] shoved the core to
   // the dead right edge (little frame to its right -> lopsided, edge-crammed).
-  // Re-anchor toward center-right + higher ([0.6,0.44]) so the amber core
-  // LEADS with real sky/arm on BOTH sides and the frame fills at every tier
-  // (mockup A target: the core reads at background-position ~74% 42%). The
-  // frameLayout solver auto-fits; a more central anchor fits a LARGER frame.
-  { id: "A-core-t20", core: [2050, 1040], theta: 20, coreAt: [0.6, 0.44] },
+  // Re-anchor toward center-right + higher so the amber core LEADS with real
+  // sky/arm on BOTH sides and the frame fills at every tier. The frameLayout
+  // solver auto-fits; a more central anchor fits a LARGER frame.
+  // 11-03 STEP-0 composition fix: coreAt-x pushed 0.6 -> 0.68 so the visual
+  // warm-core peak lands at master-x ~0.64 (was ~0.56) with an EXPANDED dark
+  // quiet region on its left. Paired with NightSky.astro's base-tier
+  // object-position 0%, this leads the core at viewport ~86% (the clear right
+  // margin the centered/locked deck card does NOT cover) while the card's
+  // left-aligned text sits over the dark quiet-left — matching approved mockup
+  // A (core to the RIGHT of the card, text over darker sky). Frame shrinks
+  // 1053x448 -> 978x416 (more off-center anchor); still resized to 2560/1920.
+  // This is COMPOSITION only — the grade constants above are frozen (11-01).
+  { id: "A-core-t20", core: [2050, 1040], theta: 20, coreAt: [0.68, 0.44] },
   // B — same bulge, steeper diagonal (closer to the UI-SPEC's steep target,
   // trades a little inscribed resolution for angle).
   { id: "B-core-t28", core: [2050, 1035], theta: 28, coreAt: [0.85, 0.58] },

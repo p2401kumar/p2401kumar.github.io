@@ -152,14 +152,23 @@ const LQIP = readFileSync(
 
   .sky-photo img {
     object-fit: cover;
-    /* Reference desktop tier (1024–1799px). 11-01 BOLD-02 recompose: the
-       regraded master (build-sky.mjs coreAt [0.6,0.44]) sits the amber
-       galactic core near master-x 0.52, so a LOW object-position keeps the
-       master's dark quiet left edge under the left-anchored glass card while
-       the warm core LEADS at viewport ~72% (mockup A: background-position
-       ~74% 42%). Wider tiers step the value DOWN (they reveal more master
-       width, pulling the core left) — see the ladder below. */
-    object-position: 10% 40%;
+    /* Reference desktop tier (1024–1799px). 11-03 STEP-0 composition fix (on
+       top of 11-01 BOLD-02): the deck card is centered + wide (max-width 880,
+       spanning viewport ~19–81% at 1440), so — with the card position LOCKED
+       by the deck layout — the SKY is moved (not the card) to lead the amber
+       core in the clear zone the card does NOT cover (the right margin +
+       around the card), matching the approved mockup A where the core leads to
+       the RIGHT of the card and the text sits over naturally-darker sky.
+       Two coupled moves: (1) the crop anchor was pushed right (build-sky.mjs
+       coreAt [0.6,0.44] -> [0.68,0.44]) so the master's warm core peak sits at
+       master-x ~0.64 with an expanded dark quiet region to its LEFT; (2) this
+       object-position dropped 10% -> 0% (max rightward pan) so the core lands
+       at viewport ~86% (right margin, dust lanes in the open) while the card's
+       left-aligned text block sits over the dark quiet-left (master ~0.15–0.36).
+       The 11-01 GRADE is frozen — this is COMPOSITION (which part of the same
+       bright master shows where), not a re-darken. Wider tiers step DOWN (they
+       reveal more master width, pulling the core left) — see the ladder. */
+    object-position: 0% 40%;
     /* VISIBLE IS THE DEFAULT STATE (2026-07-19 sky-visibility fix,
        .planning/10-UI-REVIEW.md remediation 2): base opacity 1, and the
        LQIP-to-full fade runs 0→1 as a pure ENHANCEMENT with NO fill mode
@@ -209,7 +218,7 @@ const LQIP = readFileSync(
 
   /* Ultrawide (>=1800px): reveals the most master width, so the core drifts
      leftward — step object-position DOWN to ~3% to keep the core leading at
-     viewport ~68%. */
+     viewport ~77–83% (right of the centered card) after the 11-03 recrop. */
   @media (min-width: 1800px) {
     .sky-photo img {
       object-position: 3% 40%;
