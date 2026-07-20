@@ -164,16 +164,9 @@ const AURORA_INTERVAL_MS = 2000;
 // duplicated because that module dispatches CLI modes at import time).
 // ---------------------------------------------------------------------------
 
-function relLum(r, g, b) {
-  const lin = (c) => {
-    const v = c / 255;
-    return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
-  };
-  return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
-}
-
 /** 0-255 luma (BT.709-ish weights on gamma-encoded values — fine for
- * structure metrics; matches the review audit's methodology). */
+ * structure metrics; matches the review audit's methodology; the WCAG
+ * linearized form lives in verify-contrast.mjs, which owns contrast). */
 function luma255(r, g, b) {
   return 0.2126 * r + 0.7152 * g + 0.0722 * b;
 }
@@ -897,7 +890,7 @@ async function runViewport(url, vp, opts = {}) {
 // Floor evaluation.
 // ---------------------------------------------------------------------------
 
-function checkFloors(vpKey, tier, session, refDir) {
+function checkFloors(vpKey, tier, session) {
   const F = FLOORS[vpKey];
   const checks = [];
   const add = (name, actual, floor, pass, note) =>
