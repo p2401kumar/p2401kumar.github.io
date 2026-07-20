@@ -5,16 +5,16 @@ milestone_name: Bolder Sky
 current_phase: 11
 current_phase_name: Bolder Sky Rework
 status: in-progress
-stopped_at: 11-01 COMPLETE — warm+bright core-led regrade + recompose; banding gate green; nothing pushed. Next 11-02 (camper cut, liquid-glass card, overlay re-tune)
-last_updated: "2026-07-20T18:47:13.431Z"
-last_activity: 2026-07-20
-last_activity_desc: "11-01 executed: sky master regraded warm+bright (desat 0.35→0.80, tint dropped, midtone LIFT, vignette removed), recomposed core-led crop + object-position ladder, masters/LQIP regenerated, banding gate re-passed green"
+stopped_at: 11-02 COMPLETE — camper cut (warm ambient glow), premium liquid-glass card (both tiers), overlay re-tuned to the brighter sky; every v3.0 ladder + engine invariant intact; nothing pushed. Next 11-03 (gate battery + card-fill contrast escalation)
+last_updated: "2026-07-20T19:05:06.779Z"
+last_activity: 2026-07-19
+last_activity_desc: "09-03 executed: mobile shed ladder + full closing battery + Phase 9 close-out (AMB-05)"
 progress:
   total_phases: 2
   completed_phases: 0
   total_plans: 3
-  completed_plans: 1
-  percent: 33
+  completed_plans: 2
+  percent: 0
 ---
 
 # Project State
@@ -28,7 +28,9 @@ See: .planning/PROJECT.md (updated 2026-07-18)
 
 ## Current Position
 
-Phase: 11 (Bolder Sky Rework) — IN PROGRESS (1/3 plans)
+Phase: 11 (Bolder Sky Rework) — IN PROGRESS (2/3 plans)
+Plan: 11-02 COMPLETE — the look rework of the shipped v3.0 engine. (BOLD-03) Cut the camper silhouette SVG + its fill rules; reshaped `.camper-glow` into a broad soft warm ambient wash low in the frame (inset -28%, ellipse at 42% 64%, peak 0.34→0), kept a CHILD of `.camper` so 11-03's re-pointed visibility gate measures warm-glow luminance there; parallax classes/keyframes + reduced-motion branches untouched. (BOLD-04) Reworked `--glass-*` (tokens.css only, zero hex) into premium liquid glass — tier-1 frost 0.06→0.10, blur 12→22px, saturate 140%, brightness 0.90→1.08, edge 0.10→0.28; tier-2 dead gray box `rgb(15 18 23/0.55)`→luminous smoked glass `rgb(18 24 34/0.48)` blur 10→20px; new `--glass-radius`/`--glass-specular`/`--glass-inner-glow`; deck.css `.panel-card` gained rounded corners + a specular `::before` (inset:0+radius:inherit, z-index below text via isolation:isolate) + inner glow, `::before` added to the print strip; ALL ladders (@supports/reduced-transparency/print) + .fig exemption + active-panel scoping + -webkit dual-write (8==4*2) preserved. (BOLD-05) Overlay re-tuned ALPHA-ONLY: constellation STATE_ALPHAS bumped (ambient star 0.45/0.55→0.54/0.64, link 0.16→0.22, halo 0.15/1.3×→0.19/1.4×; brightened link 0.5→0.6, halo→0.32/1.6×) so lines stay authored; firefly floor 0.4→0.5 (peak 0.9 held for the SKY-05 fallback ceiling); aurora unchanged (brighter core = more headroom). single-rAF (2/0/0), no new 'lighter' (baseline 2), source-over only, canvas never transformed; `npx astro check` 0 errors, `npm run build` passes. Commits `b341c26` (feat camper), `ba5b1d6` (feat glass), `3175170` (feat overlay), `4445208` (test evidence 1440+375). NOTHING pushed. **Flag for 11-03:** at 1440 the centered card overlaps the bright core and the `--dim` eyebrow reads marginal over the lifted frost — a card-fill escalation candidate (escalate the card, never re-darken the sky). BOLD-03, BOLD-04, BOLD-05 Complete.
+
 Plan: 11-01 COMPLETE — the murk-killing regrade + recompose. build-sky.mjs regraded to reproduce the approved Galactic-Core mockup, baked via sharp (no runtime filters): GRADE_SATURATION 0.35→0.80, the cool-slate `.tint(#93a7cf)` DROPPED (GRADE_TINT_ENABLED=false), the midtone x0.80 DARKEN replaced with a zenith-anchored midtone LIFT (per-channel power-curve LUT, MIDTONE_GAMMA 0.78 — pins the black floor on --sky-zenith, lifts mids/highs), column vignette VIGNETTE_ALPHA 0.88→0 (removed; card is the scrim now). Recomposed crop anchor coreAt [0.84,0.58]→[0.6,0.44] (core off the dead edge, leads center-right, frame grew 987×420→1053×448). NightSky.astro object-position ladder recomputed: base 72% 38%→10% 40%, ≥1800 78% 34%→3% 40%, 640-1023 55% 32%→50% 45%, <640 QUIET-CROP 10% 70%→50% 50% (mobile now shows real core presence, not the dead navy gradient). All four masters + LQIP regenerated. Banding gate re-passed FIRST try (GRAIN_AMP unchanged 1.5): --selftest clean PASS/banded FAIL, all four masters runsAboveZero=1 zeroGaps=0 64/64 bins. Before/after evidence committed under evidence/. Commits `57dbd74` (feat build-sky), `0cb9fc3` (feat ladder+masters), `2ff72f5` (test banding+evidence). NOTHING pushed — origin/main behind local. BOLD-01, BOLD-02 Complete.
 
 Prior phase: 10 (Integration & Launch) — COMPLETE (2/2 plans) — v3.0 LIVE
@@ -123,6 +125,7 @@ Last activity: 2026-07-19 — 09-03 executed: mobile shed ladder + full closing 
 | Phase 10 P01 | ~50 min | 3 tasks | 17 files |
 | Phase 10 P02 | ~25 min | 2 tasks | 5 files |
 | Phase 11 P01 | ~14 min | 3 tasks | 7 files |
+| Phase 11 P02 | ~20 min | 3 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -231,6 +234,10 @@ Recent decisions affecting current work:
 - [Phase 11]: 11-01: midtone LIFT uses a per-channel power-curve LUT anchored at --sky-zenith (out = Z + (255-Z)·((in-Z)/(255-Z))^gamma) rather than sharp .gamma() — sharp's gamma re-anchors to 0 and would lift the (5,7,10) dark floor to ~18 (grey shadows, banding-prone); the anchored curve pins the floor and lifts only mids/highs
 - [Phase 11]: 11-01: crop re-anchored coreAt [0.84,0.58]→[0.6,0.44] (core off the dead right edge → leads center-right with sky both sides; larger frame 1053×448). Object-position ladder is cover-window-geometry-derived: narrow/portrait tiers (<1024) are height-bound with a tiny horizontal window so op must sit ~50% to hit the core's master-x; wider tiers step op DOWN (base 10%, ≥1800 3%) to keep the core leading-right. v3.0 mobile quiet-crop 10% 70% removed
 - [Phase 11]: 11-01: banding gate re-passed on the lifted-mids regrade FIRST try with GRAIN_AMP unchanged at 1.5 (all four masters runsAboveZero=1 zeroGaps=0 64/64 bins) — no grain re-tune loop needed; the lifted-mids "new banding risk" did not materialize
+- [Phase 11]: 11-02: liquid-glass FORM (specular ::before + crisp bright edge + rounded corners + inner glow) carries "reads as glass" more than fill opacity — so tier-2 can keep a darker smoked-glass fill (legibility scrim for light text) yet still read as glass by sharing the .panel-card form; the specular ::before is clipped WITHOUT overflow:hidden on the content box (inset:0 + border-radius:inherit sizes the pseudo to the card) and paints on the frost under the text via isolation:isolate + z-index:-1 (works in both deck and classic modes)
+- [Phase 11]: 11-02: tier-2 reworked from the dead neutral rgb(15 18 23/0.55) "gray box" to blue-tinted luminous smoked glass rgb(18 24 34/0.48) + blur 20px — still darkens for light-text legibility, no longer a flat slab; 11-03's screenshot gate arbitrates exact opacity
+- [Phase 11]: 11-02: aurora.ts left intentionally UNCHANGED — a brighter MW core gives MORE headroom under the moon<core / aurora<core ceilings, so the envelope needs no change (11-03 gates --moon/--aurora); the v3.0 16px blur "ceiling" note is retired (glass depth is the point, blur raised to 20-24px deliberately)
+- [Phase 11]: 11-02: kept the recipe's tier-1 brightness 1.08 despite the centered card overlapping the bright core at 1440 (marginal --dim eyebrow) — contrast is 11-03's gate by the plan's own division of labor; flagged as a card-fill escalation candidate (escalate the card, never re-darken the sky) rather than guessing an ad-hoc opacity
 
 ### Pending Todos
 
@@ -263,8 +270,8 @@ Items acknowledged and carried forward:
 
 ## Session Continuity
 
-Last session: 2026-07-20T18:47:13.413Z
-Stopped at: Completed 11-01-PLAN.md — warm+bright core-led regrade + recompose of the sky master (murk killed: desat/tint/darken/vignette all reversed; amber core leads; mobile shows real sky; banding gate green). Nothing pushed (Phase 12 owns the gated deploy). Next: 11-02 (camper cut + warm ambient glow, liquid-glass card, overlay re-tune)
+Last session: 2026-07-20T19:05:06.779Z
+Stopped at: Completed 11-02-PLAN.md — camper cut (broad warm ambient glow, kept a child of .camper for 11-03's gate), premium liquid-glass card both tiers (--glass-* reworked in tokens.css only + .panel-card specular ::before/rounded corners/inner glow, all ladders + .fig exemption + dual-write preserved), overlay re-tuned alpha-only to the brighter sky (constellations bumped, firefly floor lifted, aurora unchanged). single-rAF 2/0/0, no new 'lighter', zero-hex, build+astro-check green. Nothing pushed. Next: 11-03 (gate battery — re-bless visibility, contrast ≥4.5 both viewports with the card-fill escalation candidate, moon/aurora/banding/soak/Lighthouse, before/after evidence)
 Resume file: None
 
 ## Operator Next Steps

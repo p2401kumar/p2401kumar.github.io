@@ -9,9 +9,9 @@ Focused aesthetic rework of the shipped v3.0 background (engine unchanged). Dire
 
 - [x] **BOLD-01**: Sky master regraded warm + bright via `build-sky.mjs` — the real amber galactic core keeps its color, midtones lifted out of the murk, cool-warm contrast restored; no visible banding (the lifted-midtone grade re-passes the banding gate)
 - [x] **BOLD-02**: Recomposed so the galactic core leads and the frame is filled (no dead center, no lopsided band-at-the-edge); the object-position ladder keeps real sky/core presence at 375 / 1280 / 1440 (mobile no longer reads as an empty gradient)
-- [ ] **BOLD-03**: The camper silhouette (the "smudge") is cut; the copper brand warmth survives as a clean soft ambient glow (no hard blob), fireflies unchanged
-- [ ] **BOLD-04**: The content-card glass is reworked to read as premium liquid glass (brighter frost + specular highlight + crisp bright edge + rounded corners), not a flat gray box; both tiers read as glass while holding contrast; ladders + Fig. 01 exemption + active-panel scoping preserved; values in `tokens.css` only
-- [ ] **BOLD-05**: The drawn overlay is re-tuned to the brighter sky — constellations still read as authored, moon + aurora stay under the (now brighter) Milky-Way-core luminance ceiling, fireflies + warm glow carry copper; every v3.0 engine invariant holds (single-rAF, no `'lighter'`, canvas never CSS-transformed)
+- [x] **BOLD-03**: The camper silhouette (the "smudge") is cut; the copper brand warmth survives as a clean soft ambient glow (no hard blob), fireflies unchanged
+- [x] **BOLD-04**: The content-card glass is reworked to read as premium liquid glass (brighter frost + specular highlight + crisp bright edge + rounded corners), not a flat gray box; both tiers read as glass while holding contrast; ladders + Fig. 01 exemption + active-panel scoping preserved; values in `tokens.css` only
+- [x] **BOLD-05**: The drawn overlay is re-tuned to the brighter sky — constellations still read as authored, moon + aurora stay under the (now brighter) Milky-Way-core luminance ceiling, fireflies + warm glow carry copper; every v3.0 engine invariant holds (single-rAF, no `'lighter'`, canvas never CSS-transformed)
 - [ ] **BOLD-06**: All gates re-pass on the new look — `verify-visibility.mjs` re-blessed to the approved stills and green ×3 viewports (blur/blackout controls still fail); `--cdp-screenshot` ≥4.5:1 every surface both viewports (held by the card, never by re-darkening the sky); `--moon`/`--aurora`/banding green; soak <10%; **live** Lighthouse ≥90 ×4; deploy gated on explicit user go with rollback documented
 
 ## Future Requirements
@@ -33,9 +33,9 @@ Deferred: NOTE-01 (notes), NOTE-02 (/craft), CASE-04 (3rd case study), PLAT-08 (
 |-------------|-------|--------|
 | BOLD-01 | Phase 11 | Complete |
 | BOLD-02 | Phase 11 | Complete |
-| BOLD-03 | Phase 11 | Pending |
-| BOLD-04 | Phase 11 | Pending |
-| BOLD-05 | Phase 11 | Pending |
+| BOLD-03 | Phase 11 | Complete |
+| BOLD-04 | Phase 11 | Complete |
+| BOLD-05 | Phase 11 | Complete |
 | BOLD-06 | Phase 12 | Pending (local gates in 11; live + deploy in 12) |
 
 **Coverage:** 6 total · mapped 6 · unmapped 0
