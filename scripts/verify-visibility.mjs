@@ -6,8 +6,9 @@
 // moonPeak < mwPeak, auroraPeak < mwPeak) — all of which improve, or at
 // worst hold, as the background loses structure. A fully invisible sky is
 // that battery's global optimum. This gate measures the OPPOSITE axis:
-// can a human actually SEE the Milky Way band, countable stars, the camper
-// silhouette, and the aurora on the settled page? Its core metric is
+// can a human actually SEE the Milky Way band, countable stars, the lower-left
+// copper warm glow (11-02 cut the camper silhouette; the warm glow survives),
+// and the aurora on the settled page? Its core metric is
 // luminance RANGE / connected-component structure — the things a
 // backdrop-filter blur destroys while every mean/ratio metric holds.
 //
@@ -23,7 +24,9 @@
 //       2. DETERMINISTIC captures under emulated prefers-reduced-motion
 //          (scene.ts paints exactly ONE static frame; glass stays live):
 //          hero + one mid panel (systems). Full floor set: band range,
-//          starfield range, star count, camper Sobel-edge energy vs its
+//          starfield range, star count, camper WARM-GLOW presence (mean R-B
+//          over the glow zone vs its surround; 11-03 replaced the cut
+//          silhouette's Sobel-edge floor) vs its
 //          surround, SSIM vs the blessed reference stills in
 //          scripts/fixtures/visibility-refs/.
 //       3. LIVE aurora window (desktop only — at 375 the left margin is
@@ -112,10 +115,24 @@ const VIEWPORTS = [
 // measures 127.7/123.4 vs broken 63.2.
 const FLOORS = {
   "1440x900": {
-    bandRange: 90, // healthy 111.5 | broken 67.3 (see anchoring note)
-    starfieldRange: 100, // 60% of raw ref 165.7; healthy 127.7
-    starCount: 25, // review spec: >= 25 distinct stars at 1440; healthy 120
-    camperEdgeAbs: 5.0, // healthy 8.3-8.4 (silhouette + window gradients)
+    // 11-03 RE-RAISED for the brighter core-led look (deterministic reduced-
+    // motion captures are byte-stable, so a higher floor is not flaky). The old
+    // floors (90/100) were calibrated to the muddy v3.0 look (healthy 111/127);
+    // on the new look healthy is 159/168, and a blur(12) control only drops
+    // bandRange to 119 / starfieldRange to 107 — ABOVE the old floors, so the
+    // gate would no longer catch the original blur BLOCKER. Re-anchored to ~85%
+    // of healthy so the blur control TRIPS a range floor (selftest honesty) and
+    // healthy still clears with a ~24-33pt margin.
+    bandRange: 135, // healthy 159.1 | blur(12) 119.4 -> TRIPS | broken-muddy 67
+    starfieldRange: 135, // healthy 167.9 | blur(12) 107.2 -> TRIPS
+    starCount: 25, // review spec: >= 25 distinct stars at 1440; healthy 291
+    // WARM-GLOW presence (11-03, replaces camperEdgeAbs): mean(R-B) over the
+    // camper glow zone minus the sky above it. Healthy (reduced-motion, glow
+    // held at opacity 0.85) = 19.75; a lost/darkened glow collapses toward the
+    // cool surround (delta ~0). Floor 10.0 (~51% of healthy) rejects a
+    // collapsed glow with margin. Edge-energy is the WRONG metric for a soft
+    // radial (near-zero edge); this measures the copper luminance-presence.
+    camperWarmDelta: 10.0,
     // Aurora presence is asserted at the SOURCE (canvas alpha coverage in
     // the aurora band, in-page readback) — the review's literal
     // "screenshot mean >= surround mean + delta" is empirically invalid:
@@ -130,24 +147,24 @@ const FLOORS = {
     liveStarCount: 20, // live twinkle phase can dim some points vs static
   },
   "1280x800": {
-    bandRange: 90, // healthy 111.3
-    starfieldRange: 100, // healthy 123.4
-    starCount: 18, // healthy 92
-    camperEdgeAbs: 5.0, // healthy 9.5
+    bandRange: 135, // healthy 160.0 | blur(12) TRIPS (11-03, see 1440 note)
+    starfieldRange: 135, // healthy 168.0 | blur(12) TRIPS
+    starCount: 18, // healthy 246
+    camperWarmDelta: 10.0, // warm-glow presence (11-03); healthy 19.78
     auroraCanvasCoverage: 0.03,
     ssim: 0.9,
     liveBandRange: 90,
     liveStarCount: 14,
   },
   "375x812": {
-    // Mobile: the quiet-crop tier (10% 70%) has no galactic core in
-    // frame; assertions run on the lower-sky strip (below the
-    // content-hugging hero card, above the footer) + top strip. Floors
-    // at ~60% of the calibrated healthy values (lowerSkyRange 114.2,
-    // starCount 100+, camperEdge 16.6 — 2026-07-19 fixed build).
+    // Mobile: the core-led tier (object-position 50% 50%, 11-01/11-03) frames
+    // the core band mid-viewport; assertions run on the lower-sky strip (below
+    // the content-hugging hero card, above the footer) + top strip. Floors at
+    // ~60% of the calibrated healthy values (lowerSkyRange 114.2 -> 111.1,
+    // starCount 100+ -> 131, camperWarmDelta healthy 22.49 — 11-03 build).
     lowerSkyRange: 70,
-    starCount: 30, // top strip + lower sky combined, hero capture
-    camperEdgeAbs: 10.0, // healthy 16.6-16.7
+    starCount: 30, // top strip + lower sky combined, hero capture; healthy 131
+    camperWarmDelta: 12.0, // warm-glow presence (11-03); healthy 22.49 (~53%)
     ssim: 0.9,
     liveLowerSkyRange: 70,
     liveStarCount: 20,
@@ -196,6 +213,7 @@ function regionView(frame, rect, excludeRects = []) {
   const h = r.y1 - r.y0;
   const lum = new Float32Array(w * h);
   const gr = new Float32Array(w * h); // G - R per pixel (aurora hue shift)
+  const rb = new Float32Array(w * h); // R - B per pixel (warm/copper glow shift)
   const mask = new Uint8Array(w * h).fill(1);
   const stride = frame.width * 4;
   for (let y = 0; y < h; y++) {
@@ -204,6 +222,7 @@ function regionView(frame, rect, excludeRects = []) {
       const i = src + x * 4;
       lum[y * w + x] = luma255(frame.data[i], frame.data[i + 1], frame.data[i + 2]);
       gr[y * w + x] = frame.data[i + 1] - frame.data[i];
+      rb[y * w + x] = frame.data[i] - frame.data[i + 2];
     }
   }
   const PAD = 6;
@@ -217,7 +236,7 @@ function regionView(frame, rect, excludeRects = []) {
       for (let x = Math.max(0, ex0); x < Math.min(w, ex1); x++) mask[y * w + x] = 0;
     }
   }
-  return { lum, gr, mask, w, h, rect: r };
+  return { lum, gr, rb, mask, w, h, rect: r };
 }
 
 /** Mean (G - R) over usable pixels — the aurora hue-presence metric. The
@@ -231,6 +250,28 @@ function meanGreenShift(rv) {
   for (let i = 0; i < rv.gr.length; i++) {
     if (!rv.mask[i]) continue;
     s += rv.gr[i];
+    n++;
+  }
+  return n ? +(s / n).toFixed(3) : 0;
+}
+
+/** Mean (R - B) over usable pixels — the WARM-GLOW presence metric (11-03).
+ * The camper silhouette was cut (11-02 BOLD-03); the copper brand warmth
+ * survives as the `.camper-glow` soft radial (accent #d99163 -> R 217, B 99,
+ * so R-B = +118) low in the frame. The graded photo sky there is
+ * neutral/blue (R-B <= 0), so a live copper glow lifts this metric well above
+ * its star-matched surround; a region that LOST the glow collapses toward the
+ * surround and FAILS the delta floor. This REPLACES the old Sobel edge-energy
+ * floor, which measured the (now-cut) silhouette's edges — a soft radial has
+ * near-zero edge energy, so edge-energy is the wrong metric for a glow and
+ * would falsely FAIL the healthy new design. Coverage of the lower-left is
+ * KEPT (right metric, not a dropped floor). */
+function meanWarmShift(rv) {
+  let s = 0;
+  let n = 0;
+  for (let i = 0; i < rv.rb.length; i++) {
+    if (!rv.mask[i]) continue;
+    s += rv.rb[i];
     n++;
   }
   return n ? +(s / n).toFixed(3) : 0;
@@ -639,10 +680,10 @@ function desktopRegions(frame, g) {
     ex
   );
   // Camper box (padded) clipped against the active card and the footer.
-  // camperCore = a window inside the SVG body silhouette (left of the
-  // 70%-x window/glow): x 22-58% / y 45-75% of the .camper rect — used
-  // for the silhouette dark-delta. skyAbove = the strip directly above
-  // the camper (its detectability backdrop).
+  // camperCore = a window over the copper warm-glow zone: x 22-58% / y 45-75%
+  // of the .camper rect (the .camper-glow radial centers near 42% 64%) — used
+  // for the 11-03 warm-glow-presence delta (mean R-B vs skyAbove). skyAbove =
+  // the strip directly above the camper (the cool-sky surround baseline).
   let camper = null;
   let camperCore = null;
   let camperSkyAbove = null;
@@ -744,7 +785,17 @@ function evalDesktopCapture(frame, g) {
     bandMean: R.band ? meanLum(R.band) : null,
     starfieldRange: starRegion ? lumRange(starRegion) : null,
     starCount: starRegion ? starCount(starRegion) : null,
-    camperEdge: R.camper ? edgeEnergy(R.camper) : null,
+    camperEdge: R.camper ? edgeEnergy(R.camper) : null, // recorded diagnostic only (11-03)
+    // 11-03 warm-glow presence: mean(R-B) over the camper glow zone vs the sky
+    // above it. The copper glow lifts R-B; a region that lost the glow collapses
+    // toward the (neutral/blue) surround. camperWarmDelta is the ASSERTED floor.
+    camperCoreWarmShift: R.camperCore ? meanWarmShift(R.camperCore) : null,
+    camperBoxWarmShift: R.camper ? meanWarmShift(R.camper) : null,
+    camperSurroundWarmShift: R.camperSkyAbove ? meanWarmShift(R.camperSkyAbove) : null,
+    camperWarmDelta:
+      R.camperCore && R.camperSkyAbove
+        ? +(meanWarmShift(R.camperCore) - meanWarmShift(R.camperSkyAbove)).toFixed(3)
+        : null,
     camperCoreMean: R.camperCore ? meanLum(R.camperCore) : null,
     camperSkyAboveMean: R.camperSkyAbove ? meanLum(R.camperSkyAbove) : null,
     camperDarkDelta:
@@ -770,7 +821,16 @@ function evalMobileCapture(frame, g) {
     topStripRange: R.topStrip ? lumRange(R.topStrip) : null,
     lowerSkyRange: R.lowerSky ? lumRange(R.lowerSky) : null,
     starCount: stars,
-    camperEdge: R.camper ? edgeEnergy(R.camper) : null,
+    camperEdge: R.camper ? edgeEnergy(R.camper) : null, // recorded diagnostic only (11-03)
+    // 11-03 warm-glow presence (mobile): surround is the sky to the camper's
+    // RIGHT at the same height (sky above is often behind the card/footer).
+    camperCoreWarmShift: R.camperCore ? meanWarmShift(R.camperCore) : null,
+    camperBoxWarmShift: R.camper ? meanWarmShift(R.camper) : null,
+    camperSurroundWarmShift: R.camperSkySide ? meanWarmShift(R.camperSkySide) : null,
+    camperWarmDelta:
+      R.camperCore && R.camperSkySide
+        ? +(meanWarmShift(R.camperCore) - meanWarmShift(R.camperSkySide)).toFixed(3)
+        : null,
     camperCoreMean: R.camperCore ? meanLum(R.camperCore) : null,
     camperSkySideMean: R.camperSkySide ? meanLum(R.camperSkySide) : null,
     camperDarkDelta:
@@ -921,15 +981,17 @@ function checkFloors(vpKey, tier, session) {
       );
       add(`${panel}.starCount`, m.starCount, F.starCount, m.starCount >= F.starCount);
     }
-    // Camper asserted on the hero capture (fully clear of the
-    // content-hugging card there); recorded on systems.
+    // Camper WARM-GLOW presence asserted on the hero capture (fully clear of
+    // the content-hugging card there); recorded on systems. The silhouette was
+    // cut (11-02), so edge-energy is the wrong metric — this measures the
+    // copper glow's warm luminance-presence (mean R-B) vs the cool sky above.
     const mh = session.captures.rm_hero.metrics;
     add(
-      "hero.camperEdgeAbs",
-      mh.camperEdge,
-      F.camperEdgeAbs,
-      mh.camperEdge !== null && mh.camperEdge >= F.camperEdgeAbs,
-      "Sobel mean over the camper box — blur collapses it (dark-delta was evaluated and rejected: healthy value ~2.5, inside noise)"
+      "hero.camperWarmDelta",
+      mh.camperWarmDelta,
+      F.camperWarmDelta,
+      mh.camperWarmDelta !== null && mh.camperWarmDelta >= F.camperWarmDelta,
+      "mean(R-B) over the camper glow zone minus the sky above — a lost/darkened copper glow collapses toward the cool surround and FAILS (warm-glow presence; replaces the cut silhouette's Sobel edge floor)"
     );
   } else {
     add(
@@ -945,10 +1007,11 @@ function checkFloors(vpKey, tier, session) {
         add("hero.lowerSkyRange", m.lowerSkyRange, F.lowerSkyRange, m.lowerSkyRange >= F.lowerSkyRange);
         add("hero.starCount", m.starCount, F.starCount, m.starCount >= F.starCount);
         add(
-          "hero.camperEdgeAbs",
-          m.camperEdge,
-          F.camperEdgeAbs,
-          m.camperEdge !== null && m.camperEdge >= F.camperEdgeAbs
+          "hero.camperWarmDelta",
+          m.camperWarmDelta,
+          F.camperWarmDelta,
+          m.camperWarmDelta !== null && m.camperWarmDelta >= F.camperWarmDelta,
+          "warm-glow presence (mean R-B, glow zone vs sky to its right); replaces the cut silhouette's Sobel edge floor"
         );
       } else {
         checks.push({

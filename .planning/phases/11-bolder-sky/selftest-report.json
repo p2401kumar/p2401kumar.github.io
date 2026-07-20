@@ -1,0 +1,240 @@
+{
+  "mode": "selftest",
+  "url": "http://localhost:4321/",
+  "viewport": "1440x900",
+  "healthy": {
+    "checks": [
+      {
+        "name": "live.bandRange",
+        "actual": 159.1,
+        "floor": 90,
+        "pass": true
+      },
+      {
+        "name": "live.starCount",
+        "actual": 291,
+        "floor": 20,
+        "pass": true
+      },
+      {
+        "name": "hero.bandRange",
+        "actual": 159.1,
+        "floor": 135,
+        "pass": true
+      },
+      {
+        "name": "hero.starfieldRange",
+        "actual": 167.9,
+        "floor": 135,
+        "pass": true
+      },
+      {
+        "name": "hero.starCount",
+        "actual": 291,
+        "floor": 25,
+        "pass": true
+      },
+      {
+        "name": "systems.bandRange",
+        "actual": 159.1,
+        "floor": 135,
+        "pass": true
+      },
+      {
+        "name": "systems.starfieldRange",
+        "actual": 167.9,
+        "floor": 135,
+        "pass": true
+      },
+      {
+        "name": "systems.starCount",
+        "actual": 291,
+        "floor": 25,
+        "pass": true
+      },
+      {
+        "name": "hero.camperWarmDelta",
+        "actual": 19.754,
+        "floor": 10,
+        "pass": true,
+        "note": "mean(R-B) over the camper glow zone minus the sky above — a lost/darkened copper glow collapses toward the cool surround and FAILS (warm-glow presence; replaces the cut silhouette's Sobel edge floor)"
+      },
+      {
+        "name": "hero.ssim",
+        "actual": 1,
+        "floor": 0.9,
+        "pass": true
+      },
+      {
+        "name": "systems.ssim",
+        "actual": 1,
+        "floor": 0.9,
+        "pass": true
+      }
+    ],
+    "failing": []
+  },
+  "blackoutControl": {
+    "checks": [
+      {
+        "name": "live.bandRange",
+        "actual": 142.2,
+        "floor": 90,
+        "pass": true
+      },
+      {
+        "name": "live.starCount",
+        "actual": 170,
+        "floor": 20,
+        "pass": true
+      },
+      {
+        "name": "hero.bandRange",
+        "actual": 114.9,
+        "floor": 135,
+        "pass": false
+      },
+      {
+        "name": "hero.starfieldRange",
+        "actual": 117.9,
+        "floor": 135,
+        "pass": false
+      },
+      {
+        "name": "hero.starCount",
+        "actual": 157,
+        "floor": 25,
+        "pass": true
+      },
+      {
+        "name": "systems.bandRange",
+        "actual": 155,
+        "floor": 135,
+        "pass": true
+      },
+      {
+        "name": "systems.starfieldRange",
+        "actual": 76.1,
+        "floor": 135,
+        "pass": false
+      },
+      {
+        "name": "systems.starCount",
+        "actual": 8,
+        "floor": 25,
+        "pass": false
+      },
+      {
+        "name": "hero.camperWarmDelta",
+        "actual": 21.387,
+        "floor": 10,
+        "pass": true,
+        "note": "mean(R-B) over the camper glow zone minus the sky above — a lost/darkened copper glow collapses toward the cool surround and FAILS (warm-glow presence; replaces the cut silhouette's Sobel edge floor)"
+      },
+      {
+        "name": "hero.ssim",
+        "actual": 0.5823,
+        "floor": 0.9,
+        "pass": false
+      },
+      {
+        "name": "systems.ssim",
+        "actual": 0.5834,
+        "floor": 0.9,
+        "pass": false
+      }
+    ],
+    "failing": [
+      "hero.bandRange",
+      "hero.starfieldRange",
+      "systems.starfieldRange",
+      "systems.starCount",
+      "hero.ssim",
+      "systems.ssim"
+    ]
+  },
+  "blurControl": {
+    "checks": [
+      {
+        "name": "live.bandRange",
+        "actual": 119.4,
+        "floor": 90,
+        "pass": true
+      },
+      {
+        "name": "live.starCount",
+        "actual": 1,
+        "floor": 20,
+        "pass": false
+      },
+      {
+        "name": "hero.bandRange",
+        "actual": 119.4,
+        "floor": 135,
+        "pass": false
+      },
+      {
+        "name": "hero.starfieldRange",
+        "actual": 107.2,
+        "floor": 135,
+        "pass": false
+      },
+      {
+        "name": "hero.starCount",
+        "actual": 1,
+        "floor": 25,
+        "pass": false
+      },
+      {
+        "name": "systems.bandRange",
+        "actual": 119.4,
+        "floor": 135,
+        "pass": false
+      },
+      {
+        "name": "systems.starfieldRange",
+        "actual": 107.2,
+        "floor": 135,
+        "pass": false
+      },
+      {
+        "name": "systems.starCount",
+        "actual": 0,
+        "floor": 25,
+        "pass": false
+      },
+      {
+        "name": "hero.camperWarmDelta",
+        "actual": 19.204,
+        "floor": 10,
+        "pass": true,
+        "note": "mean(R-B) over the camper glow zone minus the sky above — a lost/darkened copper glow collapses toward the cool surround and FAILS (warm-glow presence; replaces the cut silhouette's Sobel edge floor)"
+      },
+      {
+        "name": "hero.ssim",
+        "actual": 0.6832,
+        "floor": 0.9,
+        "pass": false
+      },
+      {
+        "name": "systems.ssim",
+        "actual": 0.6841,
+        "floor": 0.9,
+        "pass": false
+      }
+    ],
+    "failing": [
+      "live.starCount",
+      "hero.bandRange",
+      "hero.starfieldRange",
+      "hero.starCount",
+      "systems.bandRange",
+      "systems.starfieldRange",
+      "systems.starCount",
+      "hero.ssim",
+      "systems.ssim"
+    ]
+  },
+  "problems": [],
+  "pass": true
+}
