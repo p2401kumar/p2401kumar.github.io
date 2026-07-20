@@ -1,0 +1,448 @@
+{
+  "mode": "gate",
+  "url": "https://p2401kumar.github.io/",
+  "startedAt": "2026-07-20T04:00:11.842Z",
+  "viewports": [
+    {
+      "viewport": "1440x900",
+      "tier": "desktop",
+      "checks": [
+        {
+          "name": "live.bandRange",
+          "actual": 111.5,
+          "floor": 90,
+          "pass": true
+        },
+        {
+          "name": "live.starCount",
+          "actual": 120,
+          "floor": 20,
+          "pass": true
+        },
+        {
+          "name": "aurora.maxCanvasCoverage",
+          "actual": 0.813,
+          "floor": 0.03,
+          "pass": true,
+          "note": "max over 26s breathing window (min 0.2993)"
+        },
+        {
+          "name": "hero.bandRange",
+          "actual": 111.5,
+          "floor": 90,
+          "pass": true
+        },
+        {
+          "name": "hero.starfieldRange",
+          "actual": 127.7,
+          "floor": 100,
+          "pass": true
+        },
+        {
+          "name": "hero.starCount",
+          "actual": 120,
+          "floor": 25,
+          "pass": true
+        },
+        {
+          "name": "systems.bandRange",
+          "actual": 111.5,
+          "floor": 90,
+          "pass": true
+        },
+        {
+          "name": "systems.starfieldRange",
+          "actual": 127.7,
+          "floor": 100,
+          "pass": true
+        },
+        {
+          "name": "systems.starCount",
+          "actual": 120,
+          "floor": 25,
+          "pass": true
+        },
+        {
+          "name": "hero.camperEdgeAbs",
+          "actual": 8.342,
+          "floor": 5,
+          "pass": true,
+          "note": "Sobel mean over the camper box — blur collapses it (dark-delta was evaluated and rejected: healthy value ~2.5, inside noise)"
+        },
+        {
+          "name": "hero.ssim",
+          "actual": 0.9999,
+          "floor": 0.9,
+          "pass": true
+        },
+        {
+          "name": "systems.ssim",
+          "actual": 0.9999,
+          "floor": 0.9,
+          "pass": true
+        }
+      ],
+      "failing": [],
+      "session": {
+        "vp": {
+          "w": 1440,
+          "h": 900,
+          "tier": "desktop"
+        },
+        "captures": {
+          "liveHero": {
+            "metrics": {
+              "bandRange": 111.5,
+              "bandMean": 44.05,
+              "starfieldRange": 127.7,
+              "starCount": 120,
+              "camperEdge": 8.434,
+              "camperCoreMean": 12.91,
+              "camperSkyAboveMean": 15.08,
+              "camperDarkDelta": 2.17,
+              "auroraMean": 17.08,
+              "auroraGreenShift": 3.693,
+              "auroraSurroundGreenShift": 8.077,
+              "regionPx": {
+                "band": 192548,
+                "starfield": 97818,
+                "camper": 23085
+              }
+            }
+          },
+          "auroraWindow": {
+            "maxCanvasCoverage": 0.813,
+            "minCanvasCoverage": 0.2993,
+            "atSample": 0,
+            "samples": 13,
+            "windowMs": 26000
+          },
+          "rm_hero": {
+            "metrics": {
+              "bandRange": 111.5,
+              "bandMean": 44.05,
+              "starfieldRange": 127.7,
+              "starCount": 120,
+              "camperEdge": 8.342,
+              "camperCoreMean": 12.53,
+              "camperSkyAboveMean": 15.08,
+              "camperDarkDelta": 2.55,
+              "auroraMean": 17,
+              "auroraGreenShift": 3.732,
+              "auroraSurroundGreenShift": 8.077,
+              "regionPx": {
+                "band": 192548,
+                "starfield": 97818,
+                "camper": 23085
+              }
+            }
+          },
+          "rm_systems": {
+            "metrics": {
+              "bandRange": 111.5,
+              "bandMean": 44.05,
+              "starfieldRange": 127.7,
+              "starCount": 120,
+              "camperEdge": 8.342,
+              "camperCoreMean": 12.53,
+              "camperSkyAboveMean": 15.1,
+              "camperDarkDelta": 2.57,
+              "auroraMean": 17,
+              "auroraGreenShift": 3.732,
+              "auroraSurroundGreenShift": 8.077,
+              "regionPx": {
+                "band": 192548,
+                "starfield": 97818,
+                "camper": 23085
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "viewport": "1280x800",
+      "tier": "desktop",
+      "checks": [
+        {
+          "name": "live.bandRange",
+          "actual": 111.3,
+          "floor": 90,
+          "pass": true
+        },
+        {
+          "name": "live.starCount",
+          "actual": 92,
+          "floor": 14,
+          "pass": true
+        },
+        {
+          "name": "aurora.maxCanvasCoverage",
+          "actual": 0.8371,
+          "floor": 0.03,
+          "pass": true,
+          "note": "max over 26s breathing window (min 0.2792)"
+        },
+        {
+          "name": "hero.bandRange",
+          "actual": 111.3,
+          "floor": 90,
+          "pass": true
+        },
+        {
+          "name": "hero.starfieldRange",
+          "actual": 123.4,
+          "floor": 100,
+          "pass": true
+        },
+        {
+          "name": "hero.starCount",
+          "actual": 92,
+          "floor": 18,
+          "pass": true
+        },
+        {
+          "name": "systems.bandRange",
+          "actual": 111.3,
+          "floor": 90,
+          "pass": true
+        },
+        {
+          "name": "systems.starfieldRange",
+          "actual": 123.4,
+          "floor": 100,
+          "pass": true
+        },
+        {
+          "name": "systems.starCount",
+          "actual": 92,
+          "floor": 18,
+          "pass": true
+        },
+        {
+          "name": "hero.camperEdgeAbs",
+          "actual": 9.464,
+          "floor": 5,
+          "pass": true,
+          "note": "Sobel mean over the camper box — blur collapses it (dark-delta was evaluated and rejected: healthy value ~2.5, inside noise)"
+        },
+        {
+          "name": "hero.ssim",
+          "actual": 0.9998,
+          "floor": 0.9,
+          "pass": true
+        },
+        {
+          "name": "systems.ssim",
+          "actual": 0.9998,
+          "floor": 0.9,
+          "pass": true
+        }
+      ],
+      "failing": [],
+      "session": {
+        "vp": {
+          "w": 1280,
+          "h": 800,
+          "tier": "desktop"
+        },
+        "captures": {
+          "liveHero": {
+            "metrics": {
+              "bandRange": 111.3,
+              "bandMean": 51.92,
+              "starfieldRange": 123.4,
+              "starCount": 92,
+              "camperEdge": 9.464,
+              "camperCoreMean": 14.35,
+              "camperSkyAboveMean": 16.9,
+              "camperDarkDelta": 2.55,
+              "auroraMean": 17.64,
+              "auroraGreenShift": 4.431,
+              "auroraSurroundGreenShift": 9.174,
+              "regionPx": {
+                "band": 116668,
+                "starfield": 60334,
+                "camper": 11024
+              }
+            }
+          },
+          "auroraWindow": {
+            "maxCanvasCoverage": 0.8371,
+            "minCanvasCoverage": 0.2792,
+            "atSample": 0,
+            "samples": 13,
+            "windowMs": 26000
+          },
+          "rm_hero": {
+            "metrics": {
+              "bandRange": 111.3,
+              "bandMean": 51.92,
+              "starfieldRange": 123.4,
+              "starCount": 92,
+              "camperEdge": 9.464,
+              "camperCoreMean": 13.9,
+              "camperSkyAboveMean": 16.9,
+              "camperDarkDelta": 3,
+              "auroraMean": 17.64,
+              "auroraGreenShift": 4.431,
+              "auroraSurroundGreenShift": 9.174,
+              "regionPx": {
+                "band": 116668,
+                "starfield": 60334,
+                "camper": 11024
+              }
+            }
+          },
+          "rm_systems": {
+            "metrics": {
+              "bandRange": 111.3,
+              "bandMean": 51.93,
+              "starfieldRange": 123.4,
+              "starCount": 92,
+              "camperEdge": 9.486,
+              "camperCoreMean": 13.9,
+              "camperSkyAboveMean": 16.91,
+              "camperDarkDelta": 3.01,
+              "auroraMean": 17.64,
+              "auroraGreenShift": 4.431,
+              "auroraSurroundGreenShift": 9.174,
+              "regionPx": {
+                "band": 116668,
+                "starfield": 60334,
+                "camper": 10950
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "viewport": "375x812",
+      "tier": "mobile",
+      "checks": [
+        {
+          "name": "live.lowerSkyRange",
+          "actual": 114.2,
+          "floor": 70,
+          "pass": true
+        },
+        {
+          "name": "live.starCount",
+          "actual": 100,
+          "floor": 20,
+          "pass": true
+        },
+        {
+          "name": "hero.lowerSkyRange",
+          "actual": 114.2,
+          "floor": 70,
+          "pass": true
+        },
+        {
+          "name": "hero.starCount",
+          "actual": 104,
+          "floor": 30,
+          "pass": true
+        },
+        {
+          "name": "hero.camperEdgeAbs",
+          "actual": 16.599,
+          "floor": 10,
+          "pass": true
+        },
+        {
+          "name": "systems.metrics",
+          "actual": {
+            "topStripRange": 70.6,
+            "lowerSkyRange": 121.3,
+            "starCount": 54,
+            "camperEdge": null,
+            "camperCoreMean": null,
+            "camperSkySideMean": null,
+            "camperDarkDelta": null,
+            "regionPx": {
+              "topStrip": 13875,
+              "lowerSky": 3979,
+              "camper": 0
+            }
+          },
+          "floor": null,
+          "pass": true,
+          "note": "recorded only — systems' tall card reaches the mobile bottom padding; lower-sky strip is hero-asserted"
+        },
+        {
+          "name": "hero.ssim",
+          "actual": 0.9994,
+          "floor": 0.9,
+          "pass": true
+        },
+        {
+          "name": "systems.ssim",
+          "actual": 0.9994,
+          "floor": 0.9,
+          "pass": true
+        }
+      ],
+      "failing": [],
+      "session": {
+        "vp": {
+          "w": 375,
+          "h": 812,
+          "tier": "mobile"
+        },
+        "captures": {
+          "liveHero": {
+            "metrics": {
+              "topStripRange": 70.6,
+              "lowerSkyRange": 114.2,
+              "starCount": 100,
+              "camperEdge": 16.717,
+              "camperCoreMean": 18.74,
+              "camperSkySideMean": 14.78,
+              "camperDarkDelta": -3.96,
+              "regionPx": {
+                "topStrip": 13875,
+                "lowerSky": 38854,
+                "camper": 14256
+              }
+            }
+          },
+          "rm_hero": {
+            "metrics": {
+              "topStripRange": 70.6,
+              "lowerSkyRange": 114.2,
+              "starCount": 104,
+              "camperEdge": 16.599,
+              "camperCoreMean": 17.6,
+              "camperSkySideMean": 14.78,
+              "camperDarkDelta": -2.82,
+              "regionPx": {
+                "topStrip": 13875,
+                "lowerSky": 38854,
+                "camper": 14256
+              }
+            }
+          },
+          "rm_systems": {
+            "metrics": {
+              "topStripRange": 70.6,
+              "lowerSkyRange": 121.3,
+              "starCount": 54,
+              "camperEdge": null,
+              "camperCoreMean": null,
+              "camperSkySideMean": null,
+              "camperDarkDelta": null,
+              "regionPx": {
+                "topStrip": 13875,
+                "lowerSky": 3979,
+                "camper": 0
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "pass": true
+}

@@ -1,0 +1,242 @@
+{
+  "mode": "selftest",
+  "url": "http://localhost:4321/",
+  "viewport": "1440x900",
+  "healthy": {
+    "checks": [
+      {
+        "name": "live.bandRange",
+        "actual": 111.5,
+        "floor": 90,
+        "pass": true
+      },
+      {
+        "name": "live.starCount",
+        "actual": 120,
+        "floor": 20,
+        "pass": true
+      },
+      {
+        "name": "hero.bandRange",
+        "actual": 111.5,
+        "floor": 90,
+        "pass": true
+      },
+      {
+        "name": "hero.starfieldRange",
+        "actual": 127.7,
+        "floor": 100,
+        "pass": true
+      },
+      {
+        "name": "hero.starCount",
+        "actual": 120,
+        "floor": 25,
+        "pass": true
+      },
+      {
+        "name": "systems.bandRange",
+        "actual": 111.5,
+        "floor": 90,
+        "pass": true
+      },
+      {
+        "name": "systems.starfieldRange",
+        "actual": 127.7,
+        "floor": 100,
+        "pass": true
+      },
+      {
+        "name": "systems.starCount",
+        "actual": 120,
+        "floor": 25,
+        "pass": true
+      },
+      {
+        "name": "hero.camperEdgeAbs",
+        "actual": 8.342,
+        "floor": 5,
+        "pass": true,
+        "note": "Sobel mean over the camper box — blur collapses it (dark-delta was evaluated and rejected: healthy value ~2.5, inside noise)"
+      },
+      {
+        "name": "hero.ssim",
+        "actual": 0.9999,
+        "floor": 0.9,
+        "pass": true
+      },
+      {
+        "name": "systems.ssim",
+        "actual": 0.9999,
+        "floor": 0.9,
+        "pass": true
+      }
+    ],
+    "failing": []
+  },
+  "blackoutControl": {
+    "checks": [
+      {
+        "name": "live.bandRange",
+        "actual": 153.2,
+        "floor": 90,
+        "pass": true
+      },
+      {
+        "name": "live.starCount",
+        "actual": 18,
+        "floor": 20,
+        "pass": false
+      },
+      {
+        "name": "hero.bandRange",
+        "actual": 101.6,
+        "floor": 90,
+        "pass": true
+      },
+      {
+        "name": "hero.starfieldRange",
+        "actual": 104.1,
+        "floor": 100,
+        "pass": true
+      },
+      {
+        "name": "hero.starCount",
+        "actual": 8,
+        "floor": 25,
+        "pass": false
+      },
+      {
+        "name": "systems.bandRange",
+        "actual": 155,
+        "floor": 90,
+        "pass": true
+      },
+      {
+        "name": "systems.starfieldRange",
+        "actual": 65.8,
+        "floor": 100,
+        "pass": false
+      },
+      {
+        "name": "systems.starCount",
+        "actual": 8,
+        "floor": 25,
+        "pass": false
+      },
+      {
+        "name": "hero.camperEdgeAbs",
+        "actual": 5.091,
+        "floor": 5,
+        "pass": true,
+        "note": "Sobel mean over the camper box — blur collapses it (dark-delta was evaluated and rejected: healthy value ~2.5, inside noise)"
+      },
+      {
+        "name": "hero.ssim",
+        "actual": 0.8622,
+        "floor": 0.9,
+        "pass": false
+      },
+      {
+        "name": "systems.ssim",
+        "actual": 0.8629,
+        "floor": 0.9,
+        "pass": false
+      }
+    ],
+    "failing": [
+      "live.starCount",
+      "hero.starCount",
+      "systems.starfieldRange",
+      "systems.starCount",
+      "hero.ssim",
+      "systems.ssim"
+    ]
+  },
+  "blurControl": {
+    "checks": [
+      {
+        "name": "live.bandRange",
+        "actual": 79.9,
+        "floor": 90,
+        "pass": false
+      },
+      {
+        "name": "live.starCount",
+        "actual": 0,
+        "floor": 20,
+        "pass": false
+      },
+      {
+        "name": "hero.bandRange",
+        "actual": 79.9,
+        "floor": 90,
+        "pass": false
+      },
+      {
+        "name": "hero.starfieldRange",
+        "actual": 85,
+        "floor": 100,
+        "pass": false
+      },
+      {
+        "name": "hero.starCount",
+        "actual": 0,
+        "floor": 25,
+        "pass": false
+      },
+      {
+        "name": "systems.bandRange",
+        "actual": 79.9,
+        "floor": 90,
+        "pass": false
+      },
+      {
+        "name": "systems.starfieldRange",
+        "actual": 85,
+        "floor": 100,
+        "pass": false
+      },
+      {
+        "name": "systems.starCount",
+        "actual": 0,
+        "floor": 25,
+        "pass": false
+      },
+      {
+        "name": "hero.camperEdgeAbs",
+        "actual": 2.44,
+        "floor": 5,
+        "pass": false,
+        "note": "Sobel mean over the camper box — blur collapses it (dark-delta was evaluated and rejected: healthy value ~2.5, inside noise)"
+      },
+      {
+        "name": "hero.ssim",
+        "actual": 0.8422,
+        "floor": 0.9,
+        "pass": false
+      },
+      {
+        "name": "systems.ssim",
+        "actual": 0.8351,
+        "floor": 0.9,
+        "pass": false
+      }
+    ],
+    "failing": [
+      "live.bandRange",
+      "live.starCount",
+      "hero.bandRange",
+      "hero.starfieldRange",
+      "hero.starCount",
+      "systems.bandRange",
+      "systems.starfieldRange",
+      "systems.starCount",
+      "hero.camperEdgeAbs",
+      "hero.ssim",
+      "systems.ssim"
+    ]
+  },
+  "problems": [],
+  "pass": true
+}
