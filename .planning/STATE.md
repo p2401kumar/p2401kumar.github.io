@@ -2,19 +2,18 @@
 gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Real Sky
-current_phase: none
-current_phase_name: Between milestones
+current_phase: 10
+current_phase_name: Integration & Launch
 status: milestone_complete
 stopped_at: v3.0 Real Sky SHIPPED + closed 2026-07-19 (tag v3.0; archives at milestones/v3.0-*); autonomous chain ended
-last_updated: "2026-07-19T23:44:17.941Z"
+last_updated: "2026-07-20T04:09:03.547Z"
 last_activity: 2026-07-19
-last_activity_desc: "Quick task: sky-visibility fix — 10-UI-REVIEW BLOCKER fixed locally (glass rescoped to content cards, fade inverted, server-rendered panel states) + verify-visibility.mjs perceptual gate GREEN x3 viewports; redeploy user-gated"
+last_activity_desc: "09-03 executed: mobile shed ladder + full closing battery + Phase 9 close-out (AMB-05)"
 progress:
-  total_phases: 4
-  completed_phases: 4
-  total_plans: 12
-  completed_plans: 12
-  percent: 100
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
 ---
 
 # Project State
@@ -222,6 +221,7 @@ Recent decisions affecting current work:
 - [Phase 10]: 10-01: soak 6.39% total = +0.90pp vs the 5.49% point, inside the 08-03 glass-live 6.10% noise family (machine shared with audit workload); <10% floor holds with 3.61pp headroom
 - [Phase 10]: 10-02: launch approved by the user's explicit "Launch now" in chat (2026-07-19) after reviewing 10-01-LAUNCH-READINESS.md — the blocking gate was human-resolved, never auto-advanced; FF push 15e6742..0dbe46f (67 commits, never --force), Actions 29708118111 green, LIVE Lighthouse 100x8 (FLR-01 authoritative), live smoke 13/13 — v3.0 SHIPPED
 - [Phase 10]: 10-02: live smoke harness active-panel probe corrected from a stale .is-active selector to the product's data-state="active" marker (deck.ts:118) — instrument-only; the deployed pages are byte-identical (cmp) to the 10-01-verified local dist
+- [Phase ?]: Sky-visibility BLOCKER fixed + deployed live 2026-07-19 (user-approved redeploy); verify-visibility gate PASS on origin all 3 viewports
 
 ### Pending Todos
 
@@ -254,7 +254,7 @@ Items acknowledged and carried forward:
 
 ## Session Continuity
 
-Last session: 2026-07-19T23:44:17.928Z
+Last session: 2026-07-20T04:08:53.044Z
 Stopped at: Completed 10-02-PLAN.md — v3.0 Real Sky LIVE (user-gated deploy, Actions 29708118111 green, LIVE Lighthouse 100×8, smoke 13/13); milestone v3.0 execution complete — next: real-device checklist (user, at leisure) + /gsd-complete-milestone
 Resume file: None
 

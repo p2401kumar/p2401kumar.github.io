@@ -1,12 +1,19 @@
 # v3.0 "Real Sky" — Retroactive UI Review (Phase 10 audit)
 
-> **STATUS UPDATE (2026-07-19): BLOCKER → FIXED-LOCALLY, pending redeploy.**
-> All three findings remediated on local main (commits 15aaf62 / 71cc35d /
-> 467d9a4) and the demanded perceptual gate shipped (8738d33,
-> `scripts/verify-visibility.mjs` — GREEN at 1440/1280/375 with both selftest
-> controls failing correctly). Full re-gate record + before/after evidence:
-> `.planning/quick/2026-07-19-sky-visibility-fix/SUMMARY.md`. The LIVE site
-> still serves the broken build — **redeploy is user-gated** (nothing pushed).
+> **STATUS UPDATE (2026-07-19): BLOCKER → FIXED + DEPLOYED LIVE.**
+> All three findings remediated on main (commits 15aaf62 / 71cc35d / 467d9a4)
+> and the demanded perceptual gate shipped (8738d33,
+> `scripts/verify-visibility.mjs`). **Deployed to the live origin 2026-07-19**
+> (user approved "Redeploy now" after reviewing before/after evidence;
+> FF push `6f56e10..1d6999d`, deploy run 29715776255 success). The perceptual
+> gate was re-run against the LIVE origin `https://p2401kumar.github.io/` and
+> **PASSED at all three viewports** (band 111.5/111.3, starfield 127.7/123.4,
+> camper edge 8.34/9.46/16.60, SSIM 0.999x — identical to local within
+> animation phase). Live captures: `evidence/live-fixed-1440.png` +
+> `live-fixed-375.png`. Live Lighthouse: mobile 100/100/100/100 · desktop
+> 94/100/100/100. Full re-gate + live record:
+> `.planning/quick/2026-07-19-sky-visibility-fix/SUMMARY.md`. The visible sky
+> is now served to real users — the driving complaint is resolved on origin.
 
 **Audited:** 2026-07-19
 **Baseline:** 05/07/08 UI-SPECs + live site https://p2401kumar.github.io/

@@ -3,12 +3,13 @@ type: quick-task
 date: 2026-07-19
 slug: sky-visibility-fix
 source: .planning/10-UI-REVIEW.md (v3.0 retroactive UI review)
-status: complete — FIXED LOCALLY, redeploy is USER-GATED (nothing pushed)
+status: complete — FIXED + DEPLOYED LIVE 2026-07-19 (user-approved redeploy)
 commits:
   - 15aaf62 fix(sky-visibility) — glass rescoped to content cards (BLOCKER)
   - 71cc35d fix(sky-visibility) — sky-photo fade inverted (failure mode = visible)
   - 467d9a4 fix(sky-visibility) — server-rendered panel states (ghost flash)
   - 8738d33 feat(sky-visibility) — verify-visibility.mjs perceptual gate + blessed refs
+  - cd4d310 test(sky-visibility) — LIVE verification, gate PASS on origin + evidence
 ---
 
 # Quick Task: v3.0 Sky-Invisibility Fix (BLOCKER + 2 warnings + perceptual gate)
@@ -134,9 +135,52 @@ Gate honesty proven.
 5. **Soak absolute number recorded via same-machine A/B** (see battery table) —
    the machine measures ~2x the recorded family on BOTH builds today.
 
-## Open item (user-gated)
+## DEPLOYED LIVE — 2026-07-19 (user-approved)
 
-The live site still serves the broken build. Redeploy = user's explicit go
-(same FF-push protocol as 10-02). After redeploy, re-run
-`verify-visibility --gate` against the live URL and re-run the review's mobile
-crop question (remediation 4) if the 375 star floor ever tightens.
+**Approval record:** the user explicitly chose **"Redeploy now"** in chat on
+2026-07-19 after reviewing the before/after evidence for the sky-visibility
+BLOCKER. That authorized the deploy.
+
+**Deploy:** FF-only push `6f56e10..1d6999d` (origin/main was a strict ancestor;
+NEVER --force). Actions deploy run `29715776255` — build 29s + deploy 10s —
+**success**. Live CSS asset `index.hvpsm-dc.css` is **byte-identical** (17081 B)
+to the local build; live HTML server-renders `data-state` (1 active / 6 inactive);
+backdrop-filter lives only on `>.panel-card` (bare active-panel rule = opacity/
+transform only). Propagation confirmed on first poll (no CDN lag).
+
+**LIVE visibility gate — PASS all three viewports** (`verify-visibility --gate
+--url https://p2401kumar.github.io/`), recorded next to local:
+
+| Check | LIVE 1440 | local | LIVE 1280 | local | LIVE 375 | local | Floor |
+|---|---|---|---|---|---|---|---|
+| band / lowerSky range | **111.5** | 111.5 | **111.3** | 111.3 | **114.2** | 114.2 | 90/90/70 |
+| starfield range (RM) | **127.7** | 127.7 | **123.4** | 123.4 | — | — | 100 |
+| star count (RM hero) | **120** | 120 | **92** | 92 | **104** | 104 | 25/18/30 |
+| live star count | **120** | 120 | **92** | 92 | **100** | 101 | 20/14/20 |
+| camper edge (Sobel) | **8.34** | 8.34 | **9.46** | 9.46 | **16.60** | 16.60 | 5/5/10 |
+| aurora canvas coverage | **0.813** | 0.829 | **0.837** | 0.825 | n/a | n/a | 0.03 |
+| SSIM vs blessed refs | **1.00/1.00** | 1.00 | **1.00/1.00** | 1.00 | **1.00/1.00** | 1.00 | 0.90 |
+
+Live equals local within animation phase (aurora coverage + one twinkle-phase
+star count differ trivially, both far above floors). Every structure floor a
+blur destroys is cleared on the REAL origin by a wide margin. Selftest gate-
+honesty proof was re-run against the local build (blackout + blur(12) controls
+both FAIL correctly — `local-selftest-report.json`).
+
+**Live evidence (committed):** `evidence/live-fixed-1440.png`,
+`evidence/live-fixed-375.png` — settled hero captures showing the crisp
+starfield, the Milky Way galactic core with dust lanes (1440 right margin), the
+camper silhouette + warm window glow, and the intact credit line
+"Sky: NOIRLab/NSF/AURA/E. Slawik/M. Zamani, CC BY 4.0". Machine-readable:
+`live-gate-report.json`.
+
+**Live smoke:** homepage 200 · deck+scene markup present (`nightsky-canvas`,
+`.deck`, `.sky-photo`) · credit line intact · `/#work` alias → `systems`
+(shipped `Map([['work','systems']])`) · `/work/dynamodb-cellularization/` 200 and
+scene-free.
+
+**Live Lighthouse:** mobile **100/100/100/100** (LCP 1.4s, TBT 50ms, CLS 0.001);
+desktop **94/100/100/100** (LCP 1.5s, TBT 20ms, CLS 0). Desktop perf 94 is below
+the local 100 — pure live-network LCP variance (1.5s over the CDN vs 0.5s local),
+above the 90 floor, not a regression; the visible sky was the priority.
+Full reports: `live-lighthouse-mobile.json` / `live-lighthouse-desktop.json`.
