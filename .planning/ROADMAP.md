@@ -46,11 +46,11 @@ Full details: [milestones/v3.0-ROADMAP.md](milestones/v3.0-ROADMAP.md) · Phase 
 
 ### 🎨 v3.1 Bolder Sky (Phases 11-12) — CURRENT
 
-- [ ] **Phase 11: Bolder Sky Rework** — Warm/bright regrade, core-led recomposition, camper cut, premium liquid-glass card, overlay re-tune; all local gates re-pass incl. `verify-visibility` re-blessed (BOLD-01..05 + local BOLD-06)
+- [x] **Phase 11: Bolder Sky Rework** — Warm/bright regrade, core-led recomposition, camper cut, premium liquid-glass card, overlay re-tune; all local gates re-pass incl. `verify-visibility` re-blessed (BOLD-01..05 + local BOLD-06) (completed 2026-07-20)
   - **Plans:** 3 plans (wave 1 → 2 → 3, sequential — each stage's gate depends on the prior stage's baked look)
   - [x] 11-01-PLAN.md — Regrade + recompose the master (warm/bright grade, core-led crop + object-position ladder, regenerate masters/LQIP, re-pass banding) (BOLD-01, BOLD-02) — completed 2026-07-20
   - [x] 11-02-PLAN.md — Camper cut + warm ambient glow, liquid-glass card (--glass-* + .panel-card specular), overlay re-tune (BOLD-03, BOLD-04, BOLD-05)
-  - [ ] 11-03-PLAN.md — The gate battery + local proof: re-bless visibility, contrast ≥4.5 both viewports (card escalation), moon/aurora/banding/soak/Lighthouse, before/after evidence, NO push (BOLD-06 local)
+  - [x] 11-03-PLAN.md — The gate battery + local proof: re-bless visibility, contrast ≥4.5 both viewports (card escalation), moon/aurora/banding/soak/Lighthouse, before/after evidence, NO push (BOLD-06 local)
 - [ ] **Phase 12: Launch** — Live Lighthouse ≥90 ×4, before/after evidence, user-gated deploy (BOLD-06 live)
 
 Direction locked via a 3-way mockup: **Galactic Core + liquid-glass card**. Lean milestone — no research fan-out (direction decided + mocked). Full spec: `phases/11-bolder-sky/11-CONTEXT.md`.
@@ -70,7 +70,7 @@ Direction locked via a 3-way mockup: **Galactic Core + liquid-glass card**. Lean
 | 8. Glass System | v3.0 | 3/3 | Complete | 2026-07-19 |
 | 9. Living Sky | v3.0 | 3/3 | Complete | 2026-07-19 |
 | 10. Integration & Launch | v3.0 | 2/2 | Complete | 2026-07-19 |
-| 11. Bolder Sky Rework | v3.1 | 2/3 | In Progress|  |
+| 11. Bolder Sky Rework | v3.1 | 3/3 | Complete   | 2026-07-20 |
 | 12. Launch | v3.1 | 0/TBD | Not started | - |
 
 ---

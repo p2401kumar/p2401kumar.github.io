@@ -5,16 +5,16 @@ milestone_name: Bolder Sky
 current_phase: 11
 current_phase_name: Bolder Sky Rework
 status: in-progress
-stopped_at: 11-02 COMPLETE — camper cut (warm ambient glow), premium liquid-glass card (both tiers), overlay re-tuned to the brighter sky; every v3.0 ladder + engine invariant intact; nothing pushed. Next 11-03 (gate battery + card-fill contrast escalation)
-last_updated: "2026-07-20T19:05:06.779Z"
+stopped_at: 11-03 COMPLETE — Phase 11 (Bolder Sky Rework) DONE (3/3 plans). STEP-0 composition fix (sky moved, not the locked card: crop coreAt-x 0.6→0.68 + object-position 10%→0% lead the core in the right margin, card over darker sky — matches mockup A). Gate battery GREEN on the bolder look: visibility re-blessed + camper metric swapped Sobel→warm-glow + range floors raised (blur still trips), --gate PASS 3 viewports + --selftest honest; contrast ≥4.5 every surface both viewports (worst systems 5.19) via card/chrome escalation (sky FROZEN); moon/aurora/banding/soak 6.96%/Lighthouse 99-100×8 all green. NOTHING pushed. Next: Phase 12 (user-gated launch/deploy of the bolder look).
+last_updated: "2026-07-20T21:15:00.000Z"
 last_activity: 2026-07-19
 last_activity_desc: "09-03 executed: mobile shed ladder + full closing battery + Phase 9 close-out (AMB-05)"
 progress:
   total_phases: 2
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 3
-  completed_plans: 2
-  percent: 0
+  completed_plans: 3
+  percent: 50
 ---
 
 # Project State
@@ -28,7 +28,9 @@ See: .planning/PROJECT.md (updated 2026-07-18)
 
 ## Current Position
 
-Phase: 11 (Bolder Sky Rework) — IN PROGRESS (2/3 plans)
+Phase: 11 (Bolder Sky Rework) — COMPLETE (3/3 plans)
+Plan: 11-03 COMPLETE — the gate battery + STEP-0 composition fix. STEP-0: the 11-02 result put the centered (locked) deck card OVER the bright core (eyebrow marginal); measurement proved object-position alone maxes the core at viewport ~55%, so the crop anchor was recomposed (coreAt-x 0.6→0.68, masters regenerated + banding re-passed) and the base object-position dropped 10%→0% — now the amber core with dust lanes LEADS in the clear right margin the card doesn't cover, card text over the dark quiet-left, eyebrow legible (matches approved mockup A; grade FROZEN, composition only). Task 1: verify-visibility camper assertion swapped Sobel-edge → warm-glow luminance-presence (camperWarmDelta, healthy 19.75/19.78/22.49, floors 10/10/12 — right metric for the cut silhouette's surviving glow, coverage KEPT); deterministic range floors RAISED 90/100→135/135 so a blur(12) still trips them on the brighter look (healthy 159/168, blur 119/107); re-blessed refs, --gate PASS 3 viewports (SSIM 1.0/1.0/0.9999), --selftest PASS (blur+blackout controls both FAIL). Task 2: contrast ≥4.5 every surface both viewports (worst systems 5.19/5.22) held by CARD/chrome escalation — tier-1 brightness 1.08→0.62 + bg 0.10→0.08, tier-2 0.48/0.98→0.55/0.82 + a deck.css §8b prose padding-inline (the failing pixel was OPEN SKY at the card edge), chrome brightness 0.92→0.64 — sky NEVER re-darkened (grade frozen); --moon (0.32/0.24<0.84/0.85) + --aurora (0.13/0.04) pass strictly, contrast+banding selftests green; re-blessed again after the glass finalized. Task 3: soak 6.96%<10%/60fps/0 longtasks, Lighthouse mobile 99/100/100/100 + desktop 100×4, single-rAF (scene 2/others 0/fig01 2) + zero-hex + leak-gate + no-cross-import all hold (engine untouched), before/after 1440+375 evidence committed. Commits `5dc478c` (feat composition), `e5517ca` (test gate re-bless+metric), `6a93d0a` (fix contrast escalation), `5293c75` (test budget+evidence). NOTHING pushed — origin 15 behind local. BOLD-06 Complete. Phase 11 CLOSED.
+
 Plan: 11-02 COMPLETE — the look rework of the shipped v3.0 engine. (BOLD-03) Cut the camper silhouette SVG + its fill rules; reshaped `.camper-glow` into a broad soft warm ambient wash low in the frame (inset -28%, ellipse at 42% 64%, peak 0.34→0), kept a CHILD of `.camper` so 11-03's re-pointed visibility gate measures warm-glow luminance there; parallax classes/keyframes + reduced-motion branches untouched. (BOLD-04) Reworked `--glass-*` (tokens.css only, zero hex) into premium liquid glass — tier-1 frost 0.06→0.10, blur 12→22px, saturate 140%, brightness 0.90→1.08, edge 0.10→0.28; tier-2 dead gray box `rgb(15 18 23/0.55)`→luminous smoked glass `rgb(18 24 34/0.48)` blur 10→20px; new `--glass-radius`/`--glass-specular`/`--glass-inner-glow`; deck.css `.panel-card` gained rounded corners + a specular `::before` (inset:0+radius:inherit, z-index below text via isolation:isolate) + inner glow, `::before` added to the print strip; ALL ladders (@supports/reduced-transparency/print) + .fig exemption + active-panel scoping + -webkit dual-write (8==4*2) preserved. (BOLD-05) Overlay re-tuned ALPHA-ONLY: constellation STATE_ALPHAS bumped (ambient star 0.45/0.55→0.54/0.64, link 0.16→0.22, halo 0.15/1.3×→0.19/1.4×; brightened link 0.5→0.6, halo→0.32/1.6×) so lines stay authored; firefly floor 0.4→0.5 (peak 0.9 held for the SKY-05 fallback ceiling); aurora unchanged (brighter core = more headroom). single-rAF (2/0/0), no new 'lighter' (baseline 2), source-over only, canvas never transformed; `npx astro check` 0 errors, `npm run build` passes. Commits `b341c26` (feat camper), `ba5b1d6` (feat glass), `3175170` (feat overlay), `4445208` (test evidence 1440+375). NOTHING pushed. **Flag for 11-03:** at 1440 the centered card overlaps the bright core and the `--dim` eyebrow reads marginal over the lifted frost — a card-fill escalation candidate (escalate the card, never re-darken the sky). BOLD-03, BOLD-04, BOLD-05 Complete.
 
 Plan: 11-01 COMPLETE — the murk-killing regrade + recompose. build-sky.mjs regraded to reproduce the approved Galactic-Core mockup, baked via sharp (no runtime filters): GRADE_SATURATION 0.35→0.80, the cool-slate `.tint(#93a7cf)` DROPPED (GRADE_TINT_ENABLED=false), the midtone x0.80 DARKEN replaced with a zenith-anchored midtone LIFT (per-channel power-curve LUT, MIDTONE_GAMMA 0.78 — pins the black floor on --sky-zenith, lifts mids/highs), column vignette VIGNETTE_ALPHA 0.88→0 (removed; card is the scrim now). Recomposed crop anchor coreAt [0.84,0.58]→[0.6,0.44] (core off the dead edge, leads center-right, frame grew 987×420→1053×448). NightSky.astro object-position ladder recomputed: base 72% 38%→10% 40%, ≥1800 78% 34%→3% 40%, 640-1023 55% 32%→50% 45%, <640 QUIET-CROP 10% 70%→50% 50% (mobile now shows real core presence, not the dead navy gradient). All four masters + LQIP regenerated. Banding gate re-passed FIRST try (GRAIN_AMP unchanged 1.5): --selftest clean PASS/banded FAIL, all four masters runsAboveZero=1 zeroGaps=0 64/64 bins. Before/after evidence committed under evidence/. Commits `57dbd74` (feat build-sky), `0cb9fc3` (feat ladder+masters), `2ff72f5` (test banding+evidence). NOTHING pushed — origin/main behind local. BOLD-01, BOLD-02 Complete.
@@ -126,6 +128,7 @@ Last activity: 2026-07-19 — 09-03 executed: mobile shed ladder + full closing 
 | Phase 10 P02 | ~25 min | 2 tasks | 5 files |
 | Phase 11 P01 | ~14 min | 3 tasks | 7 files |
 | Phase 11 P02 | ~20 min | 3 tasks | 5 files |
+| Phase 11 P03 | ~55 min | 4 tasks | 20 files |
 
 ## Accumulated Context
 
@@ -238,6 +241,10 @@ Recent decisions affecting current work:
 - [Phase 11]: 11-02: tier-2 reworked from the dead neutral rgb(15 18 23/0.55) "gray box" to blue-tinted luminous smoked glass rgb(18 24 34/0.48) + blur 20px — still darkens for light-text legibility, no longer a flat slab; 11-03's screenshot gate arbitrates exact opacity
 - [Phase 11]: 11-02: aurora.ts left intentionally UNCHANGED — a brighter MW core gives MORE headroom under the moon<core / aurora<core ceilings, so the envelope needs no change (11-03 gates --moon/--aurora); the v3.0 16px blur "ceiling" note is retired (glass depth is the point, blur raised to 20-24px deliberately)
 - [Phase 11]: 11-02: kept the recipe's tier-1 brightness 1.08 despite the centered card overlapping the bright core at 1440 (marginal --dim eyebrow) — contrast is 11-03's gate by the plan's own division of labor; flagged as a card-fill escalation candidate (escalate the card, never re-darken the sky) rather than guessing an ad-hoc opacity
+- [Phase 11]: 11-03 STEP-0: object-position alone could NOT lead the core in the card's clear zone — a column-luminance scan showed the master's warm-core peak at master-x ~0.56, and object-fit:cover geometry maxes it at viewport ~55% (still behind the centered card); a crop recompose was required (coreAt-x 0.6→0.68 shifts the visual peak to ~0.64, then object-position 0% leads it at viewport ~86%). Composition (which part of the frozen master shows where) is a distinct lever from grade — the sky was moved, never dimmed
+- [Phase 11]: 11-03 T1: the camper visibility metric was swapped, not lowered — the cut silhouette's Sobel edge-energy floor measured edges a soft radial doesn't have (a false FAIL); camperWarmDelta (mean R-B, glow zone vs cool sky above) measures the copper glow that actually survived. Also RAISED the deterministic range floors 90/100→135/135: the brighter look measures healthy 159/168 and a blur(12) only drops them to 119/107, so the OLD floors went blind to the original blur BLOCKER — higher floors keep --selftest honest while healthy clears by 24-33pt (stricter, not weaker)
+- [Phase 11]: 11-03 T2: contrast held by the CARD, sky frozen — tier-1 brightness 1.08→0.62 (the 11-02 luminous lift blew systems' right-edge tags over the bright core to 2.38), tier-2 0.48/0.98→0.55/0.82, chrome 0.92→0.64; the liquid-glass FORM keeps the darker fill reading as glass (eyeball-confirmed). The experience failing pixel was OPEN SKY at the card's right edge (unchanged by any fill bump), fixed by a tier-2 padding-inline that wraps prose inside the scrim — never by touching the sky
+- [Phase 11]: 11-03: re-bless AFTER all visual changes are final — the first bless (post-composition) was invalidated by the Task-2 glass escalation, so the SSIM refs were re-blessed to the shipped look and --gate/--selftest re-run green (the anchor must match what ships)
 
 ### Pending Todos
 
@@ -270,8 +277,8 @@ Items acknowledged and carried forward:
 
 ## Session Continuity
 
-Last session: 2026-07-20T19:05:06.779Z
-Stopped at: Completed 11-02-PLAN.md — camper cut (broad warm ambient glow, kept a child of .camper for 11-03's gate), premium liquid-glass card both tiers (--glass-* reworked in tokens.css only + .panel-card specular ::before/rounded corners/inner glow, all ladders + .fig exemption + dual-write preserved), overlay re-tuned alpha-only to the brighter sky (constellations bumped, firefly floor lifted, aurora unchanged). single-rAF 2/0/0, no new 'lighter', zero-hex, build+astro-check green. Nothing pushed. Next: 11-03 (gate battery — re-bless visibility, contrast ≥4.5 both viewports with the card-fill escalation candidate, moon/aurora/banding/soak/Lighthouse, before/after evidence)
+Last session: 2026-07-20T21:15:00.000Z
+Stopped at: Completed 11-03-PLAN.md + STEP-0 composition fix — Phase 11 (Bolder Sky Rework) CLOSED (3/3 plans). The bolder core-led look is proven on EVERY gate (brightness included) and reads like approved mockup A + C's glass: amber core with dust lanes leading in the right margin, card over darker sky, eyebrow legible, camper cut. Visibility re-blessed + honest (camper metric swapped Sobel→warm-glow, range floors raised so blur still trips), contrast ≥4.5 every surface both viewports via card/chrome escalation (sky FROZEN), moon/aurora/banding/soak 6.96%/Lighthouse 99-100×8 green. single-rAF/zero-hex/leak/no-cross-import hold, engine untouched. NOTHING pushed — origin 15 behind local. Before/after 1440+375 committed for the end-of-phase eyeball. Next: Phase 12 (user-gated launch/deploy of the bolder look — the FF-push protocol, user approval required).
 Resume file: None
 
 ## Operator Next Steps
